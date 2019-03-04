@@ -7,6 +7,16 @@ body {
 	-ms-backface-visibility: hidden;
 }
 
+button:focus{
+    outline: none;
+}
+
+/* STYLE WITHOUT DEMO-BLOCK */
+.gradient {
+    padding-bottom: 30px;
+}
+/* ********************* */
+
 .sommerce-bolder {
 	font-size: 32px;
 	font-weight: bold;
@@ -44,7 +54,8 @@ body {
 }
 
 .navbar-collapse {
-	padding-top: 10px;
+    padding-top: 10px;
+    z-index: 2;
 }
 
 .navbar-toggler.collapsed {
@@ -57,6 +68,20 @@ body {
 	background-color: white;
 	position: relative;
 	z-index: 1;
+}
+
+.header-links {
+    font-family: Montserrat;
+	font-size: 14px;
+    color: #6e6c88;
+}
+
+.header-links a{
+    text-decoration: none;
+}
+
+.header-links a:hover{
+    color: #8672ED;
 }
 
 .header-input {
@@ -93,7 +118,7 @@ body {
 }
 
 .interested {
-	color: blue;
+	color: #7765d6;
 }
 
 /* Why sommerce  */
@@ -109,6 +134,8 @@ body {
 /* Features */
 
 .feature-title {
+    padding-top: 15px;
+    padding-bottom: 10px;
 	font-size: 16px;
 	font-weight: bold;
 	color: #312e55;
@@ -124,7 +151,8 @@ body {
 #pricing {
 	margin-top: 200px;
 	background-image: linear-gradient(245deg, #ada0f8, #7765d6), url("../img/lp-sources/illustrations/demo.svg");
-	position: relative;
+    position: relative;
+    z-index:0;
 }
 
 .notify-me {
@@ -139,18 +167,19 @@ body {
 	font-weight: 600;
 	line-height: 1.71;
 	color: white !important;
-	cursor: pointer;
+    cursor: pointer;
+    text-decoration: none !important;
 }
 
 .price div {
 	padding: 25px 10px 15px 10px;
 }
 
-.gradient {
+/* .gradient {
 	background-image: url("../img/lp-sources/illustrations/demo.svg");
 	background-repeat: no-repeat;
 	background-position: top 90px right 100px;
-}
+} */
 
 .price-about {
 	font-size: 14px;
@@ -216,19 +245,19 @@ body {
 	margin-bottom: 70px;
 }
 
-.demo-buttons a {
+.demo-buttons button {
+    margin-right: 20px;
 	display: block;
 	border-radius: 2px;
 	border: solid 2px #ffffff;
-	margin-right: 25px;
 	width: 160px;
 	height: 48px;
 }
 
 .storefront-button {
+    background-color: transparent;
 	font-size: 14px;
 	font-weight: 600;
-	padding-top: 10px;
 	font-style: normal;
 	font-stretch: normal;
 	line-height: 1.71;
@@ -236,14 +265,14 @@ body {
 	text-align: center;
 	color: #ffffff;
 	text-decoration: none !important;
-	cursor: pointer;
+    cursor: pointer;
+    z-index:0;
 }
 
 .admin-button {
 	border-radius: 1px;
 	border: solid 2px #ffffff;
-	background-color: #ffffff;
-	padding-top: 10px;
+	background-color: #ffffff;  
 	font-size: 14px;
 	font-weight: 600;
 	font-style: normal;
@@ -253,7 +282,8 @@ body {
 	text-align: center;
 	color: #7765d6;
 	cursor: pointer;
-	text-decoration: none !important;
+    text-decoration: none !important;
+    z-index: 0;
 }
 
 .corner {
@@ -322,9 +352,14 @@ body {
 	position: relative;
 }
 
+.hello-faq-button:hover {
+    color: #8672ED;
+}
+
 .arrow-hello {
 	position: absolute;
-	left: 210px;
+    left: 200px;
+    bottom: 20px;
 }
 
 .hello {
@@ -420,7 +455,16 @@ body {
 .footer-links {
 	font-family: Montserrat;
 	font-size: 14px;
-	color: #6e6c88;
+    color: #6e6c88;
+}
+
+.footer-links a{
+    text-decoration: none;
+}
+
+.footer-links a:hover,
+form .footer-links:hover{
+    color: #D5D4DC;
 }
 
 .arrow {
@@ -477,7 +521,22 @@ ul li {
 	text-decoration: none;
 }
 
+/* HOVER BUTTONS */
+
+.footer-button:hover,
+.notify-me:hover {
+    background-color: #FF7498
+}
+
+.footer-button:active,
+.notify-me:active {
+    background-color: #F64774;
+}
+
+
+
 /* MEDIA  */
+
 @media screen and (max-width: 1440px) {
 	.technology-driven {
 		position: relative;
@@ -566,7 +625,7 @@ ul li {
 		max-width: 100%;
 	}
 
-	.demo-buttons a {
+	.demo-buttons button {
 		width: 100%;
 		margin-top: 20px;
 	}
@@ -655,3 +714,60 @@ ul li {
 		display: none;
 	}
 }
+
+
+/* ANIMATION HOVERS IN DEMO  */
+
+button,
+button::after {
+  -webkit-transition: all 0.3s;
+	-moz-transition: all 0.3s;
+  -o-transition: all 0.3s;
+	transition: all 0.3s;
+}
+
+
+.storefront-button::before,
+.storefront-button::after {
+  background-color: white;
+  content: '';
+  position: absolute;
+  z-index: -1;
+}
+
+.admin-button::before,
+.admin-button::after {
+  background-color:#7765d6db;
+  content: '';
+  position: absolute;
+  z-index: -1;
+}
+
+
+.storefront-button:hover {
+  color: #7765d6;
+}
+
+.admin-button:hover {
+    color: white;
+}
+
+.demo-buttons button {
+    position: relative;
+}
+ 
+
+.storefront-button::after,
+.admin-button::after {
+  height: 100%;
+  left: 0;
+  top: 0;
+  width: 0;
+}
+
+.storefront-button:hover:after,
+.admin-button:hover:after {
+  width: 100%;
+}
+
+/* ****************** */

@@ -11,6 +11,18 @@ $(document).ready(function() {
 		});
 	});
 
+	$(document).ready(function () {
+		$('#pricing').on('click', 'a', function (event) {
+			var navbarHeight = $('nav').height();
+			event.preventDefault();
+			var id = $(this).attr('href'),
+				top = $(id).offset().top;
+			var scrollTopHeigt = top - navbarHeight;
+			$('body,html').animate({ scrollTop: scrollTopHeigt }, 1000);
+		});
+	});
+
+
 	$(document).ready(function() {
 		$('#footer-scrolling').on('click', 'a', function(event) {
 			var footerHeight = $('nav').height();
