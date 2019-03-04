@@ -40,15 +40,6 @@ var tasks = {
             .pipe(uglify())
             .pipe(gulp.dest('./store/web/js/'));
     },
-    'js-so' : function(done) {
-        return gulp.src([
-            './sommerce/web/js/app/*.js',
-            './sommerce/web/js/app/admin/*.js',
-        ])
-            .pipe(concat('admin.js'))
-            .pipe(uglify())
-            .pipe(gulp.dest('./sommerce/web/js/'));
-    },
     'js-gateway' : function(done) {
         return gulp.src([
             './gateway/web/js/app/*.js',
@@ -60,11 +51,19 @@ var tasks = {
             .pipe(uglify())
             .pipe(gulp.dest('./gateway/web/js/'));
     },
+    'js-sommerce-admin' : function(done) {
+        return gulp.src([
+            './sommerce/web/js/app/global/*.js',
+            './sommerce/web/js/app/admin/*.js',
+        ])
+            .pipe(concat('admin.js'))
+            .pipe(uglify())
+            .pipe(gulp.dest('./sommerce/web/js/'));
+    },
     'js-sommerce-frontend' : function(done) {
         return gulp.src([
             './sommerce/web/js/libs/underscore.js',
-            './sommerce/web/js/app/global.js',
-            './sommerce/web/js/app/index.js',
+            './sommerce/web/js/app/global/*.js',
             './sommerce/web/js/app/frontend/*.js',
         ])
             .pipe(concat('frontend.js'))
@@ -97,5 +96,5 @@ Object.keys(tasks).forEach(function(key) {
     gulp.task(key, tasks[key]);
 });
 
-gulp.task('js', gulp.parallel('js-my', 'js-sommerce-frontend', 'js-gateway', 'js-so', 'js-store', 'js-cp'));
-gulp.task('default', gulp.parallel('js-my', 'js-sommerce-frontend', 'js-gateway', 'js-so', 'js-store', 'js-cp', 'sass-admin-sommerce'));
+gulp.task('js', gulp.parallel('js-my', 'js-sommerce-frontend', 'js-gateway', 'js-sommerce-admin', 'js-store', 'js-cp'));
+gulp.task('default', gulp.parallel('js-my', 'js-sommerce-frontend', 'js-gateway', 'js-sommerce-admin', 'js-store', 'js-cp', 'sass-admin-sommerce'));
