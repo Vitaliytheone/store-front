@@ -169,6 +169,7 @@ class CustomController extends CommonController
                 'story_domain' => Yii::$app->getRequest()->getHostName(),
             ],
             'page' => [
+                'title' => $this->pageTitle ?: $this->store->seo_title,
                 'meta' => [
                     'keywords' => $this->seoKeywords ?: $this->store->seo_keywords,
                     'description' => $this->seoDescription ?: $this->store->seo_description,
