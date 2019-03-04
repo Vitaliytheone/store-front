@@ -31,10 +31,19 @@ class MyRequest extends Request
          * @var $store Stores
          */
         $store = Yii::$app->store->getInstance();
+        $refererDomain = !empty($_SERVER['HTTP_REFERER']) ? parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST) : null;
 
         $isAdminModule = strpos($pathInfo, 'admin') !== false;
 
         if ($store && !$isAdminModule) {
+            $sources = [
+                'pages'
+            ];
+
+            // Check payments urls when call from referrer domains (payment services)
+            if ($refererDomain) {
+                $sources[] = 'payments';
+            }
 
             $urls = RouteHelper::getRoutes();
 
