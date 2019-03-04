@@ -43,6 +43,7 @@ class EditThemeForm extends Model
             '404.twig',
             'contact.twig',
             'payment_result.twig',
+            'vieworder.twig',
         ],
         'Snippets' => [
             'slider.twig',
