@@ -17,6 +17,7 @@ use yii\base\InvalidConfigException;
 use yii\base\Model;
 use yii\base\UnknownClassException;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Url;
 
 /**
  * Class OrderForm
@@ -259,7 +260,11 @@ class OrderForm extends Model
         $checkout->method_id = $storePayMethod->method_id;
         $checkout->price = $this->_searchItems->getTotal();
         $checkout->currency = $this->_store->currency;
-        $checkout->redirect_url = null;
+
+         /* "Cохраняем url страницы с которой делается заказ"
+         by Andrey Globin*/
+        $checkout->redirect_url = Url::previous();
+
         $checkout->currency_id = $storePayMethod->currency_id;
         $checkout->setDetails($this->getItems());
         $checkout->setUserDetails($this->_userData);

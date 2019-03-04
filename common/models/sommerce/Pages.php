@@ -28,11 +28,11 @@ use yii\db\Connection;
  */
 class Pages extends ActiveRecord
 {
-    public const VISIBILITY_ON = 1;
-    public const VISIBILITY_OFF = 0;
+    const VISIBILITY_ON = 1;
+    const VISIBILITY_OFF = 0;
 
-    public const IS_DRAFT_ON = 1;
-    public const IS_DRAFT_OFF = 0;
+    const IS_DRAFT_ON = 1;
+    const IS_DRAFT_OFF = 0;
 
     /**
      * @inheritdoc
@@ -152,6 +152,20 @@ class Pages extends ActiveRecord
     public function getJson()
     {
         return json_decode($this->json, true);
+    }
+
+    /**
+     * @param $url
+     * @return bool
+     */
+    public static function existUrl($url)
+    {
+        return static::find()
+            ->where([
+                'url' => $url,
+                'visibility' => 1]
+            )
+            ->exists();
     }
 
 }
