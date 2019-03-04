@@ -131,6 +131,10 @@ class PageController extends CustomController
             $renderedContent = str_ireplace('</body>',  implode("\r\n", $this->endContent) . '</body>', $renderedContent);
         }
 
+        if ($this->startHeadContent) {
+            $renderedContent = str_ireplace('</head>',  implode("\r\n", $this->startHeadContent) . '</head>', $renderedContent);
+        }
+
         return $renderedContent;
     }
 

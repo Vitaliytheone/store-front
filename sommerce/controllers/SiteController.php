@@ -80,7 +80,7 @@ class SiteController extends CustomController
     }
 
     /**
-     * Render `contact form` page
+     * Send `contact form` email
      * @return string
      */
     public function actionContactUs()
