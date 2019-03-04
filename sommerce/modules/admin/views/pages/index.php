@@ -62,12 +62,12 @@ use yii\helpers\Html;
                             <div class="divTableCell sommerce-page__row-body-td sommerce-page__td-data">
 
                                 <div class="sommerce-page__td-data-actions">
-                                    <a href="#" class="sommerce-page__actions-link duplicate-page"
+                                    <!--<a href="#" class="sommerce-page__actions-link duplicate-page"
                                        data-page="<?= htmlspecialchars(json_encode($page)) ?>"
                                        data-action="<?=Url::toRoute(['/pages/duplicate-page', 'id' => $page['id']]) ?>">
                                         <span class="la la-clone"></span>
                                         <?= Yii::t('admin', 'pages.duplicate') ?>
-                                    </a>
+                                    </a>-->
                                     <a href="#" class="sommerce-page__actions-link edit-page"
                                        data-page="<?= htmlspecialchars(json_encode($page)) ?>"
                                        data-action="<?= Url::toRoute(['/pages/update-page', 'id' => $page['id']]) ?>"

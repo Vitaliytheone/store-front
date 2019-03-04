@@ -3,7 +3,7 @@
 return [
     'db' => [
         'class' => 'yii\db\Connection',
-        'dsn' => 'mysql:host='. DB_CONFIG[0]['host'] .';dbname=' . DB_PANELS,
+        'dsn' => 'mysql:host='. DB_CONFIG[0]['host'] .';dbname=' . DB_SOMMERCES,
         'username' => DB_CONFIG[0]['user'],
         'password' => DB_CONFIG[0]['password'],
         'charset' => 'utf8',
