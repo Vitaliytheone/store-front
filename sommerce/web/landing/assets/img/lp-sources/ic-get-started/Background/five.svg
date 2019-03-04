@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="112px" height="115px" viewBox="0 0 112 115" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 53.1 (72631) - https://sketchapp.com -->
+    <title>Component / Get started / Background / Five</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="90.7204183%" y1="71.1961917%" x2="17.4637555%" y2="22.6973768%" id="linearGradient-1">
+            <stop stop-color="#F1EFFA" offset="0%"></stop>
+            <stop stop-color="#F1EFFA" stop-opacity="0" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="Component-/-Get-started-/-Background-/-Five" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M89.3981911,3.96191406 C103.072232,13.9867543 112.663831,27.0314582 101.456183,45.0273438 C91.1339341,61.6015625 129.68316,103.592774 101.456183,112.831678 C73.2292061,122.070581 93.4323479,98.2438788 41.0194253,107.075116 C-11.3934974,115.906353 -4.34141807,25.9209569 11.7973588,5.53673484 C23.585773,-9.35272407 39.7326671,10.5764961 53.5699591,9.92054878 C59.191117,9.65408164 75.7241505,-6.06292613 89.3981911,3.96191406 Z" id="Rectangle-Copy-11" fill="url(#linearGradient-1)"></path>
+    </g>
+</svg>
