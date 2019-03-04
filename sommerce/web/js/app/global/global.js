@@ -5,7 +5,7 @@ var custom = new function() {
 
     self.confirm = function (title, text, options, callback, cancelCallback) {
         var confirmPopupHtml;
-        var compiled = templates['modal/confirm'];
+        var compiled = templates['global/modal/confirm'];
         confirmPopupHtml = compiled($.extend({}, true, {
             confirm_button : 'OK',
             cancel_button : 'Cancel',
