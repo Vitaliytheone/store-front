@@ -56,10 +56,10 @@ class StoreAdmins extends ActiveRecord
      */
     static $defaultRules = [
         'orders' => 1,
-        'products' => 1,
         'payments' => 1,
-        'settings' => 1,
+        'products' => 1,
         'pages' => 1,
+        'settings' => 1,
     ];
 
     use UnixTimeFormatTrait;
@@ -208,8 +208,9 @@ class StoreAdmins extends ActiveRecord
             'orders' => Yii::t('app', 'store_admin.rule_orders'),
             'payments' => Yii::t('app', 'store_admin.rule_payments'),
             'products' => Yii::t('app', 'store_admin.rule_products'),
-            'settings' => Yii::t('app', 'store_admin.rule_settings'),
             'pages' => Yii::t('app', 'store_admin.rule_pages'),
+            'settings' => Yii::t('app', 'store_admin.rule_settings'),
+
         ];
     }
 
