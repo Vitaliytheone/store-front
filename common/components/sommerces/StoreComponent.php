@@ -34,7 +34,7 @@ class StoreComponent extends Component
     {
         if (null === static::$_instance) {
 
-            $store = $domain = null;
+            $store = $domain = $storeId = null;
 
             if ($this->domain) {
                 $domain = $this->domain;
@@ -43,10 +43,18 @@ class StoreComponent extends Component
                 $domain = preg_replace('/^www\./i', '', $domain);
             }
 
-            $domainModel = $domain ? StoreDomains::findOne(['domain' => $domain]) : null;
+            if ($domain) {
+                $storeId = StoreDomains::find()
+                    ->select('store_id')
+                    ->andWhere([
+                        'domain' => $domain
+                    ])
+                    ->asArray()
+                    ->scalar();
+            }
 
-            if ($domainModel && $domainModel instanceof StoreDomains) {
-                $store = $domainModel->store;
+            if ($storeId) {
+                $store = Stores::findOne($storeId);
             }
 
             if ($store instanceof Stores) {

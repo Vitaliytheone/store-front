@@ -7,13 +7,49 @@ body {
 	-ms-backface-visibility: hidden;
 }
 
-button:focus{
+Input::placeholder {
+  font-family: Montserrat;
+  font-size: 14px;
+  font-weight: 500;
+  color: #c1c0cc !important;
+}
+
+.footer-input:focus {
+  border-color:#ccc;
+  outline: 0;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+
+.header-input:focus{
+	box-shadow: 0 2px 4px 0 rgba(123, 98, 221, 0.1) !important;
+	outline: none !important;
+	border-color: #7765D6 !important;
+}
+
+a:hover {
+	text-decoration: none !important;
+}
+
+button:focus {
     outline: none;
 }
 
 /* STYLE WITHOUT DEMO-BLOCK */
 .gradient {
     padding-bottom: 30px;
+}
+
+@media (min-width: 768px) and (max-width: 1199px) {
+	.provide-container {
+		margin-bottom: 100px !important;
+	}
+}
+
+@media (min-width: 1200px) {
+	.provide-container {
+		margin-bottom: 125px !important;
+	}
 }
 /* ********************* */
 
@@ -119,6 +155,8 @@ button:focus{
 
 .interested {
 	color: #7765d6;
+	font-size: 14px;
+  	font-weight: 500;
 }
 
 /* Why sommerce  */
@@ -134,8 +172,8 @@ button:focus{
 /* Features */
 
 .feature-title {
-    padding-top: 15px;
-    padding-bottom: 10px;
+    padding-top: 16px;
+    padding-bottom: 8px;
 	font-size: 16px;
 	font-weight: bold;
 	color: #312e55;
@@ -362,10 +400,10 @@ button:focus{
     bottom: 20px;
 }
 
-.hello {
+a .hello {
 	padding-bottom: 3px;
 	padding-right: 5px;
-	border-bottom: 1px solid lightgrey !important;
+	border-bottom: 1px solid #D6D0F2 !important;
 	font-size: 16px;
 	font-weight: 500;
 	font-style: normal;
@@ -375,12 +413,18 @@ button:focus{
 	color: #7765d6;
 }
 
+a:hover .hello {
+	border-bottom: 1px solid!important;
+}
+
 .hello-faq-button {
 	border: 0px;
 	outline: none;
 	background-color: white;
 	padding-left: 0px;
 	cursor: pointer;
+	border-bottom: 1px solid lightgrey !important;
+	font-size: 16px;
 }
 
 .faq-container h1 {
@@ -388,7 +432,7 @@ button:focus{
 }
 
 .toggle {
-	border-bottom: 1px solid lightgray;
+	border-bottom: 1px solid #DDDDE3;
 	padding-bottom: 20px;
 	padding-top: 20px;
 }
@@ -450,6 +494,7 @@ button:focus{
 	border-radius: 2px;
 	color: white;
 	background-color: #ff5c86;
+	box-shadow: 0 2px 4px 0 rgba(255, 92, 134, 0.2);
 }
 
 .footer-links {
@@ -469,7 +514,7 @@ form .footer-links:hover{
 
 .arrow {
 	height: 1px;
-	background-color: #6e6c88;
+	background-color: #464366;
 }
 
 .color-disabled,
@@ -523,10 +568,16 @@ ul li {
 
 /* HOVER BUTTONS */
 
-.footer-button:hover,
-.notify-me:hover {
-    background-color: #FF7498
+.footer-button:hover {
+	background-color: #FF7498;
+	box-shadow: 0 2px 4px 0 rgba(255, 92, 134, 0.2);
 }
+
+.notify-me:hover {
+	background-color: white;
+	color: #ff5c86 !important;
+}
+
 
 .footer-button:active,
 .notify-me:active {
@@ -581,7 +632,7 @@ ul li {
 	}
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 767px) {
 	.hidden {
 		display: block;
 	}

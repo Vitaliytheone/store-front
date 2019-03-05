@@ -8,6 +8,7 @@ use common\models\sommerce\PaymentsLog;
 use common\models\sommerces\PaymentMethods;
 use common\models\sommerces\StorePaymentMethods;
 use common\models\sommerces\Stores;
+use sommerce\helpers\PaymentsModalHelper;
 use Yii;
 use sommerce\components\payments\BasePayment;
 use common\helpers\SiteHelper;
@@ -289,6 +290,9 @@ class Paypal extends BasePayment
         if (empty($GetTransactionDetails['EMAIL'])) {
             $GetTransactionDetails['EMAIL'] = '';
         }
+
+        $paymentsHelper = new PaymentsModalHelper();
+        $paymentsHelper->addModal(PaymentsModalHelper::AWAITING_MODAL);
 
         return [
             'result' => 1,
