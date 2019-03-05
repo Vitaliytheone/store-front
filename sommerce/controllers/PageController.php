@@ -47,10 +47,24 @@ class PageController extends CustomController
 
         $this->addModule('orderFormFrontend', []);
         $this->addModule('contactsForm', [
-            'action' => '/system/contacts']);
+            'action' => '/system/contacts'
+        ]);
         $this->addPaymentModal();
 
         return $this->renderTwigContent($content);
+    }
+
+    /**
+     * Add payment modal
+     */
+    protected function addPaymentModal()
+    {
+        $cookies = Yii::$app->request->cookies;
+        if (($cookie = $cookies->get('modal')) !== null) {
+            $this->addModule('paymentResultModal', $cookie->value);
+            $cookies = Yii::$app->response->cookies;
+            $cookies->remove('modal');
+        }
     }
 
     /**
@@ -93,18 +107,5 @@ class PageController extends CustomController
             'mimeType' => 'text/javascript;charset=UTF-8',
             'inline' => true,
         ]);
-    }
-
-    /**
-     * Add payment modal
-     */
-    protected function addPaymentModal()
-    {
-        $cookies = Yii::$app->request->cookies;
-        if (($cookie = $cookies->get('modal')) !== null) {
-            $this->addModule('paymentResultModal', $cookie->value);
-            $cookies = Yii::$app->response->cookies;
-            $cookies->remove('modal');
-        }
     }
 }

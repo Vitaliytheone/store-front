@@ -86,7 +86,6 @@ class ContactForm extends Model
             'email' => $this->email,
             'message' => $this->message,
         ]);
-        $mail->now = true;
         $sentResult = $mail->send();
 
         Yii::debug($sentResult, '$sentResult');
@@ -94,7 +93,6 @@ class ContactForm extends Model
             $this->_sentSuccess = Yii::t('app', 'contact.form.message.success');
         } else {
             // Set validation error
-//            $this->_sentSuccess = Yii::t('app', 'contact.form.message.error');
             $this->addError(null, Yii::t('app', 'contact.form.message.error'));
         }
 
