@@ -13,9 +13,6 @@ use yii\db\ActiveRecord;
  * @property int $id
  * @property int $customer_id
  * @property int $stores
- * @property int $panels
- * @property int $child_panels
- * @property int $gateways
  * @property int $domains
  * @property int $ssl_certs
  * @property int $created_at
@@ -40,7 +37,7 @@ class CustomersCounters extends ActiveRecord
     {
         return [
             [['customer_id'], 'required'],
-            [['customer_id', 'stores', 'panels', 'child_panels', 'gateways', 'domains', 'ssl_certs', 'created_at', 'updated_at'], 'integer'],
+            [['customer_id', 'stores', 'domains', 'ssl_certs', 'created_at', 'updated_at'], 'integer'],
             [['customer_id'], 'unique'],
             [['customer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Customers::class, 'targetAttribute' => ['customer_id' => 'id']],
         ];
@@ -62,9 +59,6 @@ class CustomersCounters extends ActiveRecord
             'id' => Yii::t('app', 'ID'),
             'customer_id' => Yii::t('app', 'Customer ID'),
             'stores' => Yii::t('app', 'Stores'),
-            'panels' => Yii::t('app', 'Panels'),
-            'child_panels' => Yii::t('app', 'Child Panels'),
-            'gateways' => Yii::t('app', 'Gateways'),
             'domains' => Yii::t('app', 'Domains'),
             'ssl_certs' => Yii::t('app', 'Ssl Certs'),
             'created_at' => Yii::t('app', 'Created At'),

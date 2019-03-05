@@ -170,22 +170,6 @@ class CustomersController extends CustomController
     }
 
     /**
-     * Activate stores feature
-     * @return Response
-     * @throws NotFoundHttpException
-     */
-    public function actionActivateStores()
-    {
-        $request = Yii::$app->request;
-
-        $customer = $this->findModel($request->post('id'));
-
-        $customer->activateStores();
-
-        return $this->redirect(Url::toRoute('/customers'));
-    }
-
-    /**
      * @return Response
      * @throws NotFoundHttpException
      */

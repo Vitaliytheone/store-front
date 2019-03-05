@@ -1,7 +1,7 @@
 <?php
 namespace sommerce\mail;
 
-use common\models\panels\BackgroundTasks;
+use common\models\sommerces\BackgroundTasks;
 use libs\premailer\HtmlString;
 use Yii;
 
