@@ -23,26 +23,25 @@ class ContactForm extends Model
 
     protected $_sentSuccess = '';
 
-    /** @var  Stores */
+    /** @var Stores */
     private $_store;
 
-    public function init()
-    {
-        parent::init();
-
-        $this->_store = Yii::$app->store->getInstance();
-    }
 
     public function formName()
     {
         return '';
     }
 
+    public function setStore(Stores $store)
+    {
+        $this->_store = $store;
+    }
+
     public function rules()
     {
         return [
-            ['recaptcha', 'recaptchaValidator', 'message' => 'reCAPTCHA validation error! Try some times latter!'],
-            ['recaptcha', 'required', 'message' => 'Please solve captcha'],
+            ['recaptcha', 'recaptchaValidator', 'message' => Yii::t('app', 'contact.form.recaptcha.error')],
+            ['recaptcha', 'required', 'message' => Yii::t('app', 'contact.form.recaptcha.required')],
             [['subject', 'name', 'email', 'message'], 'required'],
             [['subject', 'name', 'message'], 'string'],
             ['email', 'emailValidator'],
@@ -51,8 +50,9 @@ class ContactForm extends Model
 
     public function load($data, $formName = null)
     {
+        Yii::debug($data);
         $this->setAttributes([
-            'recaptcha' =>  ArrayHelper::getValue($data, 'g-recaptcha-response')
+            'recaptcha' => ArrayHelper::getValue($data, 'g-recaptcha-response')
         ]);
 
         return parent::load($data, $formName);
@@ -86,12 +86,15 @@ class ContactForm extends Model
             'email' => $this->email,
             'message' => $this->message,
         ]);
+        $mail->now = true;
         $sentResult = $mail->send();
 
+        Yii::debug($sentResult, '$sentResult');
         if ($sentResult === true) {
             $this->_sentSuccess = Yii::t('app', 'contact.form.message.success');
-        }  else {
+        } else {
             // Set validation error
+//            $this->_sentSuccess = Yii::t('app', 'contact.form.message.error');
             $this->addError(null, Yii::t('app', 'contact.form.message.error'));
         }
 
@@ -105,7 +108,8 @@ class ContactForm extends Model
      * @param $validator
      * @return bool
      */
-    public function emailValidator($attribute, $params, $validator) {
+    public function emailValidator($attribute, $params, $validator)
+    {
         if ($this->$attribute !== filter_var($this->$attribute, FILTER_VALIDATE_EMAIL)) {
             return false;
         }
@@ -120,7 +124,8 @@ class ContactForm extends Model
      * @return bool
      * @throws Exception
      */
-    public function recaptchaValidator($attribute, $params, $validator) {
+    public function recaptchaValidator($attribute, $params, $validator)
+    {
 
         $recaptchaResponse = $this->$attribute;
 

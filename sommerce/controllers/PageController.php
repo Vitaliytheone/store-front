@@ -46,6 +46,8 @@ class PageController extends CustomController
         $content = $page['twig'] ?? '';
 
         $this->addModule('orderFormFrontend', []);
+        $this->addModule('contactsForm', [
+            'action' => '/system/contacts']);
         $this->addPaymentModal();
 
         return $this->renderTwigContent($content);
@@ -129,11 +131,11 @@ class PageController extends CustomController
         ]));
 
         if ($this->endContent) {
-            $renderedContent = str_ireplace('</body>',  implode("\r\n", $this->endContent) . '</body>', $renderedContent);
+            $renderedContent = str_ireplace('</body>', implode("\r\n", $this->endContent) . '</body>', $renderedContent);
         }
 
         if ($this->startHeadContent) {
-            $renderedContent = str_ireplace('</head>',  implode("\r\n", $this->startHeadContent) . '</head>', $renderedContent);
+            $renderedContent = str_ireplace('</head>', implode("\r\n", $this->startHeadContent) . '</head>', $renderedContent);
         }
 
         return $renderedContent;
