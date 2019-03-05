@@ -19,14 +19,12 @@ use common\models\sommerces\queries\NotificationsQuery;
  */
 class Notifications extends ActiveRecord
 {
-    const ITEM_PANEL = 1;
     const ITEM_SSL = 2;
     const ITEM_DOMAIN = 3;
     const ITEM_CUSTOMER = 4;
     const ITEM_PAYMENTS = 5;
     const ITEM_TICKET = 6;
     const ITEM_STORE = 7;
-    const ITEM_GATEWAY = 8;
 
     /**
      * @inheritdoc
@@ -80,14 +78,12 @@ class Notifications extends ActiveRecord
     public static function getItems()
     {
         return [
-            static::ITEM_PANEL => Yii::t('app', 'notifications.item.panel'),
             static::ITEM_SSL => Yii::t('app', 'notifications.item.ssl'),
             static::ITEM_STORE => Yii::t('app', 'notifications.item.store'),
             static::ITEM_DOMAIN => Yii::t('app', 'notifications.item.domain'),
             static::ITEM_CUSTOMER => Yii::t('app', 'notifications.item.customer'),
             static::ITEM_PAYMENTS => Yii::t('app', 'notifications.item.payments'),
             static::ITEM_TICKET => Yii::t('app', 'notifications.item.ticket'),
-            static::ITEM_GATEWAY => Yii::t('app', 'notifications.item.gateway'),
         ];
     }
 

@@ -106,7 +106,7 @@ class Logs extends ActiveRecord
 
     /**
      * Log
-     * @param Project|Stores|Sites $project
+     * @param Stores $project
      * @param int $type
      * @param string $data
      * @return bool

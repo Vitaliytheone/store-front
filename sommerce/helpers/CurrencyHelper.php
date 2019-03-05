@@ -2,7 +2,7 @@
 
 namespace sommerce\helpers;
 
-use common\models\panels\services\GetPaymentMethodsService;
+use common\models\sommerces\services\GetPaymentMethodsService;
 use common\models\sommerces\PaymentMethods;
 use common\models\sommerces\PaymentMethodsCurrency;
 use Yii;
@@ -99,6 +99,8 @@ class CurrencyHelper
      * Get payment methods for currency
      * @param string $currency
      * @return array
+     * @throws \yii\base\InvalidConfigException
+     * @throws \yii\di\NotInstantiableException
      */
     public static function getPaymentMethodsByCurrency(string $currency): array
     {
