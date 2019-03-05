@@ -52,10 +52,10 @@ class Payments extends ActiveRecord
     public static function getStatuses()
     {
         return [
-            static::STATUS_COMPLETED => Yii::t('app', 'payments.status.completed'),
-            static::STATUS_REFUNDED => Yii::t('app', 'payments.status.refunded'),
-            static::STATUS_AWAITING => Yii::t('app', 'payments.status.awaiting'),
-            static::STATUS_FAILED => Yii::t('app', 'payments.status.failed'),
+            static::STATUS_COMPLETED => 'Completed',
+            static::STATUS_REFUNDED => 'Refunded',
+            static::STATUS_AWAITING => 'Awaiting',
+            static::STATUS_FAILED => 'Failed',
         ];
     }
 
