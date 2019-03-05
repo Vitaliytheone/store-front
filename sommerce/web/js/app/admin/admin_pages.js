@@ -90,6 +90,7 @@ customModule.adminPages = {
 
 
         $('#btn-new-page').click(function(e){
+            $('#createPageError').addClass('hidden');
             var flag = true;
             var $this = $(this);
             var $name = $('#editpageform-name');
@@ -153,6 +154,7 @@ customModule.adminPages = {
 
         $('.edit-page').click(function(e) {
             e.preventDefault();
+            $('#createPageError').addClass('hidden');
             var $this =  $(this);
             var page = $this.data('page');
             var $name = $('#editpageform-name');
@@ -197,9 +199,9 @@ customModule.adminPages = {
 
             var $related = $(this);
             var data = $related.data('params');
+            e.preventDefault();
 
             if (!data['can_delete']) {
-                e.preventDefault();
                 return false;
             }
 
@@ -216,7 +218,6 @@ customModule.adminPages = {
                 });
                 return false;
             });
-            e.preventDefault();
         });
 
         $('.duplicate-page').click(function(e) {
