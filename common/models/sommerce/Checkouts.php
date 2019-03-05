@@ -27,6 +27,7 @@ use common\models\sommerce\queries\CheckoutsQuery;
  * @property integer $updated_at
  * @property string $currency
  * @property string $user_details
+ * @property string $redirect_url
  *
  * @property Orders $order
  * @property Orders[] $orders
@@ -64,6 +65,7 @@ class Checkouts extends ActiveRecord
         return [
             [['id', 'status', 'method_id', 'created_at', 'updated_at', 'currency_id'], 'integer'],
             [['price'], 'number'],
+            [['redirect_url'], 'string', 'max' => 300],
             [['details', 'user_details'], 'string'],
             [['customer', 'method_status', 'ip'], 'string', 'max' => 255],
             [['status'], 'default', 'value' => static::STATUS_PENDING],
@@ -72,6 +74,7 @@ class Checkouts extends ActiveRecord
             [['currency_id'], 'exist', 'skipOnError' => true, 'targetClass' => PaymentMethodsCurrency::class, 'targetAttribute' => ['currency_id' => 'id']],
         ];
     }
+
 
     /**
      * @inheritdoc
@@ -91,6 +94,7 @@ class Checkouts extends ActiveRecord
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
             'currency' => Yii::t('app', 'Currency'),
+            'redirect_url' => ii::t('app', 'Redirect Url'),
             'user_details' => Yii::t('app', 'User details'),
         ];
     }

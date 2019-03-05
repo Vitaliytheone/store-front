@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 53.2 (72643) - https://sketchapp.com -->
+    <title>Shape</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Place-order" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Payment-awaiting" transform="translate(-590.000000, -147.000000)" fill="#FFFFFF" fill-rule="nonzero">
+            <g id="Group-4" transform="translate(322.000000, 83.000000)">
+                <g id="Group-10-Copy">
+                    <path d="M280,85 C284.970563,85 289,80.9705627 289,76 C289,71.0294373 284.970563,67 280,67 C275.029437,67 271,71.0294373 271,76 C271,80.9705627 275.029437,85 280,85 Z M280,88 C273.372583,88 268,82.627417 268,76 C268,69.372583 273.372583,64 280,64 C286.627417,64 292,69.372583 292,76 C292,82.627417 286.627417,88 280,88 Z M281.5,75.0957965 L285.796456,76.2470286 L285.019999,79.144806 L278.5,77.3977775 L278.5,70.75 L281.5,70.75 L281.5,75.0957965 Z" id="Shape"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

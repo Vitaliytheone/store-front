@@ -47,7 +47,7 @@
         <?php endforeach; ?>
     <?php else : ?>
         <tr>
-            <td colspan="5"><?= Yii::t('app/superadmin', 'email.list.no_staffs') ?></td>
+            <td colspan="5"><?= Yii::t('app/superadmin', 'email.list.no_emails') ?></td>
         </tr>
     <?php endif; ?>
     </tbody>

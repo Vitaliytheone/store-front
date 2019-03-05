@@ -2,9 +2,17 @@
 
 namespace sommerce\controllers;
 
+use common\helpers\SiteHelper;
+use common\models\sommerce\Pages;
+use common\models\sommerce\Checkouts;
 use sommerce\components\payments\Payment;
+use sommerce\helpers\PaymentsModalHelper;
+use Yii;
 use yii\base\UnknownClassException;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Url;
+use yii\web\NotFoundHttpException;
+use yii\web\Cookie;
 
 /**
  * Class PaymentsController
@@ -65,5 +73,79 @@ class PaymentsController extends CustomController
     public function actionCheckout()
     {
         return $this->renderPartial('checkout');
+    }
+
+
+    /**
+     * Displays success modal
+     * @param int $checkoutId
+     * @return string
+     */
+    public function actionSuccessPayment($checkoutId)
+    {
+        $checkout = $this->findCheckout($checkoutId);
+        $cookies = Yii::$app->response->cookies;
+
+        $paymentsHelper = new PaymentsModalHelper();
+        $paymentsHelper->setStore($this->store);
+
+        $cookies->add(new Cookie([
+            'name' => 'modal',
+            'value' => [
+                'type' => 'payment_success',
+                'data' => $paymentsHelper->getSuccessDetails($checkout)
+            ]
+
+        ]));
+
+        if (Pages::existUrl($checkout->redirect_url)) {
+            return $this->redirect($checkout->redirect_url);
+        }
+
+        return $this->redirect(Url::home());
+
+    }
+
+    /**
+     * Displays success modal
+     * @param int $checkoutId
+     * @return string
+     */
+    public function actionFailPayment($checkoutId)
+    {
+        $checkout = $this->findCheckout($checkoutId);
+        $cookies = Yii::$app->response->cookies;
+
+
+
+        $cookies->add(new Cookie([
+            'name' => 'modal',
+            'value' => [
+                'type' => 'payment_fail',
+                'data' => []
+            ]
+        ]));
+
+        if (Pages::existUrl($checkout->redirect_url)) {
+            return $this->redirect($checkout->redirect_url);
+        }
+
+        return $this->redirect(Url::home());
+    }
+
+    /**
+     * @param $checkoutId
+     * @return Checkouts
+     * @throws NotFoundHttpException
+     */
+    protected function findCheckout($checkoutId)
+    {
+        $checkout = Checkouts::findOne($checkoutId);
+
+        if (!$checkout) {
+            throw new NotFoundHttpException();
+        }
+
+        return $checkout;
     }
 }

@@ -3,7 +3,7 @@
 namespace sommerce\modules\admin\models\search;
 
 use common\models\sommerce\Navigation;
-use common\models\sommerce\PagesOld;
+use common\models\sommerce\Pages;
 use common\models\sommerce\Products;
 use common\models\sommerces\Stores;
 use yii\base\Exception;
@@ -28,7 +28,7 @@ class LinksSearch extends Model
     {
         $this->_storeDb = $stores->db_name;
         $this->_productsTable = $this->_storeDb . "." . Products::tableName();
-        $this->_pagesTable = $this->_storeDb . "." . PagesOld::tableName();
+        $this->_pagesTable = $this->_storeDb . "." . Pages::tableName();
     }
     
 
@@ -42,8 +42,7 @@ class LinksSearch extends Model
             ->select(['id', 'title AS name', 'url'])
             ->from($this->_pagesTable)
             ->where([
-                'deleted' => PagesOld::DELETED_NO,
-                'visibility' => PagesOld::VISIBILITY_YES,
+                'visibility' => Pages::VISIBILITY_ON,
             ])
             ->orderBy(['id' => SORT_DESC])
             ->all();

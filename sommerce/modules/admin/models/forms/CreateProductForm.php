@@ -2,14 +2,13 @@
 
 namespace sommerce\modules\admin\models\forms;
 
-use Codeception\PHPUnit\Constraint\Page;
 use common\models\sommerce\ActivityLog;
+use common\models\sommerce\Pages;
+use common\models\sommerce\Products;
 use common\models\sommerces\StoreAdminAuth;
 use yii;
-use yii\web\User;
 use yii\behaviors\AttributeBehavior;
-use common\models\sommerce\PagesOld;
-use common\models\sommerce\Products;
+use yii\web\User;
 
 /**
  * Class CreateProductForm
@@ -96,7 +95,7 @@ class CreateProductForm extends Products
             ['url', 'trim' ],
             ['url', 'match', 'pattern' => '/^[a-z0-9-_]+$/i'],
             ['url', 'unique'],
-            ['url', 'unique', 'targetClass' => PagesOld::class, 'targetAttribute' => ['url' => 'url'], 'filter' => ['deleted' => PagesOld::DELETED_NO]],
+            ['url', 'unique', 'targetClass' => Pages::class, 'targetAttribute' => ['url' => 'url'], 'filter' => ['visibility' => Pages::VISIBILITY_ON]],
         ];
     }
 
@@ -135,7 +134,7 @@ class CreateProductForm extends Products
         $_url = $url;
         $postfix = 1;
 
-        while (PagesOld::findOne(['url' => $_url, 'deleted' => PagesOld::DELETED_NO])) {
+        while (Pages::findOne(['url' => $_url, 'visibility' => Pages::VISIBILITY_ON])) {
             $_url = $url . '-' . $postfix;
             $postfix++;
         };
@@ -168,7 +167,7 @@ class CreateProductForm extends Products
      */
     function validateNoConflictProductPage($attribute, $params, $validator)
     {
-        $pageModel = PagesOld::findOne(['url' => $this->getAttribute($attribute)]);
+        $pageModel = Pages::findOne(['url' => $this->getAttribute($attribute)]);
         if ($pageModel) {
             $this->addError($attribute, $validator->message);
         }
