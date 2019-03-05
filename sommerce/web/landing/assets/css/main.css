@@ -10,7 +10,7 @@ body {
 Input::placeholder {
   font-family: Montserrat;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 400;
   color: #c1c0cc !important;
 }
 
@@ -57,13 +57,14 @@ button:focus {
 	font-size: 32px;
 	font-weight: bold;
 	color: #312e55;
-	line-height: 1.5;
+	line-height: 48px;
 }
 
 /* HEADER */
 .h-bolder {
 	font-size: 32px;
 	font-weight: bold;
+	line-height: 48px;
 	color: white;
 }
 
@@ -129,7 +130,7 @@ button:focus {
 }
 
 .nav li {
-	padding-right: 30px;
+	padding-right: 54px;
 }
 
 .navbar-brand {
@@ -172,7 +173,8 @@ button:focus {
 /* Features */
 
 .feature-title {
-    padding-top: 16px;
+	padding-top: 16px;
+	line-height: 24px;
     padding-bottom: 8px;
 	font-size: 16px;
 	font-weight: bold;
@@ -221,10 +223,10 @@ button:focus {
 
 .price-about {
 	font-size: 14px;
-	font-weight: 500;
+	font-weight: 400;
 	font-style: normal;
 	font-stretch: normal;
-	line-height: 1.71;
+	line-height: 24px;
 	letter-spacing: normal;
 	color: #ffcedb;
 }
@@ -274,7 +276,8 @@ button:focus {
 .provide-text {
 	font-family: Montserrat;
 	font-size: 12px;
-	font-weight: 500;
+	line-height: 20px;
+	font-weight: 400;
 	color: #eae7fa;
 }
 
@@ -349,7 +352,7 @@ button:focus {
 #started p {
 	text-align: center;
 	position: relative;
-	top: -17px;
+	top: -30px;
 }
 
 .start-title {
@@ -405,7 +408,7 @@ a .hello {
 	padding-right: 5px;
 	border-bottom: 1px solid #D6D0F2 !important;
 	font-size: 16px;
-	font-weight: 500;
+	font-weight: 400;
 	font-style: normal;
 	font-stretch: normal;
 	line-height: 1.5;
@@ -500,6 +503,7 @@ a:hover .hello {
 .footer-links {
 	font-family: Montserrat;
 	font-size: 14px;
+	line-height: 24px;
     color: #6e6c88;
 }
 
@@ -527,6 +531,7 @@ form .footer-links:hover{
 }
 .f-name {
 	font-size: 16px;
+	line-height: 24px;
 	font-weight: bold;
 	color: white;
 }
