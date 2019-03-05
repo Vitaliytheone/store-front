@@ -17,7 +17,8 @@ customModule.orderFormFrontend = {
         }
 
         var $paymentModal = function(){ return $('#order-package-modal'); },
-            $form = function(){ return $paymentModal().find('form'); };
+            $form = function(){ return $paymentModal().find('form'); },
+            $submit = function(){ return $paymentModal.find('#proceed_checkout'); };
 
         $('.buy-package').on('click', function (event) {
             event.preventDefault();
@@ -50,9 +51,8 @@ customModule.orderFormFrontend = {
             });
         });
 
-        $(document).on('submit', $form, function (event) {
-            event.preventDefault();
-            event.stopPropagation();
+        $(document).on('click', '#proceed_checkout', function (event) {
+            hideValidationError();
 
             custom.ajax({
                 url: formValidateUlr,
@@ -61,22 +61,24 @@ customModule.orderFormFrontend = {
                 success: function(data, textStatus, jqXHR) {
                     if (!data.success || !data.data) {
                         console.log('Bad response data!', data, textStatus, jqXHR);
-                        return;
                     }
-                    console.log('Success!');
+                    $form().submit();
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
-                    console.log();
-
-
-                    console.log('Bad response data!', jqXHR, textStatus, errorThrown);
+                    if (jqXHR.responseJSON.hasOwnProperty('error_message')) {
+                        showValidationError(jqXHR.responseJSON.error_message);
+                    }
                 }
             });
         });
 
-        function showValidationError() {
+        function hideValidationError() {
+            $paymentModal().find('.sommerce-modals__alert').html('').css('display', 'none');
+        }
 
-        };
+        function showValidationError(errorMessage) {
+            $paymentModal().find('.sommerce-modals__alert').html(errorMessage).css('display', 'block');
+        }
 
         function showModal(data) {
             $('body').append(templates['order/order_modal']({
@@ -88,6 +90,7 @@ customModule.orderFormFrontend = {
             }));
 
             _.defer(function(){
+                hideValidationError();
                 $paymentModal().modal('show');
             });
         }

@@ -2,18 +2,12 @@
 
 namespace sommerce\controllers;
 
-use common\components\ActiveForm;
 use common\components\exceptions\FirstValidationErrorHttpException;
 use common\components\filters\DisableCsrfToken;
 use common\components\response\CustomResponse;
-use common\models\sommerce\Carts;
 use common\models\sommerce\Packages;
-use sommerce\helpers\UserHelper;
 use sommerce\helpers\PriceHelper;
-use sommerce\models\forms\AddToCartForm;
 use sommerce\models\forms\OrderForm;
-use sommerce\models\forms\OrderFormOld;
-use sommerce\models\search\CartSearch;
 use Yii;
 use yii\base\UnknownClassException;
 use yii\bootstrap\Html;
@@ -37,6 +31,7 @@ class CartController extends CustomController
                 'class' => AjaxFilter::class,
                 'only' => [
                     'get-order-data',
+                    'validate',
                 ]
             ],
             'verbs' => [
@@ -77,18 +72,6 @@ class CartController extends CustomController
         return parent::beforeAction($action);
     }
 
-    public function actionGetOrderData($id)
-    {
-        $package = $this->_findPackage($id);
-
-        return [
-            'id' => $package->id,
-            'name' => Html::encode($package->name),
-            'price_raw' => $package->price,
-            'price' => PriceHelper::getPrice($package->price, $this->store->currency),
-        ];
-    }
-
     /**
      * Displays cart.
      * @return string|Response
@@ -100,19 +83,11 @@ class CartController extends CustomController
         $this->pageTitle = Yii::t('app', 'cart.title');
 
         Url::remember();
-        
-
-        $searchModel = new CartSearch();
-        $searchModel->setStore($this->store);
-
-        $items = $searchModel->getItemsForView();
-
-        $model = new OrderFormOld();
-        $model->setStore($this->store);
-        $model->setSearchItems($searchModel);
 
         $payload = null;
         $request = Yii::$app->request;
+
+        $model = new OrderForm();
 
         if ($request->isPost) {
             $payload = $request->post();
@@ -126,6 +101,9 @@ class CartController extends CustomController
             ];
         }
 
+        $model->setStore($this->store);
+        $model->setPackage($this->_findPackage(ArrayHelper::getValue($payload, [$model->formName(), 'package_id'])));
+
         if ($model->load($payload) && $model->save()) {
             if ($model->redirect) {
                 return $this->redirect($model->redirect);
@@ -135,34 +113,23 @@ class CartController extends CustomController
             }
             return $this->renderPartial('checkout', $model->formData);
         }
+    }
 
-        if (!empty($items)) {
-            $this->addModule('cartFrontend', [
-                'fieldOptions' => $model->getPaymentsFields(),
-                'options' => $model->getJsOptions(),
-                'cartTotal' => [
-                    'amount' => $searchModel->getTotal(),
-                    'currency' => $this->store->currency,
-                ]
-            ]);
+    /**
+     * Return order package data AJAX action
+     * @param $id
+     * @return array
+     */
+    public function actionGetOrderData($id)
+    {
+        $package = $this->_findPackage($id);
 
-            $payments = $model->getPaymentsMethodsForView();
-        }
-
-        return $this->render('cart.twig', [
-            'cart' => [
-                'orders' => $items,
-                'total_price' => $searchModel->getTotal(),
-                'payments' => $payments ?? [],
-                'form' => [
-                    'selected_method' => $model->method,
-                    'email' => $model->email,
-                ]
-            ],
-
-            'error' => $model->hasErrors(),
-            'error_message' => ActiveForm::firstError($model)
-        ]);
+        return [
+            'id' => $package->id,
+            'name' => Html::encode($package->name),
+            'price_raw' => $package->price,
+            'price' => PriceHelper::getPrice($package->price, $this->store->currency),
+        ];
     }
 
     /**
@@ -176,7 +143,7 @@ class CartController extends CustomController
 
         $form = new OrderForm();
         $form->setStore($this->store);
-        $form->setPackage($this->_findPackage(ArrayHelper::getValue($request, ['OrderForm', 'package_id'])));
+        $form->setPackage($this->_findPackage(ArrayHelper::getValue($request, [$form->formName(), 'package_id'])));
 
         if (!$form->load($request) || !$form->validate()) {
             throw new FirstValidationErrorHttpException($form);

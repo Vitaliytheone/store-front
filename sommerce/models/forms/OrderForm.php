@@ -15,6 +15,7 @@ use sommerce\helpers\UserHelper;
 use sommerce\models\search\CartSearch;
 use Yii;
 use yii\base\DynamicModel;
+use yii\base\Exception;
 use yii\base\InvalidConfigException;
 use yii\base\Model;
 use yii\base\UnknownClassException;
@@ -68,16 +69,19 @@ class OrderForm extends Model
     protected static $_methods;
 
     /**
-     * @var CartSearch
+     * Result payment method form data
+     * @var
      */
-    protected $_searchItems;
+    public $formData;
 
     /**
+     * Result payment method redirect
      * @var string
      */
     public $redirect;
 
     /**
+     * Result payment method refresh
      * @var boolean
      */
     public $refresh = false;
@@ -265,10 +269,9 @@ class OrderForm extends Model
     }
 
     /**
-     * Save to cart
+     * Proceed to checkout
      * @return bool
-     * @throws InvalidConfigException
-     * @throws UnknownClassException
+     * @throws Exception
      */
     public function save(): bool
     {
@@ -288,7 +291,7 @@ class OrderForm extends Model
         $checkout = new Checkouts();
         $checkout->customer = $this->email;
         $checkout->method_id = $storePayMethod->method_id;
-        $checkout->price = $this->_searchItems->getTotal();
+        $checkout->price = $this->getPackage()->price;
         $checkout->currency = $this->_store->currency;
 
          /* "Cохраняем url страницы с которой делается заказ"
@@ -296,15 +299,15 @@ class OrderForm extends Model
         $checkout->redirect_url = Url::previous();
 
         $checkout->currency_id = $storePayMethod->currency_id;
-        $checkout->setDetails($this->getItems());
+        $checkout->setDetails($this->attributes);
         $checkout->setUserDetails($this->_userData);
 
         if (!$checkout->save()) {
-            $this->addError('email', 'Can not create order.');
-            return false;
+            throw new Exception('Cannot create checkout!');
         }
 
         $result = Payment::getPayment($storePayMethodArray['class_name'])->checkout($checkout, $this->_store, $this->email, $storePayMethod);
+
         if (3 == $result['result'] && !empty($result['refresh'])) {
             $this->refresh = true;
             return true;

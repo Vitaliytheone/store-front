@@ -2,7 +2,6 @@
 
 namespace sommerce\controllers;
 
-use common\models\sommerces\StorePaymentMethods;
 use my\helpers\Url;
 use sommerce\helpers\PageFilesHelper;
 use sommerce\helpers\PagesHelper;
@@ -23,6 +22,9 @@ class PageController extends CustomController
     public function actionError()
     {
         $content = file_get_contents(self::getTwigView('404'));
+
+        // TODO:: REMOVE THIS DEBUG!!!!
+        error_log(print_r(Yii::$app->errorHandler->exception,1));
 
         return $this->renderTwigContent($content, [], false);
     }

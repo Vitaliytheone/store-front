@@ -25,10 +25,10 @@
                         </tbody>
                     </table>
                 </div>
-                <form action="<%= form_action_url %>">
+                <form action="<%= form_action_url %>" method="post">
                     <input type="hidden" name="OrderForm[package_id]" value="<%= package_id %>">
                     <div class="sommerce-modals__forms">
-                        <div class="form-group sommerce-modals__form-group sommerce-modals__form-group-error">
+                        <div class="form-group sommerce-modals__form-group">
                             <label for="link">Link</label>
                             <input type="text" class="form-control" id="link" name="OrderForm[link]">
                         </div>
@@ -59,7 +59,7 @@
                         <% }; %>
                     <% }; %>
                     <div class="sommerce-modals__actions">
-                        <button type="submit" class="btn btn-block sommerce-modals__btn-primary">Proceed to Checkout</button>
+                        <button type="button" class="btn btn-block sommerce-modals__btn-primary" id="proceed_checkout">Proceed to Checkout</button>
                     </div>
                 </form>
             </div>
