@@ -45,7 +45,7 @@ class MyRequest extends Request
                 $sources[] = 'payments';
             }
 
-            $urls = RouteHelper::getRoutes();
+            $urls = RouteHelper::getRoutes($sources);
 
             foreach ($urls as $url => $options) {
                 if (preg_match($options['rule'], $pathInfo, $match)) {
