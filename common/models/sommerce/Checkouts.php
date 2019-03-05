@@ -241,4 +241,16 @@ class Checkouts extends ActiveRecord
     {
         $this->user_details = !empty($userDetails) ? json_encode($userDetails) : null;
     }
+
+    /**
+     * @param $checkoutId
+     * @return string
+     */
+    public static function getRedirectUrl($checkoutId)
+    {
+        return Checkouts::find()
+            ->select('redirect_url')
+            ->where(['id' => $checkoutId])
+            ->scalar();
+    }
 }
