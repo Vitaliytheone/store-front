@@ -2,11 +2,11 @@
 
 namespace common\models\sommerce;
 
+use common\models\sommerce\queries\ProductsQuery;
 use Yii;
 use yii\behaviors\AttributeBehavior;
-use yii\db\Query;
-use common\models\sommerce\queries\ProductsQuery;
 use yii\db\ActiveRecord;
+use yii\db\Query;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -52,41 +52,6 @@ class Products extends ActiveRecord
     {
         if (parent::afterSave($insert, $changedAttributes)) {
             return true;
-        }
-
-        // Update Nav URL if Product URL updated
-        if (array_key_exists('url', $changedAttributes)) {
-
-            $navModels = Navigation::findAll([
-                'link' => Navigation::LINK_PRODUCT,
-                'link_id' => $this->id,
-                'deleted' => Navigation::DELETED_NO,
-            ]);
-
-            foreach ($navModels as $navModel) {
-                $navModel->setAttribute('url', $this->url);
-                $navModel->save(false);
-            }
-        }
-
-        // Update Nav URL if Product set invisible
-        $setInvisible = array_key_exists('visibility', $changedAttributes) && ($this->visibility == self::VISIBILITY_NO);
-        if ($setInvisible) {
-
-            $navModels = Navigation::findAll([
-                'link' => Navigation::LINK_PRODUCT,
-                'link_id' => $this->id,
-                'deleted' => Navigation::DELETED_NO,
-            ]);
-
-            foreach ($navModels as $navModel) {
-                $navModel->setAttributes([
-                    'url' => $this->url,
-                    'link' => Navigation::LINK_WEB_ADDRESS,
-                    'link_id' => null,
-                ]);
-                $navModel->save(false);
-            }
         }
 
         return false;

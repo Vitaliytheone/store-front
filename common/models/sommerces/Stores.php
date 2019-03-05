@@ -2,24 +2,22 @@
 
 namespace common\models\sommerces;
 
-use control_panel\components\behaviors\CustomersCountersBehavior;
-use common\helpers\DbHelper;
-use common\models\common\ProjectInterface;
 use common\components\traits\UnixTimeFormatTrait;
+use common\helpers\DbHelper;
+use common\helpers\DnsHelper;
 use common\helpers\NginxHelper;
-use common\models\sommerce\Blocks;
+use common\models\common\ProjectInterface;
 use common\models\sommerce\Languages;
 use common\models\sommerce\NotificationAdminEmails;
+use common\models\sommerces\queries\StoresQuery;
+use control_panel\components\behaviors\CustomersCountersBehavior;
 use my\helpers\DomainsHelper;
 use my\helpers\ExpiryHelper;
 use my\mail\mailers\InvoiceCreated;
-use common\helpers\DnsHelper;
-use sommerce\helpers\StoreHelper;
 use Yii;
 use yii\base\Exception;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
-use common\models\sommerces\queries\StoresQuery;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -48,14 +46,6 @@ use yii\helpers\ArrayHelper;
  * @property string $seo_description
  * @property string $folder
  * @property string $folder_content
- * @property string $theme_name
- * @property string $theme_folder
- * @property string $block_slider
- * @property string $block_features
- * @property string $block_reviews
- * @property string $block_process
- * @property string $custom_header
- * @property string $custom_footer
  * @property integer $last_count
  * @property integer $current_count
  * @property int $no_referral
@@ -110,18 +100,11 @@ class Stores extends ActiveRecord implements ProjectInterface
     public function rules()
     {
         return [
-            [[
-                'customer_id', 'timezone', 'status', 'expired', 'created_at', 'updated_at',
-                'block_slider', 'block_features', 'block_reviews', 'block_process', 'subdomain', 'ssl',
-                'trial', 'hide', 'last_count', 'current_count', 'no_referral',
+            [['customer_id', 'timezone', 'status', 'expired', 'created_at', 'updated_at',
+                'subdomain', 'ssl', 'trial', 'hide', 'last_count', 'current_count', 'no_referral',
             ], 'integer'],
-            [[
-                'block_slider', 'block_features', 'block_reviews', 'block_process',
-            ], 'default', 'value' => 0],
-            [['domain', 'name', 'db_name', 'logo', 'favicon', 'seo_title', 'theme_name', 'theme_folder', 'folder', 'folder_content'], 'string', 'max' => 255],
+            [['domain', 'name', 'db_name', 'logo', 'favicon', 'folder', 'folder_content'], 'string', 'max' => 255],
             [['currency', 'language'], 'string', 'max' => 10],
-            [['custom_header', 'custom_footer'], 'string', 'max' => 10000],
-            [['seo_keywords', 'seo_description'], 'string', 'max' => 2000],
             [['customer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Customers::class, 'targetAttribute' => ['customer_id' => 'id']],
             [['whois_lookup', 'nameservers'], 'string'],
             [['dns_checked_at', 'dns_status'], 'integer'],
@@ -348,14 +331,6 @@ class Stores extends ActiveRecord implements ProjectInterface
         return Yii::$app->params['store.defaults']['language'];
     }
 
-    /**
-     * Get store folder
-     * @return string
-     */
-    public function getThemeFolder()
-    {
-        return $this->theme_folder;
-    }
 
     /**
      * Get folder content decoded data
@@ -396,47 +371,6 @@ class Stores extends ActiveRecord implements ProjectInterface
                 break;
             }
         }
-    }
-
-    /**
-     * Get store folder
-     * @return string
-     */
-    public function getFolder()
-    {
-        $assetsPath = StoreHelper::getAssetsPath();
-        if (empty($this->folder) || !is_dir($assetsPath . $this->folder)) {
-            $this->generateFolderName();
-            $this->save(false);
-            StoreHelper::generateAssets($this->id);
-        }
-
-        return $this->folder;
-    }
-
-    /**
-     * @return array
-     */
-    public function getBlocks()
-    {
-        return [
-            Blocks::CODE_SLIDER => Yii::t('app', 'Slider'),
-            Blocks::CODE_FEATURES => Yii::t('app', 'Features'),
-            Blocks::CODE_PROCESS => Yii::t('app', 'Process'),
-            Blocks::CODE_REVIEW => Yii::t('app', 'Reviews'),
-        ];
-    }
-
-    /**
-     * Check is enable blocks by code
-     * @param string $code
-     * @return bool
-     */
-    public function isEnableBlock($code)
-    {
-        $fieldName = 'block_' . $code;
-
-        return $this->hasAttribute($fieldName) && $this->getAttribute($fieldName);
     }
 
     /**

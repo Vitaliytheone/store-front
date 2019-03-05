@@ -13,12 +13,10 @@ use sommerce\modules\admin\controllers\traits\settings\NotificationsTrait;
 use sommerce\modules\admin\controllers\traits\settings\PaymentsTrait;
 use sommerce\modules\admin\controllers\traits\settings\ProvidersTrait;
 use sommerce\modules\admin\models\forms\EditStoreSettingsForm;
-use sommerce\modules\admin\models\search\LinksSearch;
 use Yii;
 use yii\filters\AjaxFilter;
 use yii\filters\ContentNegotiator;
 use yii\filters\VerbFilter;
-use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
 /**
@@ -84,7 +82,6 @@ class SettingsController extends CustomController
      * @return string|Response
      * @throws \Throwable
      * @throws \yii\base\Exception
-     * @throws NotFoundHttpException
      */
     public function actionIndex()
     {
@@ -129,28 +126,6 @@ class SettingsController extends CustomController
         }
 
         return $this->redirect(Url::toRoute('/settings'));
-    }
-
-    /**
-     * Return links list by link type AJAX action
-     * @param $link_type
-     * @return array
-     * @throws \yii\base\Exception
-     */
-    public function actionGetLinks($link_type)
-    {
-        $request = Yii::$app->getRequest();
-        $response = Yii::$app->getResponse();
-        $response->format = Response::FORMAT_JSON;
-
-        if (!$request->isAjax) {
-            exit;
-        }
-
-        $searchModel = new LinksSearch();
-        $searchModel->setStore($this->store);
-
-        return ['links' => $searchModel->searchLinksByType($link_type|0)];
     }
 
     /**

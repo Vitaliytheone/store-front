@@ -4,7 +4,6 @@ namespace sommerce\controllers;
 
 use sommerce\components\filters\IntegrationsFilter;
 use sommerce\components\View;
-use sommerce\models\search\NavigationSearch;
 use sommerce\modules\admin\components\Url;
 use Yii;
 use yii\base\Exception;
@@ -156,8 +155,6 @@ class CustomController extends CommonController
             $this->endContent[] = ob_get_contents();
             ob_end_clean();
         }
-        $search =  new NavigationSearch();
-        $search->setStore($this->store);
 
         $this->_globalParams = [
             'csrfname' => Yii::$app->getRequest()->csrfParam,
