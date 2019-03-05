@@ -25,8 +25,8 @@ class RouteHelper {
     {
         $urls = [];
 
-        $urls = !in_array('payments', $sources) ? ArrayHelper::merge($urls, static::getPaymentRules()) : [];
-        $urls = !in_array('pages', $sources) ? ArrayHelper::merge($urls, static::getPagesRules()) : [];
+        $urls = in_array('payments', $sources) ? ArrayHelper::merge($urls, static::getPaymentRules()) : [];
+        $urls = in_array('pages', $sources) ? ArrayHelper::merge($urls, static::getPagesRules()) : [];
 
         array_multisort(array_map('strlen', array_keys($urls)), SORT_DESC, $urls);
 
@@ -75,14 +75,19 @@ class RouteHelper {
     {
         $urls = [];
 
-        foreach (Pages::find()->active()->all() as $page) {
-            $url = trim($page->url);
+        $pages = Pages::find()
+            ->select(['url'])
+            ->active()
+            ->asArray()
+            ->all();
+        foreach ($pages as $page) {
+            $url = trim($page['url']);
             $url = !empty($url) ? $url : '/';
             $url = str_replace('/', '\/', $url);
-            $urls[$page->url] = [
+            $urls[$page['url']] = [
                 'rule' => "/^\/?{$url}$/i",
                 'options' => [
-                    'url' => $page->url,
+                    'url' => $page['url'],
                 ],
                 'url' => '/page/index'
             ];
