@@ -50,7 +50,6 @@ class ContactForm extends Model
 
     public function load($data, $formName = null)
     {
-        Yii::debug($data);
         $this->setAttributes([
             'recaptcha' => ArrayHelper::getValue($data, 'g-recaptcha-response')
         ]);
@@ -88,7 +87,6 @@ class ContactForm extends Model
         ]);
         $sentResult = $mail->send();
 
-        Yii::debug($sentResult, '$sentResult');
         if ($sentResult === true) {
             $this->_sentSuccess = Yii::t('app', 'contact.form.message.success');
         } else {
