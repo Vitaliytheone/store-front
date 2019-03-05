@@ -116,7 +116,8 @@ class PaymentsController extends CustomController
         $checkout = $this->findCheckout($checkoutId);
         $cookies = Yii::$app->response->cookies;
 
-
+        var_dump($cookies);
+        exit;
 
         $cookies->add(new Cookie([
             'name' => 'modal',
