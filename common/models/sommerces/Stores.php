@@ -2,24 +2,23 @@
 
 namespace common\models\sommerces;
 
-use control_panel\components\behaviors\CustomersCountersBehavior;
-use common\helpers\DbHelper;
-use common\models\common\ProjectInterface;
 use common\components\traits\UnixTimeFormatTrait;
+use common\helpers\DbHelper;
+use common\helpers\DnsHelper;
 use common\helpers\NginxHelper;
-use common\models\sommerce\Blocks;
+use common\models\common\ProjectInterface;
 use common\models\sommerce\Languages;
 use common\models\sommerce\NotificationAdminEmails;
+use common\models\sommerces\queries\StoresQuery;
+use control_panel\components\behaviors\CustomersCountersBehavior;
 use my\helpers\DomainsHelper;
 use my\helpers\ExpiryHelper;
 use my\mail\mailers\InvoiceCreated;
-use common\helpers\DnsHelper;
 use sommerce\helpers\StoreHelper;
 use Yii;
 use yii\base\Exception;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
-use common\models\sommerces\queries\StoresQuery;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -412,19 +411,6 @@ class Stores extends ActiveRecord implements ProjectInterface
         }
 
         return $this->folder;
-    }
-
-    /**
-     * @return array
-     */
-    public function getBlocks()
-    {
-        return [
-            Blocks::CODE_SLIDER => Yii::t('app', 'Slider'),
-            Blocks::CODE_FEATURES => Yii::t('app', 'Features'),
-            Blocks::CODE_PROCESS => Yii::t('app', 'Process'),
-            Blocks::CODE_REVIEW => Yii::t('app', 'Reviews'),
-        ];
     }
 
     /**
