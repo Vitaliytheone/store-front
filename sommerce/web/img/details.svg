@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="48px" height="56px" viewBox="0 0 48 56" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 53.2 (72643) - https://sketchapp.com -->
+    <title>Group 8</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Place-order" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Order-details" transform="translate(-578.000000, -131.000000)">
+            <g id="Group-4" transform="translate(227.000000, 83.000000)">
+                <g id="Group-10-Copy">
+                    <g id="Group-7" transform="translate(351.000000, 48.000000)">
+                        <g id="Group-8">
+                            <path d="M3,0 L32.017334,0 L48,15.9803467 L48,53 C48,54.6568542 46.6568542,56 45,56 L3,56 C1.34314575,56 2.02906125e-16,54.6568542 0,53 L0,3 C-2.02906125e-16,1.34314575 1.34314575,3.04359188e-16 3,0 Z" id="Rectangle" fill="#B3B7C8"></path>
+                            <path d="M7,23 L41,23 C41.5522847,23 42,23.4477153 42,24 L42,26 C42,26.5522847 41.5522847,27 41,27 L7,27 C6.44771525,27 6,26.5522847 6,26 L6,24 C6,23.4477153 6.44771525,23 7,23 Z M7,30 L29,30 C29.5522847,30 30,30.4477153 30,31 L30,33 C30,33.5522847 29.5522847,34 29,34 L7,34 C6.44771525,34 6,33.5522847 6,33 L6,31 C6,30.4477153 6.44771525,30 7,30 Z M7,37 L37,37 C37.5522847,37 38,37.4477153 38,38 L38,40 C38,40.5522847 37.5522847,41 37,41 L7,41 C6.44771525,41 6,40.5522847 6,40 L6,38 C6,37.4477153 6.44771525,37 7,37 Z M7,44 L17,44 C17.5522847,44 18,44.4477153 18,45 L18,47 C18,47.5522847 17.5522847,48 17,48 L7,48 C6.44771525,48 6,47.5522847 6,47 L6,45 C6,44.4477153 6.44771525,44 7,44 Z" id="Combined-Shape" fill="#FFFFFF"></path>
+                            <path d="M32,0 L48,16 L34,16 C32.8954305,16 32,15.1045695 32,14 L32,0 Z" id="Rectangle" fill="#656B8E"></path>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

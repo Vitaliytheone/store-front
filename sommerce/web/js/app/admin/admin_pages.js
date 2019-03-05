@@ -90,6 +90,8 @@ customModule.adminPages = {
 
 
         $('#btn-new-page').click(function(e){
+            $('#createPageError').addClass('hidden');
+            var flag = true;
             var $this = $(this);
             var $name = $('#editpageform-name');
             $name.val('');
@@ -110,14 +112,27 @@ customModule.adminPages = {
             $name.on('input', function(e) {
                 var generatedUrl = custom.generateUrlFromString($(this).val());
                 generatedUrl = custom.generateUniqueUrl(generatedUrl, existingUrls);
-                var $url = $('#edit-seo__url');
-                $url.val(generatedUrl);
-                $url.trigger('input');
+                if (flag) {
+                    var $url = $('#edit-seo__url');
+                    $url.val(generatedUrl);
+                    $url.trigger('input', true);
+                }
+            });
+
+            var $url = $('#edit-seo__url');
+            $url.val('');
+            $url.trigger('input', true);
+
+            $url.on('input', function (e, data) {
+                if (!data) {
+                    flag = false;
+                }
             });
 
             $('#pageForm').attr('action', $this.data('action'));
             $('#exampleModalLabel').text($this.data('modal-title'));
             $('#page-submit').text($this.data('modal-title'));
+
         });
 
 
@@ -139,6 +154,7 @@ customModule.adminPages = {
 
         $('.edit-page').click(function(e) {
             e.preventDefault();
+            $('#createPageError').addClass('hidden');
             var $this =  $(this);
             var page = $this.data('page');
             var $name = $('#editpageform-name');
@@ -183,9 +199,9 @@ customModule.adminPages = {
 
             var $related = $(this);
             var data = $related.data('params');
+            e.preventDefault();
 
             if (!data['can_delete']) {
-                e.preventDefault();
                 return false;
             }
 
@@ -202,7 +218,6 @@ customModule.adminPages = {
                 });
                 return false;
             });
-            e.preventDefault();
         });
 
         $('.duplicate-page').click(function(e) {

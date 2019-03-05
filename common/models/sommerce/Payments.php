@@ -44,6 +44,21 @@ class Payments extends ActiveRecord
         return Yii::$app->storeDb;
     }
 
+
+    /**
+     * Get statuses
+     * @return array
+     */
+    public static function getStatuses()
+    {
+        return [
+            static::STATUS_COMPLETED => 'Completed',
+            static::STATUS_REFUNDED => 'Refunded',
+            static::STATUS_AWAITING => 'Awaiting',
+            static::STATUS_FAILED => 'Failed',
+        ];
+    }
+
     /**
      * @inheritdoc
      */

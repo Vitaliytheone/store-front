@@ -801,7 +801,7 @@ class OrderHelper
             throw new Exception('Cannot update SslCertLetsencrypt item [sslId=' . $ssl->id . ']');
         }
 
-        /** @var $project Stores|Project  */
+        /** @var $project Stores  */
 
         switch ($ssl->project_type) {
             case ProjectInterface::PROJECT_TYPE_STORE:

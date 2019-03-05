@@ -32,7 +32,6 @@ trait PagesTrait {
      * /admin/settings/edit-page
      * @param int $id
      * @return array
-     * @throws NotFoundHttpException
      */
     public function actionEditPage($id)
     {
@@ -51,6 +50,7 @@ trait PagesTrait {
      * Return page data
      * @param integer $id
      * @return array
+     * @throws NotFoundHttpException
      */
     public function actionGetPage($id)
     {
@@ -250,6 +250,7 @@ trait PagesTrait {
      * @return array
      * @throws BadRequestHttpException
      * @throws FirstValidationErrorHttpException
+     * @throws \yii\base\Exception
      */
     public function actionSetImage()
     {
@@ -269,10 +270,11 @@ trait PagesTrait {
     /**
      * Delete image
      * @param $id integer
+     * @return boolean
      * @throws BadRequestHttpException
      * @throws FirstValidationErrorHttpException
      * @throws NotFoundHttpException
-     * @return boolean
+     * @throws \yii\base\Exception
      */
     public function actionUnsetImage($id)
     {

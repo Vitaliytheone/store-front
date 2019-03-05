@@ -2,7 +2,6 @@
 
 namespace sommerce\controllers;
 
-use common\models\sommerces\StorePaymentMethods;
 use sommerce\components\filters\IntegrationsFilter;
 use sommerce\components\View;
 use sommerce\models\search\NavigationSearch;
@@ -47,7 +46,7 @@ class CustomController extends CommonController
     /**
      * @var string
      */
-    public $layout = '@sommerce/views/site/layout.php';
+    public $layout = 'layout.twig';
 
     /**
      * @var
@@ -68,7 +67,6 @@ class CustomController extends CommonController
 
         $store = Yii::$app->store->getInstance();
 
-        $this->layout = "layout.twig";
         Yii::$app->language = $store->language;
     }
 
@@ -139,6 +137,8 @@ class CustomController extends CommonController
         if (!empty($this->customJs)) {
 
             $appJs = [
+                '/js/libs/popper.js',
+                '/js/libs/bootstrap.js',
                 '/js/frontend.js',
             ];
 
@@ -164,14 +164,17 @@ class CustomController extends CommonController
             'csrftoken' => Yii::$app->getRequest()->getCsrfToken(),
             'site' => [
                 'captcha_key' => Yii::$app->params['reCaptcha.siteKey'],
-            ],
-            'page' => [
-                'site.captcha_key' => Yii::$app->params['reCaptcha.siteKey'],
-                'site.paymentMethods' => StorePaymentMethods::getActiveMethods($this->store->id),
-                'site.url' => trim(Yii::$app->getRequest()->url, '/'),
+                'url' => trim(Yii::$app->getRequest()->url, '/'),
                 'favicon' => $this->store->favicon,
                 'logo' => $this->store->logo,
                 'story_domain' => Yii::$app->getRequest()->getHostName(),
+            ],
+            'page' => [
+                'title' => $this->pageTitle ?: $this->store->seo_title,
+                'meta' => [
+                    'keywords' => $this->seoKeywords ?: $this->store->seo_keywords,
+                    'description' => $this->seoDescription ?: $this->store->seo_description,
+                ],
             ]
         ];
 
@@ -244,5 +247,70 @@ class CustomController extends CommonController
         return $renderer->renderContent($content, $params);
     }
 
+    /**
+     * Renders a static string by applying a layout.
+     * @param string $content the static string being rendered
+     * @param array $params
+     * @param boolean $layout
+     * @return string the rendering result of the layout with the given static string as the `$content` variable.
+     * If the layout is disabled, the string will be returned back.
+     * @throws \yii\base\InvalidConfigException
+     * @since 2.0.1
+     */
+    public function renderTwigContent($content, $params = [], $layout = true)
+    {
+        $renderer = $this->getView();
+
+        if (!method_exists($renderer, 'renderContent')) {
+            return '';
+        }
+
+        $global = $this->_getGlobalParams();
+        $content = $renderer->renderContent($content, array_merge($global, $params));
+
+        if (!$layout) {
+            return $content;
+        }
+
+        $layoutFile = file_get_contents(self::getTwigView($this->layout));
+
+        if ($layoutFile === false) {
+            return $content;
+        }
+
+        $renderedContent = $renderer->renderContent($layoutFile, array_merge($global, [
+            'page_content' => $content,
+        ]), $this->endContent, $this->startHeadContent);
+
+        return $renderedContent;
+    }
+
+    /**
+     * Get view path use view name
+     * @param string $view
+     * @param string $defaultExtension
+     * @return string|null
+     */
+    public static function getTwigView($view, $defaultExtension = 'twig')
+    {
+        $view = ltrim($view, '/');
+        if (strpos($view, '.twig') === false && strpos($view, '.php') === false) {
+            $view = "{$view}.{$defaultExtension}";
+        }
+
+        $sp = DIRECTORY_SEPARATOR;
+        $viewsPath = Yii::getAlias('@sommerce' . $sp . 'views');
+        $rootPath = $viewsPath . $sp . $view;
+        $pagePath = $viewsPath . $sp . 'page' . $sp . $view;
+
+        if (is_file($rootPath) || is_file($rootPath . '.' . $defaultExtension) || is_file($rootPath . '.php')) {
+            return $rootPath;
+        }
+        if (is_file($pagePath) || is_file($pagePath . '.' . $defaultExtension) || is_file($pagePath . '.php')) {
+            return $pagePath;
+        }
+
+        return null;
+    }
 
 }

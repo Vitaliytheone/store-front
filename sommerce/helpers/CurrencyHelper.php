@@ -60,11 +60,11 @@ class CurrencyHelper
     /**
      * Get currency format template
      * @param string $code
-     * @return string
+     * @return null
      */
     public static function getCurrencyTemplate($code)
     {
-        $template = '{{value}}';
+        $template = null;
         if (!empty(Yii::$app->params['currencies'][$code])) {
             $template = Yii::$app->params['currencies'][$code]['money_format'];
         }
