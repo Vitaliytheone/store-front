@@ -2,8 +2,8 @@
 
 namespace sommerce\controllers;
 
-use common\models\panels\Params;
-use common\models\panels\SslValidation;
+use common\models\sommerces\Params;
+use common\models\sommerces\SslValidation;
 use Yii;
 use yii\helpers\ArrayHelper;
 use yii\web\NotFoundHttpException;

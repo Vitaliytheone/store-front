@@ -55,7 +55,7 @@ class TemplateController extends CustomController
                 . $html . "\");";
         }
         $js = <<<JS
-                var templates = {};
+                var templates = templates || {};
                 {$js}
 JS;
 

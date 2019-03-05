@@ -1,4 +1,4 @@
-                var templates = {};
+                var templates = templates || {};
                 
 
 templates['cart/hidden'] = _.template("<input class=\"fields\" name=\"OrderForm[fields][<%= name %>]\" value=\"<%= value %>\" type=\"hidden\" id=\"field-<%= name %>\"/>");

@@ -41,15 +41,7 @@
                             </a>
                         </td>
                         <td>
-                            <?php if (!$customer->can('stores')) : ?>
-                                <?= Html::a(Html::tag('span', Yii::t('app/superadmin', 'customers.list.activate_stores'),
-                                    ['class' => 'badge badge-light']),
-                                    Url::toRoute(['/customers/activate-stores']),
-                                    ['data-method' => 'POST', 'data-params' => ['id' => $customer->id]]
-                                )?>
-                            <?php else : ?>
-                                <?= Html::a(isset($customer->countStores) ? $customer->countStores : 0, Url::toRoute(['/stores', 'customer_id' => $customer->id])); ?>
-                            <?php endif; ?>
+                            <?= Html::a(isset($customer->countStores) ? $customer->countStores : 0, Url::toRoute(['/stores', 'customer_id' => $customer->id])); ?>
                         </td>
                         <td>
                             <?php if (!$customer->can('domains')) : ?>

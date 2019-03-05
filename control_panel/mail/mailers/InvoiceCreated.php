@@ -2,7 +2,6 @@
 
 namespace control_panel\mail\mailers;
 
-
 use common\models\sommerces\Notifications;
 use yii\helpers\ArrayHelper;
 
@@ -19,19 +18,11 @@ class InvoiceCreated extends BaseMailer {
      */
     public function init()
     {
-        $project = ArrayHelper::getValue($this->options, 'project');
         $domain = ArrayHelper::getValue($this->options, 'domain');
         $ssl = ArrayHelper::getValue($this->options, 'ssl');
         $store = ArrayHelper::getValue($this->options, 'store');
-        $gateway = ArrayHelper::getValue($this->options, 'gateway');
 
-        if ($project) {
-            $this->to = $project->customer->email;
-            $this->notificationOptions = [
-                'item' => Notifications::ITEM_PANEL,
-                'item_id' => $project->id
-            ];
-        } else if ($domain) {
+        if ($domain) {
             $this->to = $domain->customer->email;
             $this->notificationOptions = [
                 'item' => Notifications::ITEM_DOMAIN,
@@ -48,12 +39,6 @@ class InvoiceCreated extends BaseMailer {
             $this->notificationOptions = [
                 'item' => Notifications::ITEM_STORE,
                 'item_id' => $store->id
-            ];
-        } else if($gateway) {
-            $this->to = $gateway->customer->email;
-            $this->notificationOptions = [
-                'item' => Notifications::ITEM_GATEWAY,
-                'item_id' => $gateway->id
             ];
         } else {
             $this->notificationEmail = false;
