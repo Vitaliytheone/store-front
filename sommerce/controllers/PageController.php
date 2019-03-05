@@ -6,6 +6,7 @@ use common\models\sommerces\StorePaymentMethods;
 use my\helpers\Url;
 use sommerce\helpers\PageFilesHelper;
 use sommerce\helpers\PagesHelper;
+use sommerce\models\forms\OrderForm;
 use Yii;
 use yii\web\NotFoundHttpException;
 
@@ -47,9 +48,16 @@ class PageController extends CustomController
 
         $content = $page['twig'] ?? '';
 
+        $orderForm = new OrderForm();
+        $orderForm->setStore($this->store);
+
         $this->addModule('orderFormFrontend', [
             'order_data_url' => Url::toRoute(['/cart/get-order-data', 'id' => '_id_']),
-            'payment_methods' =>  StorePaymentMethods::getActiveMethods($this->store->id),
+            'form_action_url' => Url::toRoute(['/cart']),
+            'form_validate_ulr' => Url::toRoute(['/cart/validate']),
+            'payment_methods' =>  $orderForm->getPaymentsMethodsForView(),
+            'fieldOptions' => $orderForm->getPaymentsFields(),
+            'options' => $orderForm->getJsOptions(),
         ]);
 
         return $this->renderTwigContent($content);

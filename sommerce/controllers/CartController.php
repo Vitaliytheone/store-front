@@ -3,6 +3,7 @@
 namespace sommerce\controllers;
 
 use common\components\ActiveForm;
+use common\components\exceptions\FirstValidationErrorHttpException;
 use common\components\filters\DisableCsrfToken;
 use common\components\response\CustomResponse;
 use common\models\sommerce\Carts;
@@ -11,6 +12,7 @@ use sommerce\helpers\UserHelper;
 use sommerce\helpers\PriceHelper;
 use sommerce\models\forms\AddToCartForm;
 use sommerce\models\forms\OrderForm;
+use sommerce\models\forms\OrderFormOld;
 use sommerce\models\search\CartSearch;
 use Yii;
 use yii\base\UnknownClassException;
@@ -42,12 +44,14 @@ class CartController extends CustomController
                 'actions' => [
                     'index' => ['GET', 'POST'],
                     'get-order-data' => ['GET'],
+                    'validate' => ['POST']
                 ],
             ],
             'content' => [
                 'class' => ContentNegotiator::class,
                 'only' => [
                     'get-order-data',
+                    'validate',
                 ],
                 'formats' => [
                     'application/json' => CustomResponse::FORMAT_AJAX_API,
@@ -55,7 +59,10 @@ class CartController extends CustomController
             ],
             'token' => [
                 'class' => DisableCsrfToken::class,
-                'only' => ['index'],
+                'only' => [
+                    'index',
+                    'validate'
+                ],
             ],
         ]);
     }
@@ -100,7 +107,7 @@ class CartController extends CustomController
 
         $items = $searchModel->getItemsForView();
 
-        $model = new OrderForm();
+        $model = new OrderFormOld();
         $model->setStore($this->store);
         $model->setSearchItems($searchModel);
 
@@ -159,83 +166,23 @@ class CartController extends CustomController
     }
 
     /**
-     * Validate cart
-     * @return array
-     * @throws UnknownClassException
-     * @throws \yii\base\InvalidConfigException
+     * Validate order form data AJAX action
+     * @return bool
+     * @throws FirstValidationErrorHttpException
      */
     public function actionValidate()
     {
-        $searchModel = new CartSearch();
-        $searchModel->setStore($this->store);
-        $model = new OrderForm();
-        $model->setStore($this->store);
-        $model->setSearchItems($searchModel);
+        $request = Yii::$app->request->post();
 
-        $status = 'error';
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            $status = 'success';
+        $form = new OrderForm();
+        $form->setStore($this->store);
+        $form->setPackage($this->_findPackage(ArrayHelper::getValue($request, ['OrderForm', 'package_id'])));
+
+        if (!$form->load($request) || !$form->validate()) {
+            throw new FirstValidationErrorHttpException($form);
         }
 
-        return [
-            'status' => $status
-        ];
-    }
-
-    /**
-     * Delete cart item
-     * @param string|integer $key
-     * @return Response
-     * @throws NotFoundHttpException
-     * @throws \Throwable
-     * @throws \yii\db\StaleObjectException
-     */
-    public function actionDelete($key)
-    {
-        $cartItem = $this->_findCartItem($key);
-
-        UserHelper::removeCartKey($cartItem->key);
-        $cartItem->delete();
-
-        return $this->redirect('/cart');
-    }
-
-    /**
-     * Displays add to cart page.
-     * @param integer $id
-     * @return string
-     * @throws NotFoundHttpException
-     * @throws \yii\base\InvalidConfigException
-     */
-    public function actionOrder($id)
-    {
-        $package = $this->_findPackage($id);
-
-        $this->pageTitle = $package->name;
-
-        $model = new AddToCartForm();
-        $model->setPackage($package);
-        $model->setStore($this->store);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            $this->redirect('/cart');
-        }
-
-        return $this->render('order.twig', [
-            'order' => [
-                'id' => $package->id,
-                'name' => Html::encode($package->name),
-                'quantity' => $package->quantity,
-                'price' => $package->price,
-                'back_url' => $this->getGoBackUrl(),
-                'form' => [
-                    'link' => $model->link,
-                ],
-            ],
-
-            'error' => $model->hasErrors(),
-            'error_message' => ActiveForm::firstError($model),
-        ]);
+        return true;
     }
 
     /**
@@ -255,24 +202,5 @@ class CartController extends CustomController
         }
 
         return $package;
-    }
-
-    /**
-     * Find cart item
-     * @param string $key
-     * @return Carts
-     * @throws NotFoundHttpException
-     */
-    protected function _findCartItem($key)
-    {
-        $cartItem = null;
-
-        if (empty($key) || !($cartItem = Carts::findOne([
-            'key' => $key,
-        ]))) {
-            throw new NotFoundHttpException();
-        }
-
-        return $cartItem;
     }
 }

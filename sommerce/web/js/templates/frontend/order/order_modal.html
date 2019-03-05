@@ -16,42 +16,52 @@
                         <tbody>
                         <tr>
                             <td class="sommerce-modals__order-name">Package:</td>
-                            <td class="sommerce-modals__order-value">200 Instagram followers</td>
+                            <td class="sommerce-modals__order-value"><%= package_name %></td>
                         </tr>
                         <tr>
                             <td class="sommerce-modals__order-name">Price:</td>
-                            <td class="sommerce-modals__order-value">$ 2.00</td>
+                            <td class="sommerce-modals__order-value"><%= package_price %></td>
                         </tr>
                         </tbody>
                     </table>
                 </div>
-                <div class="sommerce-modals__forms">
-                    <div class="form-group sommerce-modals__form-group sommerce-modals__form-group-error">
-                        <label for="link">Link</label>
-                        <input type="text" class="form-control" id="link">
-                    </div>
-                    <div class="form-group sommerce-modals__form-group">
-                        <label for="email">Email</label>
-                        <input type="email" class="form-control" id="email">
-                        <small class="form-text text-muted">You will be notified on this email address</small>
-                    </div>
-                </div>
-                <div class="sommerce-modals__payments">
-                    <div class="form-group">
-                        <div class="sommerce-modals__payments-title">Payment methods</div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="payment_m" id="inlineRadio1" value="option1">
-                            <label class="form-check-label" for="inlineRadio1">PayPal</label>
+                <form action="<%= form_action_url %>">
+                    <input type="hidden" name="OrderForm[package_id]" value="<%= package_id %>">
+                    <div class="sommerce-modals__forms">
+                        <div class="form-group sommerce-modals__form-group sommerce-modals__form-group-error">
+                            <label for="link">Link</label>
+                            <input type="text" class="form-control" id="link" name="OrderForm[link]">
                         </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="payment_m" id="inlineRadio2" value="option2">
-                            <label class="form-check-label" for="inlineRadio2">2CheckOut</label>
+                        <div class="form-group sommerce-modals__form-group">
+                            <label for="email">Email</label>
+                            <input type="email" class="form-control" id="email" name="OrderForm[email]">
+                            <small class="form-text text-muted">You will be notified on this email address</small>
                         </div>
                     </div>
-                </div>
-                <div class="sommerce-modals__actions">
-                    <button class="btn btn-block sommerce-modals__btn-primary">Proceed to Checkout</button>
-                </div>
+                    <% if (payment_methods) { %>
+                        <% if (payment_methods.length > 1) { %>
+                        <div class="sommerce-modals__payments">
+                            <div class="form-group">
+                                <div class="sommerce-modals__payments-title">Payment methods</div>
+                                <% _.each(payment_methods, function(method) { %>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="OrderForm[method]"
+                                           id="method-<%= method.id %>"
+                                           <% if (method.id === payment_methods[0].id) { %> checked <% } %>
+                                           value="<%= method.id %>">
+                                    <label class="form-check-label" for="method-<%= method.id %>"><%= method.name %></label>
+                                </div>
+                                <% }); %>
+                            </div>
+                        </div>
+                        <% } else { %>
+                        <input type="hidden" name="OrderForm[method]" value="<%= method.id %>">
+                        <% }; %>
+                    <% }; %>
+                    <div class="sommerce-modals__actions">
+                        <button type="submit" class="btn btn-block sommerce-modals__btn-primary">Proceed to Checkout</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
