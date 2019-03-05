@@ -90,8 +90,12 @@ class PaymentsController extends CustomController
         $paymentsHelper->setStore($this->store);
 
         $cookies->add(new Cookie([
-            'name' => 'payment_success_modal',
-            'value' => $paymentsHelper->getSuccessDetails($checkout)
+            'name' => 'modal',
+            'value' => [
+                'type' => 'payment_success',
+                'data' => $paymentsHelper->getSuccessDetails($checkout)
+            ]
+
         ]));
 
         if (Pages::existUrl($checkout->redirect_url)) {
@@ -112,13 +116,18 @@ class PaymentsController extends CustomController
         $checkout = $this->findCheckout($checkoutId);
         $cookies = Yii::$app->response->cookies;
 
+
+
         $cookies->add(new Cookie([
-            'name' => 'payment_fail_modal',
-            'value' => true
+            'name' => 'modal',
+            'value' => [
+                'type' => 'payment_fail',
+                'data' => []
+            ]
         ]));
 
         if (Pages::existUrl($checkout->redirect_url)) {
-            $this->redirect($checkout->redirect_url);
+            return $this->redirect($checkout->redirect_url);
         }
 
         return $this->redirect(Url::home());

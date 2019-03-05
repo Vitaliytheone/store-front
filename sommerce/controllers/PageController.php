@@ -46,6 +46,7 @@ class PageController extends CustomController
         $content = $page['twig'] ?? '';
 
         $this->addModule('orderFormFrontend', []);
+        $this->addPaymentModal();
 
         return $this->renderTwigContent($content);
     }
@@ -181,5 +182,18 @@ class PageController extends CustomController
         }
 
         return null;
+    }
+
+    /**
+     * Add payment modal
+     */
+    protected function addPaymentModal()
+    {
+        $cookies = Yii::$app->request->cookies;
+        if (($cookie = $cookies->get('modal')) !== null) {
+            $this->addModule('paymentResultModal', $cookie->value);
+            $cookies = Yii::$app->response->cookies;
+            $cookies->remove('modal');
+        }
     }
 }
