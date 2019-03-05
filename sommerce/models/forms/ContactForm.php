@@ -44,7 +44,7 @@ class ContactForm extends Model
             ['recaptcha', 'required', 'message' => Yii::t('app', 'contact.form.recaptcha.required')],
             [['subject', 'name', 'email', 'message'], 'required'],
             [['subject', 'name', 'message'], 'string'],
-            ['email', 'emailValidator'],
+            ['email', 'email'],
         ];
     }
 
