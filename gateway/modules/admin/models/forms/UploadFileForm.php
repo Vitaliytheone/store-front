@@ -29,7 +29,7 @@ class UploadFileForm extends Model
     {
         return [
             [['file'], 'required'],
-            [['file'], 'file', 'extensions' => Files::$availableExtensions[Files::FILE_TYPE_IMAGE], 'maxSize' => Files::IMAGE_SIZE],
+            [['file'], 'file', 'extensions' => Files::$availableExtensions[Files::FILE_TYPE_IMAGE], 'maxSize' => Files::IMAGE_SIZE, 'maxFiles' => 5],
         ];
     }
 
@@ -46,22 +46,29 @@ class UploadFileForm extends Model
      */
     public function save()
     {
-        $this->file = UploadedFile::getInstance($this, 'file');
+        $this->file = UploadedFile::getInstances($this, 'file');
 
         if (!$this->validate()) {
             return false;
         }
 
-        $model = new Files();
-        $model->file_type = Files::FILE_TYPE_IMAGE;
-        $model->mime = FileHelper::getMimeType($this->file->tempName);
-        $model->name = $this->file->name;
-        $model->content = is_file($this->file->tempName) ? file_get_contents($this->file->tempName) : null;
+        $transaction = Yii::$app->db->beginTransaction();
 
-        if (!$model->save()) {
-            $this->addErrors($model->getErrors());
-            return false;
+        foreach ($this->file as $file) {
+            $model = new Files();
+            $model->file_type = Files::FILE_TYPE_IMAGE;
+            $model->name =$file->name;
+            $model->mime = FileHelper::getMimeType($file->tempName);
+            $model->content = is_file($file->tempName) ? file_get_contents($file->tempName) : null;
+
+            if (!$model->save()) {
+                $transaction->rollBack();
+                $this->addErrors($model->getErrors());
+                return false;
+            }
         }
+
+        $transaction->commit();
 
         $this->id = $model->id;
 
