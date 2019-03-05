@@ -15,11 +15,13 @@ class View extends \yii\web\View {
      * Render content
      * @param string $content
      * @param array $params
+     * @param array $endContent
+     * @param array $startHeadContent
      * @param string $ext
      * @return string
      * @throws \yii\base\InvalidConfigException
      */
-    public function renderContent($content, $params = [], $ext = 'twig'): string
+    public function renderContent($content, $params = [], $endContent = [], $startHeadContent = [], $ext = 'twig'): string
     {
         $output = '';
         if (isset($this->renderers[$ext])) {
@@ -32,6 +34,14 @@ class View extends \yii\web\View {
             if (method_exists($renderer, 'renderContent')) {
                 $output = $renderer->renderContent($content, $params);
             }
+        }
+
+        if (!empty($endContent)) {
+            $output = str_ireplace('</body>',  implode("\r\n", $endContent) . '</body>', $output);
+        }
+
+        if (!empty($startHeadContent)) {
+            $output = str_ireplace('</head>',  implode("\r\n", $startHeadContent) . '</head>', $output);
         }
 
         return $output;

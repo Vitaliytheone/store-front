@@ -42,7 +42,15 @@ class EditPageForm extends Model
             [['description'], 'string', 'max' => 160],
             ['url', 'match', 'pattern' => '/^[a-z0-9-_]+$/i'],
             ['url', 'unique', 'targetClass' => Products::class, 'targetAttribute' => ['url' => 'url']],
-            ['url', 'unique', 'targetClass' => Pages::class, 'targetAttribute' => ['url' => 'url']]
+            ['url', 'unique', 'targetClass' => Pages::class, 'targetAttribute' => ['url' => 'url'],
+                'when' => function ($model) {
+                    if (empty($this->page->url)) {
+                        return true;
+                    }
+
+                    return $model->url !== $this->page->url;
+                }
+            ]
         ];
     }
 
