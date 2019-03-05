@@ -259,8 +259,8 @@ $(function() {
         });
     }
 });
-                var templates = {};
-                
+var templates = {};
+
 
 templates['global/modal/confirm'] = _.template("<div class=\"modal fade confirm-modal\" id=\"confirmModal\" tabindex=\"-1\" data-backdrop=\"static\">\n    <div class=\"modal-dialog modal-md\" role=\"document\">\n        <div class=\"modal-content\">\n            <% if (typeof(confirm_message) !== \"undefined\" && confirm_message != \'\') { %>\n            <div class=\"modal-header\">\n                <h3 id=\"conrirm_label\"><%= title %><\/h3>\n                <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\"><span aria-hidden=\"true\">&times;<\/span><\/button>\n            <\/div>\n\n            <div class=\"modal-body\">\n                <p><%= confirm_message %><\/p>\n            <\/div>\n\n\n            <div class=\"modal-footer justify-content-start\">\n                <button class=\"btn btn-primary m-btn--air\" id=\"confirm_yes\"><%= confirm_button %><\/button>\n                <button class=\"btn btn-secondary m-btn--air\" data-dismiss=\"modal\" aria-hidden=\"true\"><%= cancel_button %><\/button>\n            <\/div>\n            <% } else { %>\n            <div class=\"modal-body\">\n                <div class=\"text-center\">\n                    <h3 id=\"conrirm_label\"><%= title %><\/h3>\n                <\/div>\n\n                <div class=\"text-center\">\n                    <button class=\"btn btn-primary m-btn--air\" id=\"confirm_yes\"><%= confirm_button %><\/button>\n                    <button class=\"btn btn-secondary m-btn--air\" data-dismiss=\"modal\" aria-hidden=\"true\"><%= cancel_button %><\/button>\n                <\/div>\n            <\/div>\n            <% } %>\n        <\/div>\n    <\/div>\n<\/div>");
 /**
@@ -297,7 +297,7 @@ customModule.adminGeneral = {
                 }
 
                 $seoTitle.on('focus', function (e){
-                   seoTitleTouched = true;
+                    seoTitleTouched = true;
                 });
 
                 $storeName.on('input', function(e){
@@ -314,11 +314,11 @@ customModule.adminGeneral = {
          *            General settings delete logo & favicon
          ******************************************************************/
         var $modal = $('#delete-modal'),
-        $deleteBtn = $modal.find('#delete-image');
+            $deleteBtn = $modal.find('#delete-image');
 
         $modal.on('show.bs.modal', function (event){
             var button = $(event.relatedTarget),
-            actionUrl = button.attr('href');
+                actionUrl = button.attr('href');
             $deleteBtn.attr('href', actionUrl);
         });
 
@@ -364,7 +364,7 @@ customModule.adminIntegrations = {
             var $checkbox = $(e.currentTarget),
                 actionUrl = $checkbox.data('action_url'),
                 active = $checkbox.prop('checked') | 0;
-                category = $checkbox.data('category');
+            category = $checkbox.data('category');
 
             $.ajax({
                 url: actionUrl,
@@ -5035,7 +5035,7 @@ customModule.adminProviders = {
         });
     }
 };
-                var templates = {};
-                
+var templates = {};
+
 
 templates['payments/description'] = _.template("<div class=\"form-group form-group-description\">\n    <span class=\"fa fa-times remove-description\"><\/span>\n    <label for=\"<%= elementId %>\" class=\"control-label\"><%= label %><\/label>\n    <input type=\"text\" class=\"form-control <%= elementClass %>\" name=\"<%= elementName %>\" id=\"<%= elementId %>\" value=\"\">\n<\/div>");

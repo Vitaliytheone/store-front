@@ -46,6 +46,13 @@ return [
     'payment_result.awaiting.title' => 'Awaiting',
     'payment_result.awaiting.description' => 'Your payment awaiting!',
 
+
+    'payments.status.completed' => 'Completed',
+    'payments.status.refunded' => 'Refunded',
+    'payment.status.awaiting' => 'Awaiting',
+    'payment.status.failed' => 'Failed',
+
+
     'footer.terms' => 'Terms of Service',
     'footer.policy' => 'Privacy Policy',
     'footer.contact' => 'Contact Us',

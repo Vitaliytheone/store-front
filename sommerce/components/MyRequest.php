@@ -1,7 +1,7 @@
 <?php
 namespace sommerce\components;
 
-use sommerce\helpers\CurrencyHelper;
+use common\helpers\UrlHelper;
 use common\models\sommerces\Stores;
 use sommerce\helpers\RouteHelper;
 use Yii;
@@ -31,12 +31,19 @@ class MyRequest extends Request
          * @var $store Stores
          */
         $store = Yii::$app->store->getInstance();
-
         $isAdminModule = strpos($pathInfo, 'admin') !== false;
 
         if ($store && !$isAdminModule) {
+            $sources = [
+                'pages'
+            ];
 
-            $urls = RouteHelper::getRoutes();
+            // Check payments urls when call from referrer domains (payment services)
+            if (!UrlHelper::isOurCall()) {
+                $sources[] = 'payments';
+            }
+
+            $urls = RouteHelper::getRoutes($sources);
 
             foreach ($urls as $url => $options) {
                 if (preg_match($options['rule'], $pathInfo, $match)) {
