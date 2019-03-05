@@ -2,6 +2,8 @@
 
 namespace sommerce\controllers;
 
+use common\models\sommerces\StorePaymentMethods;
+use my\helpers\Url;
 use sommerce\helpers\PageFilesHelper;
 use sommerce\helpers\PagesHelper;
 use Yii;
@@ -45,7 +47,10 @@ class PageController extends CustomController
 
         $content = $page['twig'] ?? '';
 
-        $this->addModule('orderFormFrontend', []);
+        $this->addModule('orderFormFrontend', [
+            'order_data_url' => Url::toRoute(['/cart/get-order-data', 'id' => '_id_']),
+            'payment_methods' =>  StorePaymentMethods::getActiveMethods($this->store->id),
+        ]);
 
         return $this->renderTwigContent($content);
     }

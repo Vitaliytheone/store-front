@@ -4,6 +4,7 @@ namespace sommerce\controllers;
 
 use common\components\ActiveForm;
 use common\components\filters\DisableCsrfToken;
+use common\components\response\CustomResponse;
 use common\models\sommerce\Carts;
 use common\models\sommerce\Packages;
 use sommerce\helpers\UserHelper;
@@ -31,20 +32,24 @@ class CartController extends CustomController
         return ArrayHelper::merge(parent::behaviors(), [
             'ajax' => [
                 'class' => AjaxFilter::class,
-                'only' => ['validate']
+                'only' => [
+                    'get-order-data',
+                ]
             ],
             'verbs' => [
                 'class' => VerbFilter::class,
                 'actions' => [
                     'index' => ['GET', 'POST'],
-                    'validate'=> ['POST'],
+                    'get-order-data' => ['GET'],
                 ],
             ],
             'content' => [
                 'class' => ContentNegotiator::class,
-                'only' => ['validate'],
+                'only' => [
+                    'get-order-data',
+                ],
                 'formats' => [
-                    'application/json' => Response::FORMAT_JSON,
+                    'application/json' => CustomResponse::FORMAT_AJAX_API,
                 ],
             ],
             'token' => [
@@ -62,6 +67,18 @@ class CartController extends CustomController
         }
 
         return parent::beforeAction($action);
+    }
+
+    public function actionGetOrderData($id)
+    {
+        $package = $this->_findPackage($id);
+
+        return [
+            'id' => $package->id,
+            'name' => Html::encode($package->name),
+            'price' => $package->price,
+            'price_currency' => '',
+        ];
     }
 
     /**
