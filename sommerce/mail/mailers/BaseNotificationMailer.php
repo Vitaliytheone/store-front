@@ -1,7 +1,8 @@
 <?php
+
 namespace sommerce\mail\mailers;
 
-use common\models\panels\BackgroundTasks;
+use common\models\sommerces\BackgroundTasks;
 use common\models\sommerce\NotificationTemplates;
 use Yii;
 use common\models\sommerces\Stores;
@@ -13,8 +14,8 @@ use sommerce\mail\BaseMailer;
  * Class BaseNotificationMailer
  * @package sommerce\mail\mailers
  */
-class BaseNotificationMailer extends BaseMailer {
-
+class BaseNotificationMailer extends BaseMailer
+{
     /**
      * @var Stores
      */
