@@ -14,10 +14,17 @@ Input::placeholder {
   color: #c1c0cc !important;
 }
 
-Input:focus{
-	box-shadow: none !important;
+.footer-input:focus {
+  border-color:#ccc;
+  outline: 0;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+
+.header-input:focus{
+	box-shadow: 0 2px 4px 0 rgba(123, 98, 221, 0.1) !important;
 	outline: none !important;
-	border-color: lightgrey !important;
+	border-color: #7765D6 !important;
 }
 
 a:hover {
@@ -148,6 +155,8 @@ button:focus {
 
 .interested {
 	color: #7765d6;
+	font-size: 14px;
+  	font-weight: 500;
 }
 
 /* Why sommerce  */
@@ -423,7 +432,7 @@ a:hover .hello {
 }
 
 .toggle {
-	border-bottom: 1px solid lightgray;
+	border-bottom: 1px solid #DDDDE3;
 	padding-bottom: 20px;
 	padding-top: 20px;
 }
@@ -485,6 +494,7 @@ a:hover .hello {
 	border-radius: 2px;
 	color: white;
 	background-color: #ff5c86;
+	box-shadow: 0 2px 4px 0 rgba(255, 92, 134, 0.2);
 }
 
 .footer-links {
@@ -504,7 +514,7 @@ form .footer-links:hover{
 
 .arrow {
 	height: 1px;
-	background-color: #6e6c88;
+	background-color: #464366;
 }
 
 .color-disabled,
@@ -558,10 +568,16 @@ ul li {
 
 /* HOVER BUTTONS */
 
-.footer-button:hover,
-.notify-me:hover {
-    background-color: #FF7498
+.footer-button:hover {
+	background-color: #FF7498;
+	box-shadow: 0 2px 4px 0 rgba(255, 92, 134, 0.2);
 }
+
+.notify-me:hover {
+	background-color: white;
+	color: #ff5c86 !important;
+}
+
 
 .footer-button:active,
 .notify-me:active {
