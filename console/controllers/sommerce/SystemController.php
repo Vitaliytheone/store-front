@@ -303,48 +303,4 @@ class SystemController extends CustomController
             }
         }
     }
-
-    /**
-     * @throws \yii\db\Exception
-     */
-    public function actionChangeProvidersId()
-    {
-        $stores = (new \yii\db\Query())->select([
-            'db_name',
-        ])->from(DB_STORES . '.stores')->all();
-
-        $store_tables = [
-            'suborders',
-            'packages'
-        ];
-
-        $stores_tables = [
-            StoreProviders::tableName(),
-            StoresSendOrders::tableName()
-        ];
-
-        foreach ((new \yii\db\Query())->select([
-            'id',
-            'site'
-        ])->from(DB_STORES . '.providers')->all() as $provider) {
-            $providerId = (new \yii\db\Query())
-                ->select(['provider_id'])->from(AdditionalServices::tableName())
-                ->where([
-                    'name' => $provider['site'],
-                    'store' => 1,
-                    'status' =>  0
-                ])->one()['provider_id'];
-
-
-            foreach ($stores_tables as $table) {
-                Yii::$app->db->createCommand("UPDATE {$table} SET `provider_id` = '" . $providerId. "' WHERE `provider_id` = '" . $provider['id'] . "';")->execute();
-            }
-
-            foreach ($stores as $store) {
-                foreach ($store_tables as $table) {
-                    Yii::$app->db->createCommand("UPDATE `{$store['db_name']}`.`{$table}` SET `provider_id` = '" . $providerId. "' WHERE `provider_id` = '" . $provider['id'] . "';")->execute();
-                }
-            }
-        }
-    }
 }

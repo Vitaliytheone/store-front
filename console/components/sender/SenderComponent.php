@@ -1,4 +1,5 @@
 <?php
+
 namespace console\components\sender;
 
 use common\events\Events;
@@ -104,6 +105,8 @@ class SenderComponent extends Component
     /**
      * Run Sender
      * @return array
+     * @throws Exception
+     * @throws \yii\db\Exception
      */
     public function run()
     {
@@ -117,6 +120,7 @@ class SenderComponent extends Component
     /**
      * Get queue send orders data
      * @return array
+     * @throws \yii\db\Exception
      */
     public function getSendOrders()
     {
@@ -186,6 +190,7 @@ class SenderComponent extends Component
      * Update suborder by values
      * @param $orderInfo
      * @param $values
+     * @throws \yii\db\Exception
      */
     private function _updateOrder($orderInfo, $values)
     {
@@ -280,6 +285,7 @@ class SenderComponent extends Component
     /**
      * Orders Sender and result processor
      * @return array
+     * @throws \yii\db\Exception
      */
     private function sendOrders()
     {
