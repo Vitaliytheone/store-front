@@ -8,6 +8,7 @@ use common\components\response\CustomResponse;
 use common\models\sommerce\Carts;
 use common\models\sommerce\Packages;
 use sommerce\helpers\UserHelper;
+use sommerce\helpers\PriceHelper;
 use sommerce\models\forms\AddToCartForm;
 use sommerce\models\forms\OrderForm;
 use sommerce\models\search\CartSearch;
@@ -76,8 +77,8 @@ class CartController extends CustomController
         return [
             'id' => $package->id,
             'name' => Html::encode($package->name),
-            'price' => $package->price,
-            'price_currency' => '',
+            'price_raw' => $package->price,
+            'price' => PriceHelper::getPrice($package->price, $this->store->currency),
         ];
     }
 
