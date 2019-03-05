@@ -32,6 +32,7 @@ class MyRequest extends Request
          */
         $store = Yii::$app->store->getInstance();
         $refererDomain = !empty($_SERVER['HTTP_REFERER']) ? parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST) : null;
+        $currentDomain = $_SERVER['HTTP_HOST'];
 
         $isAdminModule = strpos($pathInfo, 'admin') !== false;
 
@@ -41,7 +42,7 @@ class MyRequest extends Request
             ];
 
             // Check payments urls when call from referrer domains (payment services)
-            if ($refererDomain) {
+            if (empty($refererDomain) || mb_strtolower($refererDomain) !== mb_strtolower($currentDomain)) {
                 $sources[] = 'payments';
             }
 
