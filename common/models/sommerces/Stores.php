@@ -46,14 +46,6 @@ use yii\helpers\ArrayHelper;
  * @property string $seo_description
  * @property string $folder
  * @property string $folder_content
- * @property string $theme_name
- * @property string $theme_folder
- * @property string $block_slider
- * @property string $block_features
- * @property string $block_reviews
- * @property string $block_process
- * @property string $custom_header
- * @property string $custom_footer
  * @property integer $last_count
  * @property integer $current_count
  * @property int $no_referral
