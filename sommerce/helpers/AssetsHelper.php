@@ -65,7 +65,10 @@ class AssetsHelper
             $scripts[] = $scriptFile;
         }
 
+        $scripts[] = static::getFileUrl('/js/libs/popper.js');
+        $scripts[] = static::getFileUrl('/js/libs/bootstrap.js');
         $scripts[] = static::getFileUrl('/js/frontend.js');
+        $scripts[] = 'https://www.google.com/recaptcha/api.js?hl=en';
 
         return $scripts;
     }
