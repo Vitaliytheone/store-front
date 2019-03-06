@@ -22,6 +22,11 @@ body {
 	height: 112px;
 }
 
+.arrow-right img {
+	width: 31px;
+	height: 31px;
+}
+
 Input::placeholder {
   font-family: Montserrat;
   font-size: 14px;
@@ -84,7 +89,7 @@ button:focus {
 }
 
 #header {
-	background-image: url("../images/big/Main-image.png");
+	background-image: url("../images/webp/Illustrations/main@2x.webp");
 	background-size: contain;
 	background-repeat: no-repeat;
 	background-position: top right;
@@ -571,10 +576,11 @@ ul li {
 }
 
 .mail {
-	background-image: url("../images/big/mail.png");
+	background-image: url("../images/webp/Illustrations/mail@2x.webp");
 	background-size: contain;
 	background-repeat: no-repeat;
 	background-position: top right;
+	padding-left: 0px;
 }
 
 .hello-button {
