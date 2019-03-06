@@ -62,12 +62,11 @@ var tasks = {
     },
     'js-sommerce-frontend' : function(done) {
         return gulp.src([
-            './sommerce/web/js/libs/underscore.js',
             './sommerce/web/js/app/global/*.js',
             './sommerce/web/js/app/frontend/*.js',
         ])
             .pipe(concat('frontend.js'))
-            .pipe(uglify())
+            // .pipe(uglify())
             .pipe(gulp.dest('./sommerce/web/js/'));
     },
     'js-my' : function (done) {
