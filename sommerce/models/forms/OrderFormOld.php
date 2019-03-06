@@ -3,8 +3,6 @@
 namespace sommerce\models\forms;
 
 use common\components\ActiveForm;
-use common\models\sommerce\Packages;
-use sommerce\components\validators\LinkValidator;
 use sommerce\helpers\CurrencyHelper;
 use common\models\sommerce\Checkouts;
 use common\models\sommerces\PaymentMethods;
@@ -15,41 +13,28 @@ use sommerce\helpers\UserHelper;
 use sommerce\models\search\CartSearch;
 use Yii;
 use yii\base\DynamicModel;
-use yii\base\Exception;
 use yii\base\InvalidConfigException;
 use yii\base\Model;
 use yii\base\UnknownClassException;
 use yii\helpers\ArrayHelper;
-use yii\helpers\Html;
 use yii\helpers\Url;
 
 /**
  * Class OrderForm
  * @package app\models\forms
  */
-class OrderForm extends Model
+class OrderFormOld extends Model
 {
-    /**
-     * Buyer email
-     * @var string customer (buyer) email
-     */
+    /** @var string customer (buyer) email */
     public $email;
-    /**
-     * @var int current PaymentMethod - ID
-     */
+
+    /** @var int current PaymentMethod - ID */
     public $method;
+
+    /** @var int ID of current StorePaymentMethod */
+    public $storePayMethod;
+
     /**
-     * Link
-     * @var
-     */
-    public $link;
-    /**
-     * Package ID
-     * @var int $package_id
-     */
-    public $package_id;
-    /**
-     * Payment method custom fields
      * @var array
      */
     public $fields;
@@ -58,10 +43,11 @@ class OrderForm extends Model
      * @var Stores
      */
     protected $_store;
+
     /**
-     * @var  Packages
+     * @var array - cart items
      */
-    protected $_package;
+    protected $_items;
 
     /**
      * @var array - payment methods
@@ -69,22 +55,24 @@ class OrderForm extends Model
     protected static $_methods;
 
     /**
-     * Result payment method form data
-     * @var
+     * @var CartSearch
      */
-    public $formData;
+    protected $_searchItems;
 
     /**
-     * Result payment method redirect
      * @var string
      */
     public $redirect;
 
     /**
-     * Result payment method refresh
      * @var boolean
      */
     public $refresh = false;
+
+    /**
+     * @var array
+     */
+    public $formData;
 
     /**
      * @var array
@@ -95,12 +83,6 @@ class OrderForm extends Model
      * @var array
      */
     protected $_userData;
-
-    /** @inheritdoc */
-    public function formName()
-    {
-        return 'OrderForm';
-    }
 
     /**
      * @return array the validation rules.
@@ -121,17 +103,10 @@ class OrderForm extends Model
         }
 
         $rules = array_merge($rules, [
-            ['package_id', 'required'],
-            ['package_id', 'exist',
-                'targetClass' => Packages::class,
-                'targetAttribute' => ['package_id' => 'id'],
-                'filter' => ['visibility' => Packages::VISIBILITY_YES]
-            ],
-            ['link', 'required'],
-            ['link', LinkValidator::class],
-            ['email', 'required'],
-            ['email', 'email'],
-            ['fields', 'safe']
+            [['email'], 'required'],
+            [['email'], 'email'],
+            [['email'], 'validateCarItems'],
+            [['fields'], 'safe']
         ]);
 
         return $rules;
@@ -155,37 +130,6 @@ class OrderForm extends Model
     }
 
     /**
-     * @inheritdoc
-     */
-    public function attributeLabels()
-    {
-        return [
-            'email' => 'Email address',
-            'method' => 'Payment method',
-            'package_id' => 'Package',
-            'link' => 'Link',
-        ];
-    }
-
-    /**
-     * Set package
-     * @param Packages $package
-     */
-    public function setPackage($package)
-    {
-        $this->_package = $package;
-    }
-
-    /**
-     * Get package
-     * @return Packages
-     */
-    public function getPackage()
-    {
-        return $this->_package;
-    }
-
-    /**
      * Set store
      * @param Stores $store
      */
@@ -195,12 +139,34 @@ class OrderForm extends Model
     }
 
     /**
-     * Get store
-     * @return Stores
+     * Set cart search
+     * @param CartSearch $searchItems
      */
-    public function getStore()
+    public function setSearchItems(CartSearch $searchItems)
     {
-        return $this->_store;
+        $this->_searchItems = $searchItems;
+
+        $this->_items = ArrayHelper::getValue($searchItems->search(), 'models', []);
+    }
+
+    /**
+     * Get cart items
+     * @return array
+     */
+    public function getItems()
+    {
+        $returnItems = [];
+
+        foreach ($this->_items as $item) {
+            $returnItems[] = [
+                'cart_key' => $item['key'],
+                'link' => $item['link'],
+                'package_id' => $item['package_id'],
+                'quantity' => $item['package_quantity'],
+            ];
+        }
+
+        return $returnItems;
     }
 
     /**
@@ -259,11 +225,9 @@ class OrderForm extends Model
     {
         $methods = [];
         foreach ($this->getPaymentMethods() as $method) {
-
             $methods[] = [
                 'id' => $method['id'],
-                'name' => Html::encode($method['name']),
-                'method' => $method['method'],
+                'method' => $method['name']
             ];
         }
 
@@ -271,9 +235,10 @@ class OrderForm extends Model
     }
 
     /**
-     * Proceed to checkout
+     * Save to cart
      * @return bool
-     * @throws Exception
+     * @throws InvalidConfigException
+     * @throws UnknownClassException
      */
     public function save(): bool
     {
@@ -293,19 +258,23 @@ class OrderForm extends Model
         $checkout = new Checkouts();
         $checkout->customer = $this->email;
         $checkout->method_id = $storePayMethod->method_id;
-        $checkout->price = $this->getPackage()->price;
+        $checkout->price = $this->_searchItems->getTotal();
         $checkout->currency = $this->_store->currency;
-        $checkout->currency_id = $storePayMethod->currency_id;
+
+         /* "Cохраняем url страницы с которой делается заказ"
+         by Andrey Globin*/
         $checkout->redirect_url = Url::previous();
-        $checkout->setDetails($this->attributes);
+
+        $checkout->currency_id = $storePayMethod->currency_id;
+        $checkout->setDetails($this->getItems());
         $checkout->setUserDetails($this->_userData);
 
         if (!$checkout->save()) {
-            throw new Exception('Cannot create checkout!');
+            $this->addError('email', 'Can not create order.');
+            return false;
         }
 
         $result = Payment::getPayment($storePayMethodArray['class_name'])->checkout($checkout, $this->_store, $this->email, $storePayMethod);
-
         if (3 == $result['result'] && !empty($result['refresh'])) {
             $this->refresh = true;
             return true;
@@ -342,6 +311,44 @@ class OrderForm extends Model
     public function getPaymentConfig()
     {
         return ArrayHelper::getValue($this->getCurrencyPayments(), $this->method, []);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function attributeLabels()
+    {
+        return [
+            'email' => 'Email address',
+            'method' => 'Payment method',
+        ];
+    }
+
+    /**
+     * Validate cart items
+     * @param $attribute
+     * @return bool
+     */
+    public function validateCarItems($attribute): bool
+    {
+        if ($this->hasErrors()) {
+            return false;
+        }
+
+        if (empty($this->_items)) {
+            $this->addError($attribute, 'Cart can not be empty.');
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Clear user cart items
+     */
+    public function clearCart()
+    {
+        UserHelper::flushCart();
     }
 
     /**

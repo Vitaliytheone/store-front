@@ -332,6 +332,8 @@ class Customers extends ActiveRecord
     public function can($code, $params = [])
     {
         switch ($code) {
+            case 'stores':
+                return true;
 
             case 'domains':
                 if (!Domains::find()->where(['customer_id' => $this->id])->exists()) {
