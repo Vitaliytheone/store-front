@@ -38,17 +38,17 @@ class CreateFileForm extends Model
                     Files::FILE_TYPE_PAGE,
                     Files::FILE_TYPE_SNIPPET,
                 ]);
-            }, 'maxSize' => Files::TWIG_SIZE],
+            }, 'maxSize' => Files::TWIG_SIZE, 'maxFiles' => 5],
             [['file'], 'file', 'skipOnEmpty' => true, 'extensions' => 'css', 'checkExtensionByMimeType' => false, 'when' => function() {
                 return in_array($this->file_type, [
                     Files::FILE_TYPE_CSS,
                 ]);
-            }, 'maxSize' => Files::CSS_SIZE],
+            }, 'maxSize' => Files::CSS_SIZE, 'maxFiles' => 5],
             [['file'], 'file', 'skipOnEmpty' => true, 'extensions' => 'js', 'checkExtensionByMimeType' => false, 'when' => function() {
                 return in_array($this->file_type, [
                     Files::FILE_TYPE_JS,
                 ]);
-            }, 'maxSize' => Files::JS_SIZE],
+            }, 'maxSize' => Files::JS_SIZE, 'maxFiles' => 5],
 
             [['name'], 'required', 'when' => function() {
                 return empty($this->file);
@@ -78,26 +78,39 @@ class CreateFileForm extends Model
      */
     public function save()
     {
-        $this->file = UploadedFile::getInstance($this, 'file');
+        $this->file = UploadedFile::getInstances($this, 'file');
 
         if (!$this->validate()) {
             return false;
         }
 
-        $model = new Files();
-        $model->file_type = $this->file_type;
-
-        if (!empty($this->file)) {
-            $model->name = $this->file->name;
-            $model->mime = FileHelper::getMimeType($this->file->tempName);
-            $model->content = is_file($this->file->tempName) ? file_get_contents($this->file->tempName) : null;
-        } else {
+        if (empty($this->file)) {
+            $model = new Files();
+            $model->file_type = $this->file_type;
             $model->name = $this->name . '.' . Files::$availableExtensions[$this->file_type];
-        }
 
-        if (!$model->save()) {
-            $this->addErrors($model->getErrors());
-            return false;
+            if (!$model->save()) {
+                $this->addErrors($model->getErrors());
+                return false;
+            }
+        } else {
+            $transaction = Yii::$app->db->beginTransaction();
+
+            foreach ($this->file as $file) {
+                $model = new Files();
+                $model->file_type = $this->file_type;
+                $model->name =$file->name;
+                $model->mime = FileHelper::getMimeType($file->tempName);
+                $model->content = is_file($file->tempName) ? file_get_contents($file->tempName) : null;
+
+                if (!$model->save()) {
+                    $transaction->rollBack();
+                    $this->addErrors($model->getErrors());
+                    return false;
+                }
+            }
+
+            $transaction->commit();
         }
 
         $this->id = $model->id;
