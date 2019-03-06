@@ -150,7 +150,7 @@ button:focus {
 	height: 48px;
 	border-radius: 2px;
 	margin-right: 10px;
-	background-color: #ffffff;
+	border-color: #BDBCC8;
 }
 
 .nav li {
@@ -756,40 +756,36 @@ ul li {
 @media (min-width: 992px) and (max-width: 1440px) {
 	#header {
 		background-position: 100%;
-	}
-
-	.technology-driven {
-		padding-bottom: 500px;
+    	background-size: 70%;
 	}
 }
 
-@media (min-width: 768px) and (max-width: 992px) {
+@media (min-width: 768px) and (max-width: 991px) {
 	#header {
-		background-position: 100%;
+		background-size: 80%;
+   		background-position: 100% 100%;
 	}
 
-	.technology-driven {
-		padding-bottom: 600px;
-	}
+
 }
 
-@media (min-width: 768px) and (max-width: 900px) {
-	#header {
-		background-size: contain;
-		height: 1000px;
-	}
-}
 
 @media (max-width: 769px) {
 	#header {
 		background-position: right bottom;
-		background-size: contain;
+		background-size: 90%;
 	}
 }
 
-@media (max-width: 500px) {
+@media (min-width:400px) and (max-width: 600px) {
 	.technology-driven {
 		padding-bottom: 150px;
+	}
+}
+
+@media (max-width: 399px) {
+	.technology-driven {
+		padding-bottom: 50px;
 	}
 }
 
