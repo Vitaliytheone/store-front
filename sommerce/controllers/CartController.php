@@ -61,17 +61,7 @@ class CartController extends CustomController
             ],
         ]);
     }
-
-    public function beforeAction($action)
-    {
-        if (in_array($action->id, ['index'])) {
-            $this->enableDomainValidation = false;
-            $this->enableCsrfValidation = false;
-        }
-
-        return parent::beforeAction($action);
-    }
-
+    
     /**
      * Displays cart.
      * @return string|Response
@@ -164,8 +154,8 @@ class CartController extends CustomController
         $package = null;
 
         if (empty($id) || !($package = Packages::find()->andWhere([
-            'id' => $id,
-        ])->active()->one())) {
+                'id' => $id,
+            ])->active()->one())) {
             throw new NotFoundHttpException();
         }
 

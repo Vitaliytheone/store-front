@@ -7,10 +7,30 @@ body {
 	-ms-backface-visibility: hidden;
 }
 
+#features img {
+	width: 80px;
+	height: 80px;
+}
+
+#pricing img {
+	width: 72px;
+	height: 72px;
+}
+
+#started .numbers {
+	width: 115px;
+	height: 112px;
+}
+
+.arrow-right img {
+	width: 31px;
+	height: 31px;
+}
+
 Input::placeholder {
   font-family: Montserrat;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 400;
   color: #c1c0cc !important;
 }
 
@@ -57,18 +77,20 @@ button:focus {
 	font-size: 32px;
 	font-weight: bold;
 	color: #312e55;
-	line-height: 1.5;
+	line-height: 48px;
 }
 
 /* HEADER */
 .h-bolder {
 	font-size: 32px;
 	font-weight: bold;
+	line-height: 48px;
 	color: white;
 }
 
 #header {
-	background-image: url("../img/lp-sources/illustrations/main.svg");
+	background-image: url("../images/webp/Illustrations/main@2x.webp");
+	background-size: contain;
 	background-repeat: no-repeat;
 	background-position: top right;
 }
@@ -129,14 +151,14 @@ button:focus {
 }
 
 .nav li {
-	padding-right: 30px;
+	padding-right: 32px;
 }
 
 .navbar-brand {
 	font-size: 24px;
 	font-weight: bold;
-	color: #312e55;
-	padding-right: 50px;
+	color: #312E55 !important;
+	padding-right: 54px;
 }
 
 .notify-button {
@@ -172,7 +194,8 @@ button:focus {
 /* Features */
 
 .feature-title {
-    padding-top: 16px;
+	padding-top: 16px;
+	line-height: 24px;
     padding-bottom: 8px;
 	font-size: 16px;
 	font-weight: bold;
@@ -210,7 +233,7 @@ button:focus {
 }
 
 .price div {
-	padding: 25px 10px 15px 10px;
+	padding: 24px 12px 6px 12px;
 }
 
 /* .gradient {
@@ -221,10 +244,10 @@ button:focus {
 
 .price-about {
 	font-size: 14px;
-	font-weight: 500;
+	font-weight: 400;
 	font-style: normal;
 	font-stretch: normal;
-	line-height: 1.71;
+	line-height: 24px;
 	letter-spacing: normal;
 	color: #ffcedb;
 }
@@ -274,7 +297,8 @@ button:focus {
 .provide-text {
 	font-family: Montserrat;
 	font-size: 12px;
-	font-weight: 500;
+	line-height: 20px;
+	font-weight: 400;
 	color: #eae7fa;
 }
 
@@ -349,7 +373,7 @@ button:focus {
 #started p {
 	text-align: center;
 	position: relative;
-	top: -17px;
+	top: -30px;
 }
 
 .start-title {
@@ -405,7 +429,7 @@ a .hello {
 	padding-right: 5px;
 	border-bottom: 1px solid #D6D0F2 !important;
 	font-size: 16px;
-	font-weight: 500;
+	font-weight: 400;
 	font-style: normal;
 	font-stretch: normal;
 	line-height: 1.5;
@@ -500,6 +524,7 @@ a:hover .hello {
 .footer-links {
 	font-family: Montserrat;
 	font-size: 14px;
+	line-height: 24px;
     color: #6e6c88;
 }
 
@@ -527,12 +552,18 @@ form .footer-links:hover{
 }
 .f-name {
 	font-size: 16px;
+	line-height: 24px;
 	font-weight: bold;
 	color: white;
 }
 
 ul li {
 	padding-bottom: 10px;
+}
+
+
+#ready .d-flex {
+	padding-left: 1px;
 }
 
 .ready-input div {
@@ -545,9 +576,11 @@ ul li {
 }
 
 .mail {
-	background-image: url("../img/lp-sources/illustrations/mail.svg");
+	background-image: url("../images/webp/Illustrations/mail@2x.webp");
+	background-size: contain;
 	background-repeat: no-repeat;
 	background-position: top right;
+	padding-left: 0px;
 }
 
 .hello-button {

@@ -5,7 +5,6 @@ namespace common\models\sommerces;
 use control_panel\components\behaviors\CustomersCountersBehavior;
 use common\components\traits\UnixTimeFormatTrait;
 use common\models\common\ProjectInterface;
-use common\models\sommerces\Stores;
 use control_panel\helpers\DomainsHelper;
 use control_panel\mail\mailers\RenewedSSL;
 use Yii;

@@ -56,6 +56,10 @@ $config = [
             'class' => 'console\controllers\sommerce\SystemController',
         ],
 
+        'system-superadmin' => [
+            'class' => 'console\controllers\superadmin\SystemController',
+        ],
+
         'blocks-sommerce' => [
             'class' => 'console\controllers\sommerce\BlocksController',
         ],
@@ -141,7 +145,7 @@ $config = [
 
         'mailerSwift' => [
             'class' => 'yii\swiftmailer\Mailer',
-            
+
             // раскомментировать если использовать smtp отправку и наоборот
             /*'transport' => [
                 'class' => 'Swift_SmtpTransport',

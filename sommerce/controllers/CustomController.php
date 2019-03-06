@@ -151,8 +151,6 @@ class CustomController extends CommonController
             $this->endContent[] = ob_get_contents();
             ob_end_clean();
         }
-        $search =  new NavigationSearch();
-        $search->setStore($this->store);
 
         $this->_globalParams = [
             'csrfname' => Yii::$app->getRequest()->csrfParam,

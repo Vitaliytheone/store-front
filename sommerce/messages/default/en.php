@@ -26,6 +26,8 @@ return [
     'contact.button.submit' => 'Send message',
     'contact.form.message.success' => 'Thank you! Your message has been sent',
     'contact.form.message.error' => 'Internal error. Try again later!',
+    'contact.form.recaptcha.error' => 'reCAPTCHA validation error! Try some times latter!',
+    'contact.form.recaptcha.required' => 'Please solve captcha',
 
     'order.title' => 'Add to cart',
     'order.package' => 'Package',

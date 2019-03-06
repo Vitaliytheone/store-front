@@ -23,9 +23,6 @@ class PageController extends CustomController
     {
         $content = file_get_contents(self::getTwigView('404'));
 
-        // TODO:: REMOVE THIS DEBUG!!!!
-//        error_log(print_r(Yii::$app->errorHandler->exception,1));
-
         return $this->renderTwigContent($content, [], false);
     }
 
@@ -52,6 +49,10 @@ class PageController extends CustomController
 
         $content = $page['twig'] ?? '';
 
+        $this->addModule('contactsForm', [
+            'action' => '/system/contacts'
+        ]);
+        $this->addPaymentModal();
         $orderForm = new OrderForm();
         $orderForm->setStore($this->store);
 
@@ -65,6 +66,19 @@ class PageController extends CustomController
         ]);
 
         return $this->renderTwigContent($content);
+    }
+
+    /**
+     * Add payment modal
+     */
+    protected function addPaymentModal()
+    {
+        $cookies = Yii::$app->request->cookies;
+        if (($cookie = $cookies->get('modal')) !== null) {
+            $this->addModule('paymentResultModal', $cookie->value);
+            $cookies = Yii::$app->response->cookies;
+            $cookies->remove('modal');
+        }
     }
 
     /**
@@ -107,18 +121,5 @@ class PageController extends CustomController
             'mimeType' => 'text/javascript;charset=UTF-8',
             'inline' => true,
         ]);
-    }
-
-    /**
-     * Add payment modal
-     */
-    protected function addPaymentModal()
-    {
-        $cookies = Yii::$app->request->cookies;
-        if (($cookie = $cookies->get('modal')) !== null) {
-            $this->addModule('paymentResultModal', $cookie->value);
-            $cookies = Yii::$app->response->cookies;
-            $cookies->remove('modal');
-        }
     }
 }
