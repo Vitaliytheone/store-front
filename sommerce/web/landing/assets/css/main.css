@@ -89,7 +89,7 @@ button:focus {
 }
 
 #header {
-	background-image: url("../images/webp/Illustrations/main@2x.webp");
+	background-image: url("../images/big/Main@2x-min\ 2.png");
 	background-size: contain;
 	background-repeat: no-repeat;
 	background-position: top right;
@@ -576,7 +576,7 @@ ul li {
 }
 
 .mail {
-	background-image: url("../images/webp/Illustrations/mail@2x.webp");
+	background-image: url("../images/big/mail.png");
 	background-size: contain;
 	background-repeat: no-repeat;
 	background-position: top right;
