@@ -4,6 +4,8 @@ namespace sommerce\controllers;
 
 use sommerce\components\filters\IntegrationsFilter;
 use sommerce\components\View;
+use sommerce\helpers\AssetsHelper;
+use sommerce\models\search\NavigationSearch;
 use sommerce\modules\admin\components\Url;
 use Yii;
 use yii\base\Exception;
@@ -135,19 +137,13 @@ class CustomController extends CommonController
 
         if (!empty($this->customJs)) {
 
-            $appJs = [
-                '/js/libs/popper.js',
-                '/js/libs/bootstrap.js',
-                '/js/frontend.js',
-            ];
-
-            foreach ($appJs as $src) {
-                $this->endContent[] = Html::script('', ['src' => $src, 'type' => 'text/javascript']);
+            if (!empty($this->customJs)) {
+                foreach (AssetsHelper::getStoreScripts() as $src) {
+                    $this->endContent[] = Html::script('', ['src' => $src, 'type' => 'text/javascript']);
+                }
+                $this->endContent[] = Html::script(implode("\r\n", $this->customJs), ['type' => 'text/javascript']);
             }
-
-            $this->endContent[] = Html::script(implode("\r\n", $this->customJs), ['type' => 'text/javascript']);
         }
-        $this->endContent[] = Html::script('', ['src' => 'https://www.google.com/recaptcha/api.js?hl=en']);
 
         if (YII_ENV_DEV) {
             ob_start();

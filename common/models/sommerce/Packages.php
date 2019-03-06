@@ -2,6 +2,7 @@
 
 namespace common\models\sommerce;
 
+use common\models\panels\AdditionalServices;
 use Yii;
 use yii\behaviors\AttributeBehavior;
 use yii\db\ActiveRecord;
@@ -30,6 +31,7 @@ use yii\helpers\ArrayHelper;
  * @property string $properties
  *
  * @property Products $product
+ * @property AdditionalServices $provider
  * @property Suborders[] $suborders
  */
 class Packages extends ActiveRecord
@@ -118,6 +120,14 @@ class Packages extends ActiveRecord
     }
 
     /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getProvider()
+    {
+        return $this->hasOne(AdditionalServices::class, ['provider_id' => 'provider_id']);
+    }
+
+    /**
      * @inheritdoc
      * @return PackagesQuery the active query used by this AR class.
      */
@@ -148,6 +158,7 @@ class Packages extends ActiveRecord
      * Mark deleted items as 'deleted' and
      * level up items position with same product ID
      * @return bool
+     * @throws \yii\db\Exception
      */
     public function deleteVirtual()
     {

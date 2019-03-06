@@ -310,6 +310,8 @@ return [
     'settings.languages_section_result' => 'Result',
     'settings.languages_section_view_order' => 'View order',
     'settings.languages_section_orders' => 'Orders',
+    'settings.errors_providers_exist' => 'Provider already exist.',
+    'settings.errors_providers_vaild' => 'Provider not valid',
 
     'settings.languages_message_created' => 'Language was successfully created!',
     'settings.languages_message_updated' => 'Language was successfully updated!',

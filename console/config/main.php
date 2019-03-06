@@ -56,10 +56,6 @@ $config = [
             'class' => 'console\controllers\sommerce\SystemController',
         ],
 
-        'blocks-sommerce' => [
-            'class' => 'console\controllers\sommerce\BlocksController',
-        ],
-
         'cron-store' => [
             'class' => 'console\controllers\store\CronController',
         ],
@@ -141,7 +137,7 @@ $config = [
 
         'mailerSwift' => [
             'class' => 'yii\swiftmailer\Mailer',
-            
+
             // раскомментировать если использовать smtp отправку и наоборот
             /*'transport' => [
                 'class' => 'Swift_SmtpTransport',

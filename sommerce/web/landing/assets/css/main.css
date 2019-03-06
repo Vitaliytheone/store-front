@@ -7,6 +7,27 @@ body {
 	-ms-backface-visibility: hidden;
 }
 
+#features img {
+	width: 80px;
+	height: 80px;
+}
+
+#pricing img {
+	width: 72px;
+	height: 72px;
+}
+
+#started .numbers,
+.carousel-item img {
+	width: 115px;
+	height: 112px;
+}
+
+.arrow-right img {
+	width: 31px;
+	height: 31px;
+}
+
 Input::placeholder {
   font-family: Montserrat;
   font-size: 14px;
@@ -40,7 +61,9 @@ button:focus {
     padding-bottom: 30px;
 }
 
-@media (min-width: 768px) and (max-width: 1199px) {
+
+
+/* @media (min-width: 768px) and (max-width: 1199px) {
 	.provide-container {
 		margin-bottom: 100px !important;
 	}
@@ -50,7 +73,7 @@ button:focus {
 	.provide-container {
 		margin-bottom: 125px !important;
 	}
-}
+} */
 /* ********************* */
 
 .sommerce-bolder {
@@ -69,7 +92,8 @@ button:focus {
 }
 
 #header {
-	background-image: url("../img/lp-sources/illustrations/main.svg");
+	background-image: url("../images/big/Main@2x-min\ 2.png");
+	background-size: contain;
 	background-repeat: no-repeat;
 	background-position: top right;
 }
@@ -130,14 +154,14 @@ button:focus {
 }
 
 .nav li {
-	padding-right: 54px;
+	padding-right: 32px;
 }
 
 .navbar-brand {
 	font-size: 24px;
 	font-weight: bold;
-	color: #312e55;
-	padding-right: 50px;
+	color: #312E55 !important;
+	padding-right: 54px;
 }
 
 .notify-button {
@@ -212,7 +236,7 @@ button:focus {
 }
 
 .price div {
-	padding: 25px 10px 15px 10px;
+	padding: 24px 12px 6px 12px;
 }
 
 /* .gradient {
@@ -281,10 +305,10 @@ button:focus {
 	color: #eae7fa;
 }
 
-.provide-container {
+/* .provide-container {
 	padding-top: 30px;
 	margin-bottom: 70px;
-}
+} */
 
 .demo-buttons button {
     margin-right: 20px;
@@ -540,6 +564,11 @@ ul li {
 	padding-bottom: 10px;
 }
 
+
+#ready .d-flex {
+	padding-left: 1px;
+}
+
 .ready-input div {
 	padding-top: 10px;
 }
@@ -550,9 +579,11 @@ ul li {
 }
 
 .mail {
-	background-image: url("../img/lp-sources/illustrations/mail.svg");
+	background-image: url("../images/big/mail.png");
+	background-size: contain;
 	background-repeat: no-repeat;
-	background-position: top right;
+	background-position: 100% 20px;
+	padding-left: 0px;
 }
 
 .hello-button {
@@ -604,9 +635,13 @@ ul li {
 	.footer-input {
 		width: 280px;
 	}
+
+	.collapse-container {
+		width: 100%;
+	}
 }
 
-@media screen and (max-width: 992px) {
+@media screen and (max-width: 991px) {
 	.faq-container {
 		width: 100%;
 	}
@@ -615,12 +650,8 @@ ul li {
 		width: 100%;
 	}
 
-	.collapse-container {
-		width: 100%;
-	}
-
 	.mail {
-		background-position: 160% 40%;
+		background-position: 150% 20px;
 	}
 
 	.gradient {
@@ -705,6 +736,11 @@ ul li {
 	.header-descr {
 		max-width: 100%;
 	}
+
+	.price div {
+    padding: 24px 12px 30px 12px;
+}
+
 }
 
 @media screen and (max-width: 350px) {
@@ -769,8 +805,14 @@ ul li {
 	.slick {
 		display: none;
 	}
+	
 }
 
+@media (max-width: 425px) {
+	.mail {
+		background-position: 50% 100%;
+	}
+}
 
 /* ANIMATION HOVERS IN DEMO  */
 
