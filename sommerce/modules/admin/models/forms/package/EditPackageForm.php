@@ -3,12 +3,11 @@
 namespace admin\models\forms\package;
 
 use admin\models\forms\BaseForm;
+use common\models\panels\AdditionalServices;
 use common\models\sommerce\ActivityLog;
 use yii\db\Query;
 use common\models\sommerce\Packages;
-use common\models\sommerces\Providers;
 use common\models\sommerces\StoreProviders;
-use common\models\sommerces\Stores;
 use Yii;
 use yii\db\Transaction;
 use yii\helpers\ArrayHelper;
@@ -69,6 +68,7 @@ class EditPackageForm extends BaseForm
 
     /**
      * @return bool
+     * @throws \yii\db\Exception
      */
     public function save()
     {
@@ -173,12 +173,12 @@ class EditPackageForm extends BaseForm
         if (null === $this->_store_providers) {
             $this->_store_providers = (new Query())
                 ->select([
-                    'pr.id', 'pr.site',
+                    'pr.provider_id as id', 'pr.name as site',
                     'sp.store_id'
                 ])
                 ->from(['sp' => StoreProviders::tableName()])
                 ->where(['sp.store_id' => $this->_store->id])
-                ->leftJoin(['pr' => Providers::tableName()], 'pr.id = sp.provider_id')
+                ->leftJoin(['pr' => AdditionalServices::tableName()], 'pr.provider_id = sp.provider_id')
                 ->indexBy('id')
                 ->all();
 
