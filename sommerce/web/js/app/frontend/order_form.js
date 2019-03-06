@@ -4,8 +4,7 @@ customModule.orderFormFrontend = {
 
         var self = this;
 
-        self.currentMethod = null;
-        self.packageId = null;
+        self.params = params;
 
         self.fieldsContainer = null;
         self.modal = null;
@@ -17,24 +16,14 @@ customModule.orderFormFrontend = {
         self.formActionUrl = params.form_action_url;
         self.formValidateUlr = params.form_validate_ulr;
 
-        self.formValidated = false;
+        self.packageId = null;
 
         if (!self.paymentMethods || !self.orderDataUrl || !self.formActionUrl || !self.formValidateUlr) {
             console.log('Bad config!');
             return;
         }
 
-        if ('undefined' != typeof params.options) {
-            if ('undefined' != typeof params.options.authorize) {
-                self.initAuthorize(params.options.authorize);
-            }
-            if ('undefined' != typeof params.options.stripe) {
-                self.initStripe(params.options.stripe);
-            }
-            if ('undefined' != typeof params.options.stripe_3d_secure) {
-                self.initStripe3dSecure(params.options.stripe_3d_secure);
-            }
-        }
+        self.currentMethod = self.paymentMethods[0].id;
 
         $('.buy-package').on('click', function (event) {
             event.preventDefault();
@@ -68,7 +57,6 @@ customModule.orderFormFrontend = {
                 }
             });
         });
-
     },
     initModal: function(data) {
         var self = this;
@@ -91,6 +79,18 @@ customModule.orderFormFrontend = {
             hideValidationError();
             $('#order-package-modal').modal('show');
         });
+
+        if ('undefined' != typeof self.params.options) {
+            if ('undefined' != typeof self.params.options.authorize) {
+                self.initAuthorize(self.params.options.authorize);
+            }
+            if ('undefined' != typeof self.params.options.stripe) {
+                self.initStripe(self.params.options.stripe);
+            }
+            if ('undefined' != typeof self.params.options.stripe_3d_secure) {
+                self.initStripe3dSecure(self.params.options.stripe_3d_secure);
+            }
+        }
 
         $(document).on('click', '#proceed_checkout', function (event) {
             hideValidationError();
@@ -129,7 +129,11 @@ customModule.orderFormFrontend = {
             self.updateFields(method);
         });
 
-        $('input[name="OrderForm[method]"]:checked').trigger('change');
+        if (self.paymentMethods.length > 1) {
+            $('input[name="OrderForm[method]"]:checked').trigger('change');
+        } else {
+            $('input:hidden[name="OrderForm[method]"]').trigger('change');
+        }
 
         function hideValidationError() {
             self.modal.find('.sommerce-modals__alert').html('').css('display', 'none');
@@ -176,11 +180,11 @@ customModule.orderFormFrontend = {
         var self = this;
         var email = $('input[name="OrderForm[email]');
         var configure = params.configure;
-        var submitBtn = $('button[type=submit]', self.fieldsContainer);
+        var submitBtn = $('#proceed_checkout');
         var submitMethodBtn = $("<button />", configure).hide();
         submitBtn.after(submitMethodBtn);
 
-        $(document).on('validated', self.fieldsContainer, function(e) {
+        $(document).on('click', submitBtn, function (e) {
             if ('' == ($.trim(email.val()))) {
                 return;
             }
@@ -210,7 +214,7 @@ customModule.orderFormFrontend = {
 
         $(document).on('validated', self.fieldsContainer, function(e) {
 
-            if (params.type != $('input[name="OrderForm[method]"]:checked').val()) {
+            if (params.type != self.currentMethod) {
                 return true;
             }
 
@@ -259,7 +263,7 @@ customModule.orderFormFrontend = {
 
         $(document).on('validated', self.fieldsContainer, function(e) {
 
-            if (params.type != $('input[name="OrderForm[method]"]:checked').val()) {
+            if (params.type != self.currentMethod) {
                 return true;
             }
 
@@ -344,3 +348,5 @@ customModule.orderFormFrontend = {
         }
     }
 };
+
+var responseAuthorizeHandler = customModule.orderFormFrontend.responseAuthorizeHandler;

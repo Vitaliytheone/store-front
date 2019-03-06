@@ -177,9 +177,6 @@ class Authorize extends BasePayment
         $this->_payment->transaction_id = $transactionId;
         $this->_payment->save(false);
 
-        // Clear cart after payment will be create
-        Carts::clearCheckoutItems($checkout);
-
         $response = $this->getTransactionDetails($transactionId, $this->_payment, $details);
 
         if (null == $response) {
