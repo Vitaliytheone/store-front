@@ -2,10 +2,10 @@
     /* @var $this \yii\web\View */
     /* @var $providers \sommerce\modules\admin\models\search\ProvidersSearch */
 
-    use common\components\ActiveForm;
-    use yii\bootstrap\Html;
+use common\components\ActiveForm;
+use yii\bootstrap\Html;
 
-    $model = new \sommerce\modules\admin\models\forms\ProvidersListForm();
+$model = new \sommerce\modules\admin\models\forms\ProvidersListForm();
 ?>
 <?php $form = ActiveForm::begin([
     'id' => 'providersListForm',
@@ -26,7 +26,7 @@
         </div>
     <?php endforeach; ?>
 <?php else : ?>
-    <p>No providers</p>
+    <p><?= Yii::t('admin', 'settings.providers_no_providers') ?></p>
 <?php endif; ?>
 <hr>
 <?= Html::submitButton(Yii::t('admin', 'settings.providers_save'), ['class' => 'btn btn-success m-btn--air', 'name' => 'save-button']) ?>

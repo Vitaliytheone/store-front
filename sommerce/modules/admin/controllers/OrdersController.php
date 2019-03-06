@@ -2,20 +2,20 @@
 
 namespace sommerce\modules\admin\controllers;
 
-use sommerce\events\Events;
 use common\models\sommerce\ActivityLog;
 use common\models\sommerces\StoreAdminAuth;
 use common\models\sommerces\Stores;
+use sommerce\events\Events;
 use sommerce\helpers\UiHelper;
-use Yii;
 use sommerce\modules\admin\components\Url;
-use yii\web\Response;
-use yii\web\NotFoundHttpException;
-use yii\web\BadRequestHttpException;
-use yii\web\NotAcceptableHttpException;
+use sommerce\modules\admin\models\forms\SuborderForm;
 use sommerce\modules\admin\models\search\OrdersSearch;
 use sommerce\modules\admin\models\SuborderDetails;
-use sommerce\modules\admin\models\forms\SuborderForm;
+use Yii;
+use yii\web\BadRequestHttpException;
+use yii\web\NotAcceptableHttpException;
+use yii\web\NotFoundHttpException;
+use yii\web\Response;
 
 /**
  * Class OrdersController
@@ -152,7 +152,7 @@ class OrdersController extends CustomController
 
         ActivityLog::log($identity, ActivityLog::E_ORDERS_ORDER_CANCELED, $model->id, $model->id);
 
-        UiHelper::message(Yii::t('admin', 'orders.message_status_changed'));
+        UiHelper::message(Yii::t('admin', 'orders.message_canceled'));
 
         $filters = static::_queryParams();
         $this->redirect(Url::toRoute(["/orders$filters"]));
@@ -183,7 +183,7 @@ class OrdersController extends CustomController
 
         ActivityLog::log($identity, ActivityLog::E_ORDERS_ORDER_RESENT, $model->id, $model->id);
 
-        UiHelper::message(Yii::t('admin', 'orders.message_status_changed'));
+        UiHelper::message(Yii::t('admin', 'orders.message_resend'));
 
         $filters = static::_queryParams();
         $this->redirect(Url::toRoute(["/orders$filters"]));

@@ -13,11 +13,10 @@
                     <label for="order-detail-provider">
                         <?= Yii::t('admin', 'orders.details_provider') ?>
                     </label>
-                    <input type="text" class="form-control readonly" id="order-detail-provider" value=""
-                           readonly>
+                    <input type="text" class="form-control readonly" id="order-detail-provider" value="" readonly>
                 </div>
                 <div class="form-group">
-                    <label for="order-detail-provider-id">
+                    <label for="order-detail-provider-order-id">
                         <?= Yii::t('admin', 'orders.details_order_id') ?>
                     </label>
                     <input type="text" class="form-control readonly" id="order-detail-provider-order-id" value="" readonly>

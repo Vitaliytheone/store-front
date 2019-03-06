@@ -26,6 +26,7 @@ class RouteHelper {
         $urls = [];
 
         $urls = in_array('payments', $sources) ? ArrayHelper::merge($urls, static::getPaymentRules()) : [];
+
         $urls = in_array('pages', $sources) ? ArrayHelper::merge($urls, static::getPagesRules()) : [];
 
         array_multisort(array_map('strlen', array_keys($urls)), SORT_DESC, $urls);

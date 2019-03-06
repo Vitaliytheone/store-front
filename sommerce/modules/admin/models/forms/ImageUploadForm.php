@@ -122,12 +122,12 @@ class ImageUploadForm extends Model
         }
 
         if (!($this->file instanceof UploadedFile)) {
-            $this->addError('file', Yii::t('admin', 'settings.message_upload_error'));
+            $this->addError('file', Yii::t('admin', 'cdn.error.bad_upload'));
             return false;
         }
 
         if (!$content = file_get_contents($this->file->tempName)) {
-            $this->addError('file', Yii::t('admin', 'settings.message_upload_error'));
+            $this->addError('file', Yii::t('admin', 'cdn.error.bad_upload'));
             return false;
         }
 
@@ -290,7 +290,7 @@ class ImageUploadForm extends Model
         try {
             $cdnId = $cdn->uploadFromPath($filePath, $mime);
         } catch (\Exception $e) {
-            $this->addError('file', Yii::t('admin', 'cdn.error.common'));
+            $this->addError('file', Yii::t('admin', 'cdn.error.bad_upload'));
         }
 
         return $cdnId;

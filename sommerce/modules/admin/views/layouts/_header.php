@@ -1,12 +1,12 @@
 <?php
-    /* @var $this \yii\web\View */
+/* @var $this \yii\web\View */
 
-    use sommerce\modules\admin\components\Url;
-    use yii\helpers\ArrayHelper;
-    use sommerce\modules\admin\helpers\NavbarHelper;
+use sommerce\modules\admin\components\Url;
+use sommerce\modules\admin\helpers\NavbarHelper;
+use yii\helpers\ArrayHelper;
+use yii\helpers\Html;
 
 $navbarItems = NavbarHelper::getNavbarItems($this->context->route);
-
 
 ?>
 <!-- begin::Header -->
@@ -20,7 +20,7 @@ $navbarItems = NavbarHelper::getNavbarItems($this->context->route);
                     <div class="m-stack m-stack--ver m-stack--general m-stack--inline">
                         <div class="m-stack__item m-stack__item--middle m-brand__logo">
                             <a href="<?= Url::toRoute('/orders')?>" class="m-brand__logo-wrapper">
-                                Name panel
+                                <?= Html::encode($this->title) ?>
                             </a>
                         </div>
                         <div class="m-stack__item m-stack__item--middle m-brand__tools">
@@ -61,7 +61,7 @@ $navbarItems = NavbarHelper::getNavbarItems($this->context->route);
                                 <li class="m-menu__item m-menu__item--submenu m-menu__item--rel m-menu__item--more m-menu__item--icon-only mobile-show" data-menu-submenu-toggle="hover" data-redirect="true" aria-haspopup="true">
                                     <a href="<?= Url::toRoute('/settings')?>" class="m-menu__link m-menu__toggle">
                                         <span class="m-menu__item-here"></span>
-                                        <span class="m-menu__link-text"> Settings</span>
+                                        <span class="m-menu__link-text"> <?= Yii::t('admin', 'header.menu_settings') ?></span>
                                         <i class="m-menu__ver-arrow la la-angle-right"></i>
                                     </a>
                                     <div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left m-menu__submenu--pull">
@@ -96,10 +96,10 @@ $navbarItems = NavbarHelper::getNavbarItems($this->context->route);
                     <form class="m-header-search__form">
                         <ul class="m-menu--right">
                             <li>
-                                <a href="<?= Url::toRoute('/account')?>">Account</a>
+                                <a href="<?= Url::toRoute('/account')?>"><?= Yii::t('admin', 'header.menu_account') ?></a>
                             </li>
                             <li>
-                                <a href="<?= Url::toRoute('/logout') ?>">Logout</a>
+                                <a href="<?= Url::toRoute('/logout') ?>"><?= Yii::t('admin', 'header.menu_logout') ?></a>
                             </li>
                         </ul>
                     </form>

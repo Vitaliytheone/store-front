@@ -104,9 +104,9 @@ customModule.orderFormFrontend = {
                         return;
                     }
                     if (
-                       self.currentMethod != '19' && // authorize
-                       self.currentMethod != '21' && // stripe
-                       self.currentMethod != '26'    // stripe_3d_secure
+                       self.currentMethod != '11' && // authorize
+                       self.currentMethod != '13' && // stripe
+                       self.currentMethod != '17'    // stripe_3d_secure
                     ) {
                         self.fieldsContainer.submit();
                     } else {
