@@ -1746,7 +1746,7 @@ customModule.adminProducts = {
             // Sort the parents
             productsSortable.sortable({
                 containment: "parent",
-                items: "> div",
+                items: "> .product-item",
                 handle: ".move",
                 tolerance: "pointer",
                 cursor: "move",
@@ -1754,12 +1754,7 @@ customModule.adminProducts = {
                 revert: 300,
                 delay: 150,
                 dropOnEmpty: true,
-                placeholder: "movable-placeholder",
-                helper: function() {
-                    var helper = $(this).clone();
-                    helper.css({'width': $(this).width(), 'height': $(this).height()});
-                    return helper;
-                }
+                placeholder: "movable-placeholder"
             });
 
             // Sort the children
@@ -1767,12 +1762,7 @@ customModule.adminProducts = {
                 items: "> .package-item",
                 handle: ".sommerce-products-editor__packages-drag",
                 tolerance: "pointer",
-                containment: "parent",
-                helper: function() {
-                    var helper = $(this).clone();
-                    helper.css({'width': $(this).width(), 'height': $(this).height()});
-                    return helper;
-                }
+                containment: "parent"
             });
 
             productsSortable.sortable({
