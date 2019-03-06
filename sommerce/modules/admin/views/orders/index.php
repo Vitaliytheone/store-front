@@ -1,11 +1,11 @@
 <?php
 
-use yii\helpers\Html;
-use sommerce\modules\admin\components\Url;
-use yii\helpers\ArrayHelper;
-use sommerce\helpers\UiHelper;
-use sommerce\modules\admin\widgets\CustomLinkPager;
 use common\models\sommerce\Suborders;
+use sommerce\helpers\UiHelper;
+use sommerce\modules\admin\components\Url;
+use sommerce\modules\admin\widgets\CustomLinkPager;
+use yii\helpers\ArrayHelper;
+use yii\helpers\Html;
 
 /* @var $this yii\web\View */
 /* @var $ordersDataProvider yii\data\ActiveDataProvider */
@@ -75,8 +75,7 @@ $statusFilterButtons = $ordersSearchModel->getStatusFilterButtons([
                 </div>
 
                 <div class="tab-content">
-                    <div class="tab-pane fade show active" id="all-orders" role="tabpanel"
-                         aria-labelledby="all-orders-tab">
+                    <div class="tab-pane fade show active" id="all-orders" role="tabpanel" aria-labelledby="all-orders-tab">
 
                         <div class="m_datatable m-datatable m-datatable--default">
 

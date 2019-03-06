@@ -1,8 +1,8 @@
 <?php
 
-use yii\helpers\Html;
 use common\components\ActiveForm;
 use sommerce\modules\admin\components\Url;
+use yii\helpers\Html;
 
 /** @var \yii\base\Model $form */
 
@@ -15,7 +15,7 @@ use sommerce\modules\admin\components\Url;
                 <div class="d-flex align-items-center">
                     <div class="mr-auto">
                         <h3 class="m-subheader__title">
-                            Account
+                            <?= Yii::t('admin', 'account.page_title') ?>
                         </h3>
                     </div>
                 </div>
@@ -55,7 +55,7 @@ use sommerce\modules\admin\components\Url;
                         </div>
                     </div>
                     <div class="form-group">
-                        <button type="submit" class="btn btn-success m-btn--air" name="save-button">Save changes</button>
+                        <button type="submit" class="btn btn-success m-btn--air" name="save-button"><?= Yii::t('admin', 'account.btn_save') ?></button>
                     </div>
                     <?= Html::endForm(); ?>
                 </form>

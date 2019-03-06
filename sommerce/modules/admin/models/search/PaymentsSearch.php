@@ -304,7 +304,7 @@ class PaymentsSearch extends Model
             $method = $menuItem['method_id'];
             $menuItem['url'] = Url::current(['method' => $method]);
             $menuItem['active'] = UiHelper::isFilterActive('method', $method);
-            $menuItem['method_title'] = $methodsNames[$method] ?? $storeMethodsNames[$method] ?? 'Deleted';
+            $menuItem['method_title'] = $methodsNames[$method] ?? $storeMethodsNames[$method] ?? Yii::t('admin', 'payments.payment_method_deleted');
         });
 
         $allMethodsMenuItem = [
