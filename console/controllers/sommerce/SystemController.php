@@ -9,7 +9,7 @@ use common\models\sommerces\StoreAdmins;
 use common\models\sommerces\StoreIntegrations;
 use common\models\sommerces\StorePaymentMethods;
 use common\models\sommerces\Stores;
-use my\components\ActiveForm;
+use control_panel\components\ActiveForm;
 use sommerce\helpers\MessagesHelper;
 use Yii;
 use yii\db\Exception;
