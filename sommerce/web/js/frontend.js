@@ -526,50 +526,54 @@ customModule.cartFrontend = {
 };
 
 var responseAuthorizeHandler = customModule.cartFrontend.responseAuthorizeHandler;
-/******************************************************************
- *            Contact form
- ******************************************************************/
-$('#contactForm').on('click', '.block-contactus__form-button', function (e) {
-    e.preventDefault();
-    var form = $('#contactForm');
-    var errorBlock = $('#contactFormError', form);
-    var actionUrl = '/site/contact-us';
-    var csrfParam = $('meta[name="csrf-param"]').attr("content");
-    var csrfToken = $('meta[name="csrf-token"]').attr("content");
-    var postData = form.serializeArray();
-    postData.push({name: csrfParam, value:csrfToken});
+customModule.contactsForm = {
+    run: function (params) {
+        /******************************************************************
+         *            Contact form
+         ******************************************************************/
+        $('#contactForm').on('click', '.block-contactus__form-button', function (e) {
+            e.preventDefault();
+            var form = $('#contactForm');
+            var errorBlock = $('#contactFormError', form);
+            var actionUrl = params.action;
+            var csrfParam = $('meta[name="csrf-param"]').attr("content");
+            var csrfToken = $('meta[name="csrf-token"]').attr("content");
+            var btn = $('.block-contactus__form-button');
 
-    $.ajax({
-        url: actionUrl,
-        async: false,
-        type: "POST",
-        dataType: 'json',
-        data: postData,
-        success: function (data) {
-            if (data.error == false) {
-                errorBlock.removeClass('alert-danger');
-                errorBlock.addClass('alert-success');
-                errorBlock.html(data.success);
-            } else {
-                errorBlock.removeClass('alert-success');
-                errorBlock.addClass('alert-danger');
-                errorBlock.html(data.error_message);
-            }
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
-            console.log('Error on send', textStatus, errorThrown);
-        }
-    });
-});
+            var postData = form.serializeArray();
+            postData.push({name: csrfParam, value: csrfToken});
+
+            btn.prop('disabled', true);
+
+            $.ajax({
+                url: actionUrl,
+                type: "POST",
+                dataType: 'json',
+                data: postData,
+                success: function (response) {
+                    errorBlock.removeClass('alert-danger');
+                    errorBlock.addClass('alert-success');
+                    errorBlock.html(response.data.message);
+                    form.trigger('reset');
+                    if (window.grecaptcha) grecaptcha.reset();
+                    btn.removeAttr('disabled');
+                },
+                error: function (jqXHR) {
+                    errorBlock.removeClass('alert-success');
+                    errorBlock.addClass('alert-danger');
+                    errorBlock.html(jqXHR.responseJSON.error_message);
+                    btn.removeAttr('disabled');
+                }
+            });
+        });
+    }
+};
 
 customModule.orderFormFrontend = {
 
     run : function(params) {
 
         var self = this;
-
-        self.currentMethod = null;
-        self.packageId = null;
 
         self.fieldsContainer = null;
         self.modal = null;
@@ -581,12 +585,14 @@ customModule.orderFormFrontend = {
         self.formActionUrl = params.form_action_url;
         self.formValidateUlr = params.form_validate_ulr;
 
-        self.formValidated = false;
+        self.packageId = null;
 
         if (!self.paymentMethods || !self.orderDataUrl || !self.formActionUrl || !self.formValidateUlr) {
             console.log('Bad config!');
             return;
         }
+
+        self.currentMethod = self.paymentMethods[0].id;
 
         if ('undefined' != typeof params.options) {
             if ('undefined' != typeof params.options.authorize) {
@@ -632,7 +638,6 @@ customModule.orderFormFrontend = {
                 }
             });
         });
-
     },
     initModal: function(data) {
         var self = this;
@@ -668,9 +673,9 @@ customModule.orderFormFrontend = {
                         return;
                     }
                     if (
-                       self.currentMethod != '19' && // authorize
-                       self.currentMethod != '21' && // stripe
-                       self.currentMethod != '26'    // stripe_3d_secure
+                       self.currentMethod != '11' && // authorize
+                       self.currentMethod != '13' && // stripe
+                       self.currentMethod != '17'    // stripe_3d_secure
                     ) {
                         self.fieldsContainer.submit();
                     } else {
@@ -693,7 +698,11 @@ customModule.orderFormFrontend = {
             self.updateFields(method);
         });
 
-        $('input[name="OrderForm[method]"]:checked').trigger('change');
+        if (self.paymentMethods.length > 1) {
+            $('input[name="OrderForm[method]"]:checked').trigger('change');
+        } else {
+            $('input:hidden[name="OrderForm[method]"]').trigger('change');
+        }
 
         function hideValidationError() {
             self.modal.find('.sommerce-modals__alert').html('').css('display', 'none');
@@ -740,11 +749,14 @@ customModule.orderFormFrontend = {
         var self = this;
         var email = $('input[name="OrderForm[email]');
         var configure = params.configure;
-        var submitBtn = $('button[type=submit]', self.fieldsContainer);
-        var submitMethodBtn = $("<button />", configure).hide();
+        var submitBtn = $(self.fieldsContainer, '#proceed_checkout');
+        var submitMethodBtn = $("<button />", configure);
         submitBtn.after(submitMethodBtn);
 
-        $(document).on('validated', self.fieldsContainer, function(e) {
+        console.log('test');
+        console.log(configure);
+
+        submitBtn.on('click', function (e) {
             if ('' == ($.trim(email.val()))) {
                 return;
             }
@@ -774,7 +786,7 @@ customModule.orderFormFrontend = {
 
         $(document).on('validated', self.fieldsContainer, function(e) {
 
-            if (params.type != $('input[name="OrderForm[method]"]:checked').val()) {
+            if (params.type != self.currentMethod) {
                 return true;
             }
 
@@ -823,7 +835,7 @@ customModule.orderFormFrontend = {
 
         $(document).on('validated', self.fieldsContainer, function(e) {
 
-            if (params.type != $('input[name="OrderForm[method]"]:checked').val()) {
+            if (params.type != self.currentMethod) {
                 return true;
             }
 
@@ -853,15 +865,10 @@ customModule.orderFormFrontend = {
 
             var returnURL = params.return_url + '?' + $.param({
                     "method": params.type,
-                    "email": $('input[name="OrderForm[email]').val(),
                     "package_id": self.packageId,
+                    "email": $('input[name="OrderForm[email]').val(),
                     "link": $('input[name="OrderForm[link]').val()
             });
-
-            console.log(self.fieldsContainer.serialize());
-            console.log(returnURL);
-
-            //    '?method=' + params.type + '&email=' + $('input[name="OrderForm[email]').val();
 
             // create the 3DS source from the card source
             stripe.createSource({
@@ -913,6 +920,8 @@ customModule.orderFormFrontend = {
         }
     }
 };
+
+var responseAuthorizeHandler = customModule.cartFrontend.responseAuthorizeHandler;
 customModule.paymentResultModal = {
     run : function(params) {
         var selector = null;

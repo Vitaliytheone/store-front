@@ -73,7 +73,6 @@ class Stripe extends BasePayment
             PaymentsLog::log($checkout->id, $e->getMessage() . $e->getTraceAsString());
             return static::returnError();
         }
-        Carts::clearCheckoutItems($checkout);
 
         if (!($this->_payment = Payments::findOne([
             'checkout_id' => $checkout->id,
