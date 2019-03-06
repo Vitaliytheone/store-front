@@ -238,9 +238,6 @@ abstract class BasePayment extends Component
                 $sendOrder->suborder_id = $orderItem->id;
                 $sendOrder->save(false);
             }
-
-            // Remove paid items from cart
-            Carts::removeItemByKey($item['cart_key']);
         }
 
         $payment->refresh();
