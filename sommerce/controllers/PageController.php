@@ -24,7 +24,7 @@ class PageController extends CustomController
         $content = file_get_contents(self::getTwigView('404'));
 
         // TODO:: REMOVE THIS DEBUG!!!!
-        error_log(print_r(Yii::$app->errorHandler->exception,1));
+//        error_log(print_r(Yii::$app->errorHandler->exception,1));
 
         return $this->renderTwigContent($content, [], false);
     }
@@ -43,6 +43,8 @@ class PageController extends CustomController
         if (!$page) {
             throw new NotFoundHttpException("Page by url '{$url}' not found");
         }
+
+        Url::remember();
 
         $this->pageTitle = $page['seo_title'];
         $this->seoKeywords = $page['seo_keywords'];

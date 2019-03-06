@@ -259,9 +259,11 @@ class OrderForm extends Model
     {
         $methods = [];
         foreach ($this->getPaymentMethods() as $method) {
+
             $methods[] = [
                 'id' => $method['id'],
-                'name' => Html::encode($method['name'])
+                'name' => Html::encode($method['name']),
+                'method' => $method['method'],
             ];
         }
 
@@ -293,12 +295,8 @@ class OrderForm extends Model
         $checkout->method_id = $storePayMethod->method_id;
         $checkout->price = $this->getPackage()->price;
         $checkout->currency = $this->_store->currency;
-
-         /* "Cохраняем url страницы с которой делается заказ"
-         by Andrey Globin*/
-        $checkout->redirect_url = Url::previous();
-
         $checkout->currency_id = $storePayMethod->currency_id;
+        $checkout->redirect_url = Url::previous();
         $checkout->setDetails($this->attributes);
         $checkout->setUserDetails($this->_userData);
 

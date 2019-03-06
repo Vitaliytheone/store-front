@@ -55,7 +55,7 @@
                             </div>
                         </div>
                         <% } else { %>
-                        <input type="hidden" name="OrderForm[method]" value="<%= method.id %>">
+                        <input type="hidden" name="OrderForm[method]" value="<%= payment_methods[0].id %>">
                         <% }; %>
                     <% }; %>
                     <div class="sommerce-modals__actions">

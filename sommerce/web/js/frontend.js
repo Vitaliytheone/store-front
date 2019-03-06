@@ -1,1 +1,953 @@
-(function(){var e=this,n=e._,r=Array.prototype,i=Object.prototype,t=Function.prototype,o=r.push,c=r.slice,d=i.toString,a=i.hasOwnProperty,s=Array.isArray,l=Object.keys,u=t.bind,m=Object.create,f=function(){},p=function(e){return e instanceof p?e:this instanceof p?void(this._wrapped=e):new p(e)};"undefined"!=typeof exports?("undefined"!=typeof module&&module.exports&&(exports=module.exports=p),exports._=p):e._=p,p.VERSION="1.8.3";var v=function(o,a,e){if(void 0===a)return o;switch(null==e?3:e){case 1:return function(e){return o.call(a,e)};case 2:return function(e,n){return o.call(a,e,n)};case 3:return function(e,n,t){return o.call(a,e,n,t)};case 4:return function(e,n,t,r){return o.call(a,e,n,t,r)}}return function(){return o.apply(a,arguments)}},h=function(e,n,t){return null==e?p.identity:p.isFunction(e)?v(e,n,t):p.isObject(e)?p.matcher(e):p.property(e)};p.iteratee=function(e,n){return h(e,n,1/0)};var _=function(c,l){return function(e){var n=arguments.length;if(n<2||null==e)return e;for(var t=1;t<n;t++)for(var r=arguments[t],o=c(r),a=o.length,i=0;i<a;i++){var s=o[i];l&&void 0!==e[s]||(e[s]=r[s])}return e}},y=function(e){if(!p.isObject(e))return{};if(m)return m(e);f.prototype=e;var n=new f;return f.prototype=null,n},g=function(n){return function(e){return null==e?void 0:e[n]}},b=Math.pow(2,53)-1,k=g("length"),x=function(e){var n=k(e);return"number"==typeof n&&0<=n&&n<=b};function w(s){return function(e,n,t,r){n=v(n,r,4);var o=!x(e)&&p.keys(e),a=(o||e).length,i=0<s?0:a-1;return arguments.length<3&&(t=e[o?o[i]:i],i+=s),function(e,n,t,r,o,a){for(;0<=o&&o<a;o+=s){var i=r?r[o]:o;t=n(t,e[i],i,e)}return t}(e,n,t,o,i,a)}}p.each=p.forEach=function(e,n,t){var r,o;if(n=v(n,t),x(e))for(r=0,o=e.length;r<o;r++)n(e[r],r,e);else{var a=p.keys(e);for(r=0,o=a.length;r<o;r++)n(e[a[r]],a[r],e)}return e},p.map=p.collect=function(e,n,t){n=h(n,t);for(var r=!x(e)&&p.keys(e),o=(r||e).length,a=Array(o),i=0;i<o;i++){var s=r?r[i]:i;a[i]=n(e[s],s,e)}return a},p.reduce=p.foldl=p.inject=w(1),p.reduceRight=p.foldr=w(-1),p.find=p.detect=function(e,n,t){var r;if(void 0!==(r=x(e)?p.findIndex(e,n,t):p.findKey(e,n,t))&&-1!==r)return e[r]},p.filter=p.select=function(e,r,n){var o=[];return r=h(r,n),p.each(e,function(e,n,t){r(e,n,t)&&o.push(e)}),o},p.reject=function(e,n,t){return p.filter(e,p.negate(h(n)),t)},p.every=p.all=function(e,n,t){n=h(n,t);for(var r=!x(e)&&p.keys(e),o=(r||e).length,a=0;a<o;a++){var i=r?r[a]:a;if(!n(e[i],i,e))return!1}return!0},p.some=p.any=function(e,n,t){n=h(n,t);for(var r=!x(e)&&p.keys(e),o=(r||e).length,a=0;a<o;a++){var i=r?r[a]:a;if(n(e[i],i,e))return!0}return!1},p.contains=p.includes=p.include=function(e,n,t,r){return x(e)||(e=p.values(e)),("number"!=typeof t||r)&&(t=0),0<=p.indexOf(e,n,t)},p.invoke=function(e,t){var r=c.call(arguments,2),o=p.isFunction(t);return p.map(e,function(e){var n=o?t:e[t];return null==n?n:n.apply(e,r)})},p.pluck=function(e,n){return p.map(e,p.property(n))},p.where=function(e,n){return p.filter(e,p.matcher(n))},p.findWhere=function(e,n){return p.find(e,p.matcher(n))},p.max=function(e,r,n){var t,o,a=-1/0,i=-1/0;if(null==r&&null!=e)for(var s=0,c=(e=x(e)?e:p.values(e)).length;s<c;s++)t=e[s],a<t&&(a=t);else r=h(r,n),p.each(e,function(e,n,t){o=r(e,n,t),(i<o||o===-1/0&&a===-1/0)&&(a=e,i=o)});return a},p.min=function(e,r,n){var t,o,a=1/0,i=1/0;if(null==r&&null!=e)for(var s=0,c=(e=x(e)?e:p.values(e)).length;s<c;s++)(t=e[s])<a&&(a=t);else r=h(r,n),p.each(e,function(e,n,t){((o=r(e,n,t))<i||o===1/0&&a===1/0)&&(a=e,i=o)});return a},p.shuffle=function(e){for(var n,t=x(e)?e:p.values(e),r=t.length,o=Array(r),a=0;a<r;a++)(n=p.random(0,a))!==a&&(o[a]=o[n]),o[n]=t[a];return o},p.sample=function(e,n,t){return null==n||t?(x(e)||(e=p.values(e)),e[p.random(e.length-1)]):p.shuffle(e).slice(0,Math.max(0,n))},p.sortBy=function(e,r,n){return r=h(r,n),p.pluck(p.map(e,function(e,n,t){return{value:e,index:n,criteria:r(e,n,t)}}).sort(function(e,n){var t=e.criteria,r=n.criteria;if(t!==r){if(r<t||void 0===t)return 1;if(t<r||void 0===r)return-1}return e.index-n.index}),"value")};var $=function(i){return function(r,o,e){var a={};return o=h(o,e),p.each(r,function(e,n){var t=o(e,n,r);i(a,e,t)}),a}};p.groupBy=$(function(e,n,t){p.has(e,t)?e[t].push(n):e[t]=[n]}),p.indexBy=$(function(e,n,t){e[t]=n}),p.countBy=$(function(e,n,t){p.has(e,t)?e[t]++:e[t]=1}),p.toArray=function(e){return e?p.isArray(e)?c.call(e):x(e)?p.map(e,p.identity):p.values(e):[]},p.size=function(e){return null==e?0:x(e)?e.length:p.keys(e).length},p.partition=function(e,r,n){r=h(r,n);var o=[],a=[];return p.each(e,function(e,n,t){(r(e,n,t)?o:a).push(e)}),[o,a]},p.first=p.head=p.take=function(e,n,t){if(null!=e)return null==n||t?e[0]:p.initial(e,e.length-n)},p.initial=function(e,n,t){return c.call(e,0,Math.max(0,e.length-(null==n||t?1:n)))},p.last=function(e,n,t){if(null!=e)return null==n||t?e[e.length-1]:p.rest(e,Math.max(0,e.length-n))},p.rest=p.tail=p.drop=function(e,n,t){return c.call(e,null==n||t?1:n)},p.compact=function(e){return p.filter(e,p.identity)};var O=function(e,n,t,r){for(var o=[],a=0,i=r||0,s=k(e);i<s;i++){var c=e[i];if(x(c)&&(p.isArray(c)||p.isArguments(c))){n||(c=O(c,n,t));var l=0,u=c.length;for(o.length+=u;l<u;)o[a++]=c[l++]}else t||(o[a++]=c)}return o};function j(a){return function(e,n,t){n=h(n,t);for(var r=k(e),o=0<a?0:r-1;0<=o&&o<r;o+=a)if(n(e[o],o,e))return o;return-1}}function S(a,i,s){return function(e,n,t){var r=0,o=k(e);if("number"==typeof t)0<a?r=0<=t?t:Math.max(t+o,r):o=0<=t?Math.min(t+1,o):t+o+1;else if(s&&t&&o)return e[t=s(e,n)]===n?t:-1;if(n!=n)return 0<=(t=i(c.call(e,r,o),p.isNaN))?t+r:-1;for(t=0<a?r:o-1;0<=t&&t<o;t+=a)if(e[t]===n)return t;return-1}}p.flatten=function(e,n){return O(e,n,!1)},p.without=function(e){return p.difference(e,c.call(arguments,1))},p.uniq=p.unique=function(e,n,t,r){p.isBoolean(n)||(r=t,t=n,n=!1),null!=t&&(t=h(t,r));for(var o=[],a=[],i=0,s=k(e);i<s;i++){var c=e[i],l=t?t(c,i,e):c;n?(i&&a===l||o.push(c),a=l):t?p.contains(a,l)||(a.push(l),o.push(c)):p.contains(o,c)||o.push(c)}return o},p.union=function(){return p.uniq(O(arguments,!0,!0))},p.intersection=function(e){for(var n=[],t=arguments.length,r=0,o=k(e);r<o;r++){var a=e[r];if(!p.contains(n,a)){for(var i=1;i<t&&p.contains(arguments[i],a);i++);i===t&&n.push(a)}}return n},p.difference=function(e){var n=O(arguments,!0,!0,1);return p.filter(e,function(e){return!p.contains(n,e)})},p.zip=function(){return p.unzip(arguments)},p.unzip=function(e){for(var n=e&&p.max(e,k).length||0,t=Array(n),r=0;r<n;r++)t[r]=p.pluck(e,r);return t},p.object=function(e,n){for(var t={},r=0,o=k(e);r<o;r++)n?t[e[r]]=n[r]:t[e[r][0]]=e[r][1];return t},p.findIndex=j(1),p.findLastIndex=j(-1),p.sortedIndex=function(e,n,t,r){for(var o=(t=h(t,r,1))(n),a=0,i=k(e);a<i;){var s=Math.floor((a+i)/2);t(e[s])<o?a=s+1:i=s}return a},p.indexOf=S(1,p.findIndex,p.sortedIndex),p.lastIndexOf=S(-1,p.findLastIndex),p.range=function(e,n,t){null==n&&(n=e||0,e=0),t=t||1;for(var r=Math.max(Math.ceil((n-e)/t),0),o=Array(r),a=0;a<r;a++,e+=t)o[a]=e;return o};var C=function(e,n,t,r,o){if(!(r instanceof n))return e.apply(t,o);var a=y(e.prototype),i=e.apply(a,o);return p.isObject(i)?i:a};p.bind=function(e,n){if(u&&e.bind===u)return u.apply(e,c.call(arguments,1));if(!p.isFunction(e))throw new TypeError("Bind must be called on a function");var t=c.call(arguments,2),r=function(){return C(e,r,n,this,t.concat(c.call(arguments)))};return r},p.partial=function(o){var a=c.call(arguments,1),i=function(){for(var e=0,n=a.length,t=Array(n),r=0;r<n;r++)t[r]=a[r]===p?arguments[e++]:a[r];for(;e<arguments.length;)t.push(arguments[e++]);return C(o,i,this,this,t)};return i},p.bindAll=function(e){var n,t,r=arguments.length;if(r<=1)throw new Error("bindAll must be passed function names");for(n=1;n<r;n++)e[t=arguments[n]]=p.bind(e[t],e);return e},p.memoize=function(r,o){var a=function(e){var n=a.cache,t=""+(o?o.apply(this,arguments):e);return p.has(n,t)||(n[t]=r.apply(this,arguments)),n[t]};return a.cache={},a},p.delay=function(e,n){var t=c.call(arguments,2);return setTimeout(function(){return e.apply(null,t)},n)},p.defer=p.partial(p.delay,p,1),p.throttle=function(t,r,o){var a,i,s,c=null,l=0;o||(o={});var u=function(){l=!1===o.leading?0:p.now(),c=null,s=t.apply(a,i),c||(a=i=null)};return function(){var e=p.now();l||!1!==o.leading||(l=e);var n=r-(e-l);return a=this,i=arguments,n<=0||r<n?(c&&(clearTimeout(c),c=null),l=e,s=t.apply(a,i),c||(a=i=null)):c||!1===o.trailing||(c=setTimeout(u,n)),s}},p.debounce=function(n,t,r){var o,a,i,s,c,l=function(){var e=p.now()-s;e<t&&0<=e?o=setTimeout(l,t-e):(o=null,r||(c=n.apply(i,a),o||(i=a=null)))};return function(){i=this,a=arguments,s=p.now();var e=r&&!o;return o||(o=setTimeout(l,t)),e&&(c=n.apply(i,a),i=a=null),c}},p.wrap=function(e,n){return p.partial(n,e)},p.negate=function(e){return function(){return!e.apply(this,arguments)}},p.compose=function(){var t=arguments,r=t.length-1;return function(){for(var e=r,n=t[r].apply(this,arguments);e--;)n=t[e].call(this,n);return n}},p.after=function(e,n){return function(){if(--e<1)return n.apply(this,arguments)}},p.before=function(e,n){var t;return function(){return 0<--e&&(t=n.apply(this,arguments)),e<=1&&(n=null),t}},p.once=p.partial(p.before,2);var F=!{toString:null}.propertyIsEnumerable("toString"),A=["valueOf","isPrototypeOf","toString","propertyIsEnumerable","hasOwnProperty","toLocaleString"];function M(e,n){var t=A.length,r=e.constructor,o=p.isFunction(r)&&r.prototype||i,a="constructor";for(p.has(e,a)&&!p.contains(n,a)&&n.push(a);t--;)(a=A[t])in e&&e[a]!==o[a]&&!p.contains(n,a)&&n.push(a)}p.keys=function(e){if(!p.isObject(e))return[];if(l)return l(e);var n=[];for(var t in e)p.has(e,t)&&n.push(t);return F&&M(e,n),n},p.allKeys=function(e){if(!p.isObject(e))return[];var n=[];for(var t in e)n.push(t);return F&&M(e,n),n},p.values=function(e){for(var n=p.keys(e),t=n.length,r=Array(t),o=0;o<t;o++)r[o]=e[n[o]];return r},p.mapObject=function(e,n,t){n=h(n,t);for(var r,o=p.keys(e),a=o.length,i={},s=0;s<a;s++)i[r=o[s]]=n(e[r],r,e);return i},p.pairs=function(e){for(var n=p.keys(e),t=n.length,r=Array(t),o=0;o<t;o++)r[o]=[n[o],e[n[o]]];return r},p.invert=function(e){for(var n={},t=p.keys(e),r=0,o=t.length;r<o;r++)n[e[t[r]]]=t[r];return n},p.functions=p.methods=function(e){var n=[];for(var t in e)p.isFunction(e[t])&&n.push(t);return n.sort()},p.extend=_(p.allKeys),p.extendOwn=p.assign=_(p.keys),p.findKey=function(e,n,t){n=h(n,t);for(var r,o=p.keys(e),a=0,i=o.length;a<i;a++)if(n(e[r=o[a]],r,e))return r},p.pick=function(e,n,t){var r,o,a={},i=e;if(null==i)return a;p.isFunction(n)?(o=p.allKeys(i),r=v(n,t)):(o=O(arguments,!1,!1,1),r=function(e,n,t){return n in t},i=Object(i));for(var s=0,c=o.length;s<c;s++){var l=o[s],u=i[l];r(u,l,i)&&(a[l]=u)}return a},p.omit=function(e,n,t){if(p.isFunction(n))n=p.negate(n);else{var r=p.map(O(arguments,!1,!1,1),String);n=function(e,n){return!p.contains(r,n)}}return p.pick(e,n,t)},p.defaults=_(p.allKeys,!0),p.create=function(e,n){var t=y(e);return n&&p.extendOwn(t,n),t},p.clone=function(e){return p.isObject(e)?p.isArray(e)?e.slice():p.extend({},e):e},p.tap=function(e,n){return n(e),e},p.isMatch=function(e,n){var t=p.keys(n),r=t.length;if(null==e)return!r;for(var o=Object(e),a=0;a<r;a++){var i=t[a];if(n[i]!==o[i]||!(i in o))return!1}return!0};var T=function(e,n,t,r){if(e===n)return 0!==e||1/e==1/n;if(null==e||null==n)return e===n;e instanceof p&&(e=e._wrapped),n instanceof p&&(n=n._wrapped);var o=d.call(e);if(o!==d.call(n))return!1;switch(o){case"[object RegExp]":case"[object String]":return""+e==""+n;case"[object Number]":return+e!=+e?+n!=+n:0==+e?1/+e==1/n:+e==+n;case"[object Date]":case"[object Boolean]":return+e==+n}var a="[object Array]"===o;if(!a){if("object"!=typeof e||"object"!=typeof n)return!1;var i=e.constructor,s=n.constructor;if(i!==s&&!(p.isFunction(i)&&i instanceof i&&p.isFunction(s)&&s instanceof s)&&"constructor"in e&&"constructor"in n)return!1}r=r||[];for(var c=(t=t||[]).length;c--;)if(t[c]===e)return r[c]===n;if(t.push(e),r.push(n),a){if((c=e.length)!==n.length)return!1;for(;c--;)if(!T(e[c],n[c],t,r))return!1}else{var l,u=p.keys(e);if(c=u.length,p.keys(n).length!==c)return!1;for(;c--;)if(l=u[c],!p.has(n,l)||!T(e[l],n[l],t,r))return!1}return t.pop(),r.pop(),!0};p.isEqual=function(e,n){return T(e,n)},p.isEmpty=function(e){return null==e||(x(e)&&(p.isArray(e)||p.isString(e)||p.isArguments(e))?0===e.length:0===p.keys(e).length)},p.isElement=function(e){return!(!e||1!==e.nodeType)},p.isArray=s||function(e){return"[object Array]"===d.call(e)},p.isObject=function(e){var n=typeof e;return"function"===n||"object"===n&&!!e},p.each(["Arguments","Function","String","Number","Date","RegExp","Error"],function(n){p["is"+n]=function(e){return d.call(e)==="[object "+n+"]"}}),p.isArguments(arguments)||(p.isArguments=function(e){return p.has(e,"callee")}),"function"!=typeof/./&&"object"!=typeof Int8Array&&(p.isFunction=function(e){return"function"==typeof e||!1}),p.isFinite=function(e){return isFinite(e)&&!isNaN(parseFloat(e))},p.isNaN=function(e){return p.isNumber(e)&&e!==+e},p.isBoolean=function(e){return!0===e||!1===e||"[object Boolean]"===d.call(e)},p.isNull=function(e){return null===e},p.isUndefined=function(e){return void 0===e},p.has=function(e,n){return null!=e&&a.call(e,n)},p.noConflict=function(){return e._=n,this},p.identity=function(e){return e},p.constant=function(e){return function(){return e}},p.noop=function(){},p.property=g,p.propertyOf=function(n){return null==n?function(){}:function(e){return n[e]}},p.matcher=p.matches=function(n){return n=p.extendOwn({},n),function(e){return p.isMatch(e,n)}},p.times=function(e,n,t){var r=Array(Math.max(0,e));n=v(n,t,1);for(var o=0;o<e;o++)r[o]=n(o);return r},p.random=function(e,n){return null==n&&(n=e,e=0),e+Math.floor(Math.random()*(n-e+1))},p.now=Date.now||function(){return(new Date).getTime()};var E={"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#x27;","`":"&#x60;"},P=p.invert(E),R=function(n){var t=function(e){return n[e]},e="(?:"+p.keys(n).join("|")+")",r=RegExp(e),o=RegExp(e,"g");return function(e){return e=null==e?"":""+e,r.test(e)?e.replace(o,t):e}};p.escape=R(E),p.unescape=R(P),p.result=function(e,n,t){var r=null==e?void 0:e[n];return void 0===r&&(r=t),p.isFunction(r)?r.call(e):r};var z=0;p.uniqueId=function(e){var n=++z+"";return e?e+n:n},p.templateSettings={evaluate:/<%([\s\S]+?)%>/g,interpolate:/<%=([\s\S]+?)%>/g,escape:/<%-([\s\S]+?)%>/g};var D=/(.)^/,I={"'":"'","\\":"\\","\r":"r","\n":"n","\u2028":"u2028","\u2029":"u2029"},B=/\\|'|\r|\n|\u2028|\u2029/g,N=function(e){return"\\"+I[e]};p.template=function(a,e,n){!e&&n&&(e=n),e=p.defaults({},e,p.templateSettings);var t=RegExp([(e.escape||D).source,(e.interpolate||D).source,(e.evaluate||D).source].join("|")+"|$","g"),i=0,s="__p+='";a.replace(t,function(e,n,t,r,o){return s+=a.slice(i,o).replace(B,N),i=o+e.length,n?s+="'+\n((__t=("+n+"))==null?'':_.escape(__t))+\n'":t?s+="'+\n((__t=("+t+"))==null?'':__t)+\n'":r&&(s+="';\n"+r+"\n__p+='"),e}),s+="';\n",e.variable||(s="with(obj||{}){\n"+s+"}\n"),s="var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};\n"+s+"return __p;\n";try{var r=new Function(e.variable||"obj","_",s)}catch(e){throw e.source=s,e}var o=function(e){return r.call(this,e,p)},c=e.variable||"obj";return o.source="function("+c+"){\n"+s+"}",o},p.chain=function(e){var n=p(e);return n._chain=!0,n};var q=function(e,n){return e._chain?p(n).chain():n};p.mixin=function(t){p.each(p.functions(t),function(e){var n=p[e]=t[e];p.prototype[e]=function(){var e=[this._wrapped];return o.apply(e,arguments),q(this,n.apply(p,e))}})},p.mixin(p),p.each(["pop","push","reverse","shift","sort","splice","unshift"],function(n){var t=r[n];p.prototype[n]=function(){var e=this._wrapped;return t.apply(e,arguments),"shift"!==n&&"splice"!==n||0!==e.length||delete e[0],q(this,e)}}),p.each(["concat","join","slice"],function(e){var n=r[e];p.prototype[e]=function(){return q(this,n.apply(this._wrapped,arguments))}}),p.prototype.value=function(){return this._wrapped},p.prototype.valueOf=p.prototype.toJSON=p.prototype.value,p.prototype.toString=function(){return""+this._wrapped},"function"==typeof define&&define.amd&&define("underscore",[],function(){return p})}).call(this);var custom=new function(){var a=this;a.request=null,a.confirm=function(e,n,t,r,o){var a;return a=(0,templates["global/modal/confirm"])($.extend({},!0,{confirm_button:"OK",cancel_button:"Cancel",width:"600px"},t,{title:e,confirm_message:n})),$(window.document.body).append(a),$("#confirmModal").modal({}),$("#confirmModal").on("hidden.bs.modal",function(e){if($("#confirmModal").remove(),"function"==typeof o)return o.call()}),$("#confirm_yes").on("click",function(e){return $("#confirm_yes").unbind("click"),$("#confirmModal").modal("hide"),r.call()})},a.ajax=function(e){var n=$.extend({},!0,e);"object"==typeof e&&(e.beforeSend=function(){"function"==typeof n.beforeSend&&n.beforeSend()},e.success=function(e){"function"==typeof n.success&&n.success(e)},null!=a.request&&a.request.abort(),a.request=$.ajax(e))},a.notify=function(e){var n,t;if($("body").addClass("bottom-right"),"object"!=typeof e)return!1;for(n in e)void 0!==(t=$.extend({},!0,{type:"success",delay:8e3,text:""},e[n])).text&&null!=t.text&&$.notify({message:t.text.toString()},{type:t.type,placement:{from:"bottom",align:"right"},z_index:2e3,delay:t.delay,animate:{enter:"animated fadeInDown",exit:"animated fadeOutUp"}})},a.sendBtn=function(n,t){if("object"!=typeof t&&(t={}),!n.hasClass("active")){n.addClass("has-spinner");var e=$.extend({},!0,t);e.url=n.attr("href"),$(".spinner",n).remove(),n.prepend('<span class="spinner"><i class="fa fa-spinner fa-spin"></i></span>'),e.beforeSend=function(){n.addClass("active")},e.success=function(e){n.removeClass("active"),$(".spinner",n).remove(),"success"==e.status?"function"==typeof t.callback&&t.callback(e):"error"==e.status&&a.notify({0:{type:"danger",text:e.message}})},a.ajax(e)}},a.sendFrom=function(n,t,r){if("object"!=typeof r&&(r={}),!n.hasClass("active")){n.addClass("has-spinner");var e=$.extend({},!0,r),o=$(".error-summary",t);e.url=t.attr("action"),e.type="POST",$(".spinner",n).remove(),n.prepend('<span class="spinner"><i class="fa fa-spinner fa-spin"></i></span>'),e.beforeSend=function(){n.addClass("active"),o.length&&(o.addClass("hidden"),o.html(""))},e.success=function(e){n.removeClass("active"),$(".spinner",n).remove(),"success"==e.status?"function"==typeof r.callback&&r.callback(e):"error"==e.status&&(e.message&&(o.length?(o.html(e.message),o.removeClass("hidden")):a.notify({0:{type:"danger",text:e.message}})),e.errors&&$.each(e.errors,function(e,n){alert(n),t.yiiActiveForm("updateAttribute",e,n)}),"function"==typeof r.errorCallback&&r.errorCallback(e))},a.ajax(e)}},a.generateUrlFromString=function(e){var n=e.replace(/[^a-z0-9_\-\s]/gim,"").replace(/\s+/g,"-").toLowerCase();return"-"!==n&&"_"!==n||(n=""),n},a.generateUniqueUrl=function(e,n){var t,r,o=e;for(r=1;(t=_.find(n,function(e){return e===o}))&&(o=e+"-"+r,r++),t;);return o}},customModule={};window.modules={},$(function(){"object"==typeof window.modules&&$.each(window.modules,function(e,n){void 0!==customModule[e]&&customModule[e].run(n)})}),(templates=templates||{})["global/modal/confirm"]=_.template('<div class="modal fade confirm-modal" id="confirmModal" tabindex="-1" data-backdrop="static">\n    <div class="modal-dialog modal-md" role="document">\n        <div class="modal-content">\n            <% if (typeof(confirm_message) !== "undefined" && confirm_message != \'\') { %>\n            <div class="modal-header">\n                <h3 id="conrirm_label"><%= title %></h3>\n                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span aria-hidden="true">&times;</span></button>\n            </div>\n\n            <div class="modal-body">\n                <p><%= confirm_message %></p>\n            </div>\n\n\n            <div class="modal-footer justify-content-start">\n                <button class="btn btn-primary m-btn--air" id="confirm_yes"><%= confirm_button %></button>\n                <button class="btn btn-secondary m-btn--air" data-dismiss="modal" aria-hidden="true"><%= cancel_button %></button>\n            </div>\n            <% } else { %>\n            <div class="modal-body">\n                <div class="text-center">\n                    <h3 id="conrirm_label"><%= title %></h3>\n                </div>\n\n                <div class="text-center">\n                    <button class="btn btn-primary m-btn--air" id="confirm_yes"><%= confirm_button %></button>\n                    <button class="btn btn-secondary m-btn--air" data-dismiss="modal" aria-hidden="true"><%= cancel_button %></button>\n                </div>\n            </div>\n            <% } %>\n        </div>\n    </div>\n</div>'),customModule.cartFrontend={fieldsOptions:void 0,fieldsContainer:void 0,cartTotal:void 0,run:function(e){var n=this;n.fieldsContainer=$("form"),n.fieldOptions=e.fieldOptions,n.cartTotal=e.cartTotal,void 0!==e.options&&(void 0!==e.options.authorize&&n.initAuthorize(e.options.authorize),void 0!==e.options.stripe&&n.initStripe(e.options.stripe),void 0!==e.options.stripe_3d_secure&&n.initStripe3dSecure(e.options.stripe_3d_secure)),$(document).on("change",'input[name="OrderForm[method]"]',function(){var e=$(this).val();n.updateFields(e)}),$('input[name="OrderForm[method]"]:checked').trigger("change")},updateFields:function(e){var n=this;if($("button[type=submit]",n.fieldsContainer).show(),$(".fields",n.fieldsContainer).remove(),$("input,select",n.fieldsContainer).prop("disabled",!1),void 0!==n.fieldOptions&&void 0!==n.fieldOptions[e]&&n.fieldOptions[e]){var t=[],r=templates["cart/input"],o=templates["cart/hidden"];$.each(n.fieldOptions[e],function(e,n){void 0!==n&&null!=n&&n&&("input"==n.type&&t.push(r(n)),"hidden"==n.type&&t.push(o(n)))}),$(".form-group",n.fieldsContainer).last().after(t.join("\r\n"))}},initAuthorize:function(n){var t=$('input[name="OrderForm[email]'),e=n.configure,r=$("button[type=submit]",this.fieldsContainer),o=$("<button />",e).hide();r.after(o),r.on("click",function(e){if(""!=$.trim(t.val()))return $('input[name="OrderForm[method]"]:checked').val()==n.type?(e.stopImmediatePropagation(),o.trigger("click"),$("body,html").animate({scrollTop:0},100),!1):void 0})},initStripe:function(r){var o=this,a=StripeCheckout.configure($.extend({},!0,r.configure,{token:function(e){$("#field-token").val(e.id),$("#field-email").val(e.email),o.fieldsContainer.submit()}}));$("button",o.fieldsContainer).on("click",function(e){if(r.type!=$('input[name="OrderForm[method]"]:checked').val())return!0;var n=!1;if($.ajax({url:o.fieldsContainer.attr("action")+"/validate",data:o.fieldsContainer.serialize(),async:!1,method:"POST",success:function(e){"success"==e.status&&(n=!0)}}),!n)return!0;var t=$.extend({},!0,r.open);return t.amount=100*$("#amount").val(),a.open(t),e.preventDefault(),!1}),$(window).on("popstate",function(){a.close()})},initStripe3dSecure:function(r){var o=this;if(Boolean(r.configure.key.trim()))var t=Stripe(r.configure.key),a=StripeCheckout.configure($.extend({},!0,r.configure,{token:function(e){t.createSource({type:"card",token:e.id}).then(function(e){e.error||!e.source?(console.log("ERROR!",e.error.message),window.location.replace(r.return_url)):function(e){if("not_supported"===e.card.three_d_secure)return console.log("This card does not support 3D Secure!"),window.location.replace(r.return_url);var n=r.return_url+"?method="+r.type+"&email="+$('input[name="OrderForm[email]').val();t.createSource({type:"three_d_secure",amount:100*o.cartTotal.amount,currency:o.cartTotal.currency,three_d_secure:{card:e.id},redirect:{return_url:n}}).then(function(e){e.error?(console.log("ERROR!",e.error.message),window.location.replace(r.return_url)):function(e){e.redirect&&e.redirect.failure_reason&&(console.log("REDIRECT ERROR!",e.redirect.failure_reason),window.location.replace(r.return_url));window.location.replace(e.redirect.url)}(e.source)})}(e.source)})}}));$("button",o.fieldsContainer).on("click",function(e){if(r.type!=$('input[name="OrderForm[method]"]:checked').val())return!0;var n=!1;if($.ajax({url:o.fieldsContainer.attr("action")+"/validate",data:o.fieldsContainer.serialize(),async:!1,method:"POST",success:function(e){"success"===e.status&&(n=!0)}}),!n)return!0;var t=$.extend({},!0,r.open);return t.amount=100*o.cartTotal.amount,t.currency=o.cartTotal.currency,a.open(t),e.preventDefault(),!1}),$(window).on("popstate",function(){a.close()})},responseAuthorizeHandler:function(e){if("Error"===e.messages.resultCode)for(var n=0;n<e.messages.message.length;)alert(e.messages.message[n].code+": "+e.messages.message[n].text),n+=1;else $("#field-data_descriptor").val(e.opaqueData.dataDescriptor),$("#field-data_value").val(e.opaqueData.dataValue),$("form").submit()}};var templates,responseAuthorizeHandler=customModule.cartFrontend.responseAuthorizeHandler;$("#contactForm").on("click",".block-contactus__form-button",function(e){e.preventDefault();var n=$("#contactForm"),t=$("#contactFormError",n),r=$('meta[name="csrf-param"]').attr("content"),o=$('meta[name="csrf-token"]').attr("content"),a=n.serializeArray();a.push({name:r,value:o}),$.ajax({url:"/site/contact-us",async:!1,type:"POST",dataType:"json",data:a,success:function(e){0==e.error?(t.removeClass("alert-danger"),t.addClass("alert-success"),t.html(e.success)):(t.removeClass("alert-success"),t.addClass("alert-danger"),t.html(e.error_message))},error:function(e,n,t){console.log("Error on send",n,t)}})}),customModule.orderFormFrontend={run:function(e){console.log(e);var o=e.payment_methods,t=e.order_data_url,a=e.form_action_url,n=e.form_validate_ulr;if(o&&t&&a&&n){var i=function(){return $("#order-package-modal")},r=function(){return i().find("form")};$(".buy-package").on("click",function(e){e.preventDefault(),e.stopPropagation();var n=$(this).data("id");if(i().remove(),!n)throw"Package id is undefined!";t=t.replace("_id_",n),custom.ajax({url:t,type:"GET",success:function(e,n,t){var r;e.success&&e.data?(r=e.data,$("body").append(templates["order/order_modal"]({package_id:r.id,package_name:r.name,package_price:r.price,payment_methods:o,form_action_url:a})),_.defer(function(){s(),i().modal("show")})):console.log("Bad response data!",e,n,t)},error:function(e,n,t){console.log("Bad response data!",e,n,t)}})}),$(document).on("click","#proceed_checkout",function(e){s(),custom.ajax({url:n,type:"POST",data:r().serialize(),success:function(e,n,t){e.success&&e.data||console.log("Bad response data!",e,n,t),r().submit()},error:function(e,n,t){var r;e.responseJSON.hasOwnProperty("error_message")&&(r=e.responseJSON.error_message,i().find(".sommerce-modals__alert").html(r).css("display","block"))}})})}else console.log("Bad config!");function s(){i().find(".sommerce-modals__alert").html("").css("display","none")}}},customModule.paymentResultModal={run:function(e){var n=null,t=null;switch(e.type){case"payment_fail":t=templates["payments_modal/failed"](),n="#modal-payment-failed";break;case"payment_success":t=templates["payments_modal/success"](e.data),n="#modal-payment-success";break;case"payment_awaiting":t=templates["payments_modal/awaiting"](),n="#modal-payment-awaiting"}$("body").append(t),$(n).modal("show")}},(templates=templates||{})["order/order_modal"]=_.template('<div class="modal fade" id="order-package-modal" tabindex="-1" role="dialog">\n    <div class="modal-dialog sommerce-modals__dialog" role="document">\n        <div class="modal-content sommerce-modals__content">\n            <div class="modal-body sommerce-modals__body">\n                <div class="sommerce-modals__header">\n                    <div class="sommerce-modals__header-title">Order details</div>\n                    <div class="sommerce-modals__header-close" data-dismiss="modal" aria-label="Close">\n                        <span class="sommerce-modals__order-icons-close"></span>\n                    </div>\n                </div>\n                <div class="sommerce-modals__alert sommerce-modals__alert-danger">\n                    <span>Please enter your link in format <strong>https://instagram.com/nickname</strong></span>\n                </div>\n                <div class="sommerce-modals__order-details">\n                    <table class="sommerce-modals__order-table">\n                        <tbody>\n                        <tr>\n                            <td class="sommerce-modals__order-name">Package:</td>\n                            <td class="sommerce-modals__order-value"><%= package_name %></td>\n                        </tr>\n                        <tr>\n                            <td class="sommerce-modals__order-name">Price:</td>\n                            <td class="sommerce-modals__order-value"><%= package_price %></td>\n                        </tr>\n                        </tbody>\n                    </table>\n                </div>\n                <form action="<%= form_action_url %>" method="post">\n                    <input type="hidden" name="OrderForm[package_id]" value="<%= package_id %>">\n                    <div class="sommerce-modals__forms">\n                        <div class="form-group sommerce-modals__form-group">\n                            <label for="link">Link</label>\n                            <input type="text" class="form-control" id="link" name="OrderForm[link]">\n                        </div>\n                        <div class="form-group sommerce-modals__form-group">\n                            <label for="email">Email</label>\n                            <input type="email" class="form-control" id="email" name="OrderForm[email]">\n                            <small class="form-text text-muted">You will be notified on this email address</small>\n                        </div>\n                    </div>\n                    <% if (payment_methods) { %>\n                        <% if (payment_methods.length > 1) { %>\n                        <div class="sommerce-modals__payments">\n                            <div class="form-group">\n                                <div class="sommerce-modals__payments-title">Payment methods</div>\n                                <% _.each(payment_methods, function(method) { %>\n                                <div class="form-check form-check-inline">\n                                    <input class="form-check-input" type="radio" name="OrderForm[method]"\n                                           id="method-<%= method.id %>"\n                                           <% if (method.id === payment_methods[0].id) { %> checked <% } %>\n                                           value="<%= method.id %>">\n                                    <label class="form-check-label" for="method-<%= method.id %>"><%= method.name %></label>\n                                </div>\n                                <% }); %>\n                            </div>\n                        </div>\n                        <% } else { %>\n                        <input type="hidden" name="OrderForm[method]" value="<%= method.id %>">\n                        <% }; %>\n                    <% }; %>\n                    <div class="sommerce-modals__actions">\n                        <button type="button" class="btn btn-block sommerce-modals__btn-primary" id="proceed_checkout">Proceed to Checkout</button>\n                    </div>\n                </form>\n            </div>\n        </div>\n    </div>\n</div>'),templates["payments_modal/awaiting"]=_.template('<div class="modal fade" id="modal-payment-awaiting" tabindex="-1" role="dialog" data-backdrop="static">\n    <div class="modal-dialog sommerce-modals__dialog" role="document">\n        <div class="modal-content sommerce-modals__content">\n            <div class="modal-body sommerce-modals__body">\n                <div class="sommerce-modals__header">\n                    <div class="sommerce-modals__header-title"></div>\n                    <div class="sommerce-modals__header-close" data-dismiss="modal" aria-label="Close">\n                        <span class="sommerce-modals__order-icons-close"></span>\n                    </div>\n                </div>\n\n                <div class="sommerce-modals__order-header">\n                    <div class="sommerce-modals__order-header-icon">\n                        <div class="sommerce-modals__order-icons-awaiting"></div>\n                    </div>\n                    <div class="sommerce-modals__order-header-title">\n                        Payment awaiting\n                    </div>\n                    <div class="sommerce-modals__order-header-description">\n                        Your payment is being verified. You will be informed on your email.\n                    </div>\n                </div>\n                <div class="sommerce-modals__actions text-center">\n                    <button class="btn sommerce-modals__btn-default sommerce-modals__actions-btn-center" data-dismiss="modal">Ok, got it!</button>\n                </div>\n            </div>\n        </div>\n    </div>\n</div>'),templates["payments_modal/failed"]=_.template('<div class="modal fade" id="modal-payment-failed" tabindex="-1" role="dialog" data-backdrop="static">\n    <div class="modal-dialog sommerce-modals__dialog" role="document">\n        <div class="modal-content sommerce-modals__content">\n            <div class="modal-body sommerce-modals__body">\n                <div class="sommerce-modals__header">\n                    <div class="sommerce-modals__header-title"></div>\n                    <div class="sommerce-modals__header-close" data-dismiss="modal" aria-label="Close">\n                        <span class="sommerce-modals__order-icons-close"></span>\n                    </div>\n                </div>\n\n                <div class="sommerce-modals__order-header">\n                    <div class="sommerce-modals__order-header-icon">\n                        <div class="sommerce-modals__order-icons-failed"></div>\n                    </div>\n                    <div class="sommerce-modals__order-header-title">\n                        Payment failed\n                    </div>\n                    <div class="sommerce-modals__order-header-description">\n                        Your payment was failed by some reasons. Try to do it again.\n                    </div>\n                </div>\n                <div class="sommerce-modals__actions text-center">\n                    <button class="btn sommerce-modals__btn-default sommerce-modals__actions-btn-center" data-dismiss="modal">Ok, got it!</button>\n                </div>\n            </div>\n        </div>\n    </div>\n</div>'),templates["payments_modal/success"]=_.template('<div class="modal fade" id="modal-payment-success" tabindex="-1" role="dialog" data-backdrop="static">\n    <div class="modal-dialog modal-lg" role="document">\n        <div class="modal-content sommerce-modals__content">\n            <div class="modal-body sommerce-modals__body">\n                <div class="sommerce-modals__header">\n                    <div class="sommerce-modals__header-title"></div>\n                    <div class="sommerce-modals__header-close" data-dismiss="modal" aria-label="Close">\n                        <span class="sommerce-modals__order-icons-close"></span>\n                    </div>\n                </div>\n\n                <div class="sommerce-modals__order-header">\n                    <div class="sommerce-modals__order-header-icon">\n                        <div class="sommerce-modals__order-icons-success"></div>\n                    </div>\n                    <div class="sommerce-modals__order-header-title">\n                        Successfull payment\n                    </div>\n                    <div class="sommerce-modals__order-header-description">\n                        Thank you! Your payment was successful. Here is your order details.\n                    </div>\n                </div>\n\n                <div class="sommerce-modals__order-result">\n                    <table class="sommerce-modals__order-result-table">\n                        <thead>\n                        <tr>\n                            <th>Order ID</th>\n                            <th>Package</th>\n                            <th>Details</th>\n                            <th>Price</th>\n                            <th>Status</th>\n                        </tr>\n                        </thead>\n                        <tbody>\n                        <tr>\n                            <td data-label="Order ID"><%= order_id %></td>\n                            <td data-label="Package"><%= package %></td>\n                            <td data-label="Details"><%= details %></td>\n                            <td data-label="Price" nowrap=""><%= price %></td>\n                            <td data-label="Status">\n                                <span class="sommerce-status-text"><%= status %></span>\n                            </td>\n                        </tr>\n                        </tbody>\n                    </table>\n                </div>\n                <div class="sommerce-modals__actions text-center">\n                    <button class="btn sommerce-modals__btn-default sommerce-modals__actions-btn-center" data-dismiss="modal">Continue</button>\n                </div>\n            </div>\n        </div>\n    </div>\n</div>');
+var custom = new function() {
+    var self = this;
+
+    self.request = null;
+
+    self.confirm = function (title, text, options, callback, cancelCallback) {
+        var confirmPopupHtml;
+        var compiled = templates['global/modal/confirm'];
+        confirmPopupHtml = compiled($.extend({}, true, {
+            confirm_button : 'OK',
+            cancel_button : 'Cancel',
+            width: '600px'
+        }, options, {
+            'title': title,
+            'confirm_message': text
+        }));
+
+        $(window.document.body).append(confirmPopupHtml);
+        $('#confirmModal').modal({});
+
+        $('#confirmModal').on('hidden.bs.modal', function (e) {
+            $('#confirmModal').remove();
+
+            if ('function' == typeof cancelCallback) {
+                return cancelCallback.call();
+            }
+        });
+
+        return $('#confirm_yes').on('click', function (e) {
+            $("#confirm_yes").unbind("click");
+            $('#confirmModal').modal('hide');
+            return callback.call();
+        });
+    };
+
+    self.ajax = function(options) {
+        var settings = $.extend({}, true, options);
+        if ("object" === typeof options) {
+            options.beforeSend = function() {
+                if ('function' === typeof settings.beforeSend) {
+                    settings.beforeSend();
+                }
+            };
+            options.success = function(response) {
+                if ('function' === typeof settings.success) {
+                    settings.success(response);
+                }
+            };
+            null         != self.request ? self.request.abort() : '';
+            self.request = $.ajax(options);
+        }
+    }
+
+    self.notify = function(notifyData) {
+        var notifyContainer = $('body'),
+            key, value;
+        notifyContainer.addClass('bottom-right');
+
+        if ('object' != typeof notifyData) {
+            return false;
+        }
+        for (key in notifyData) {
+
+            value = $.extend({}, true, {
+                type	: 'success',
+                delay	: 8000,
+                text	: '',
+            }, notifyData[key]);
+
+            if ('undefined' == typeof value.text || null == value.text) {
+                continue;
+            }
+
+            $.notify({
+                message	: value.text.toString(),
+            }, {
+                type: value.type,
+                placement: {
+                    from: "bottom",
+                    align: "right"
+                },
+                z_index : 2000,
+                delay: value.delay,
+                animate: {
+                    enter: 'animated fadeInDown',
+                    exit: 'animated fadeOutUp'
+                }
+            });
+        }
+    }
+
+    self.sendBtn = function(btn, settings)
+    {
+        if ('object' != typeof settings) {
+            settings = {};
+        }
+
+        if (btn.hasClass('active')) {
+            return;
+        }
+
+        btn.addClass('has-spinner');
+
+        var options = $.extend({}, true, settings);
+
+        options.url = btn.attr('href');
+
+        $('.spinner', btn).remove();
+
+        btn.prepend('<span class="spinner"><i class="fa fa-spinner fa-spin"></i></span>');
+
+        options.beforeSend = function() {
+            btn.addClass('active');
+        };
+
+        options.success = function(response) {
+            btn.removeClass('active');
+            $('.spinner', btn).remove();
+
+            if ('success' == response.status) {
+                if ('function' === typeof settings.callback) {
+                    settings.callback(response);
+                }
+            } else if ('error' == response.status) {
+                self.notify({0: {
+                    type : 'danger',
+                    text : response.message
+                }});
+            }
+        };
+
+        self.ajax(options);
+    }
+
+    self.sendFrom = function(btn, form, settings)
+    {
+        if ('object' != typeof settings) {
+            settings = {};
+        }
+
+        if (btn.hasClass('active')) {
+            return;
+        }
+
+        btn.addClass('has-spinner');
+
+        var options = $.extend({}, true, settings);
+        var errorSummary = $('.error-summary', form);
+
+        options.url = form.attr('action');
+        options.type = 'POST';
+
+        $('.spinner', btn).remove();
+
+        btn.prepend('<span class="spinner"><i class="fa fa-spinner fa-spin"></i></span>');
+
+        options.beforeSend = function() {
+            btn.addClass('active');
+
+            if (errorSummary.length) {
+                errorSummary.addClass('hidden');
+                errorSummary.html('');
+            }
+        };
+
+        options.success = function(response) {
+            btn.removeClass('active');
+            $('.spinner', btn).remove();
+
+            if ('success' == response.status) {
+                if ('function' === typeof settings.callback) {
+                    settings.callback(response);
+                }
+            } else if ('error' == response.status) {
+                if (response.message) {
+
+                    if (errorSummary.length) {
+                        errorSummary.html(response.message);
+                        errorSummary.removeClass('hidden');
+                    } else {
+                        self.notify({0: {
+                            type : 'danger',
+                            text : response.message
+                        }});
+                    }
+                }
+
+                if (response.errors) {
+                    $.each(response.errors, function(key, val) {
+                        alert(val);
+                        form.yiiActiveForm('updateAttribute', key, val);
+                    });
+                }
+
+                if ('function' === typeof settings.errorCallback) {
+                    settings.errorCallback(response);
+                }
+            }
+        };
+
+        self.ajax(options);
+    };
+
+    /**
+     * Generate Url path from string
+     * a-z, -_ ,0-9
+     * @param string
+     */
+    self.generateUrlFromString = function(string)
+    {
+        var url = string.replace(/[^a-z0-9_\-\s]/gmi, "").replace(/\s+/g, '-').toLowerCase();
+
+        if (url === '-' || url === '_') {
+            url = '';
+        }
+
+        return url;
+    };
+
+    /**
+     * Generate unique url
+     * @param url
+     * @param exitingUrls
+     * @returns {*}
+     */
+    self.generateUniqueUrl = function(url, exitingUrls)
+    {
+        var generatedUrl = url,
+            exiting,
+            prefixCounter;
+
+        prefixCounter = 1;
+
+        do {
+            exiting = _.find(exitingUrls, function(exitingUrl){
+                return exitingUrl === generatedUrl;
+            });
+
+            if (exiting) {
+                generatedUrl = url + '-' + prefixCounter;
+                prefixCounter ++;
+            }
+        }
+        while (exiting);
+
+        return generatedUrl;
+    };
+
+};
+var customModule = {};
+window.modules = {};
+
+$(function() {
+    if ('object' == typeof window.modules) {
+        $.each(window.modules, function(name, options) {
+            if ('undefined' != typeof customModule[name]) {
+                customModule[name].run(options);
+            }
+        });
+    }
+});
+                var templates = templates || {};
+                
+
+templates['global/modal/confirm'] = _.template("<div class=\"modal fade confirm-modal\" id=\"confirmModal\" tabindex=\"-1\" data-backdrop=\"static\">\n    <div class=\"modal-dialog modal-md\" role=\"document\">\n        <div class=\"modal-content\">\n            <% if (typeof(confirm_message) !== \"undefined\" && confirm_message != \'\') { %>\n            <div class=\"modal-header\">\n                <h3 id=\"conrirm_label\"><%= title %><\/h3>\n                <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\"><span aria-hidden=\"true\">&times;<\/span><\/button>\n            <\/div>\n\n            <div class=\"modal-body\">\n                <p><%= confirm_message %><\/p>\n            <\/div>\n\n\n            <div class=\"modal-footer justify-content-start\">\n                <button class=\"btn btn-primary m-btn--air\" id=\"confirm_yes\"><%= confirm_button %><\/button>\n                <button class=\"btn btn-secondary m-btn--air\" data-dismiss=\"modal\" aria-hidden=\"true\"><%= cancel_button %><\/button>\n            <\/div>\n            <% } else { %>\n            <div class=\"modal-body\">\n                <div class=\"text-center\">\n                    <h3 id=\"conrirm_label\"><%= title %><\/h3>\n                <\/div>\n\n                <div class=\"text-center\">\n                    <button class=\"btn btn-primary m-btn--air\" id=\"confirm_yes\"><%= confirm_button %><\/button>\n                    <button class=\"btn btn-secondary m-btn--air\" data-dismiss=\"modal\" aria-hidden=\"true\"><%= cancel_button %><\/button>\n                <\/div>\n            <\/div>\n            <% } %>\n        <\/div>\n    <\/div>\n<\/div>");
+customModule.cartFrontend = {
+    fieldsOptions: undefined,
+    fieldsContainer: undefined,
+    cartTotal: undefined,
+    run : function(params) {
+        var self = this;
+
+        self.fieldsContainer = $('form');
+        self.fieldOptions = params.fieldOptions;
+        self.cartTotal = params.cartTotal;
+
+        if ('undefined' != typeof params.options) {
+            if ('undefined' != typeof params.options.authorize) {
+                self.initAuthorize(params.options.authorize);
+            }
+            if ('undefined' != typeof params.options.stripe) {
+                self.initStripe(params.options.stripe);
+            }
+            if ('undefined' != typeof params.options.stripe_3d_secure) {
+                self.initStripe3dSecure(params.options.stripe_3d_secure);
+            }
+        }
+
+        $(document).on('change', 'input[name="OrderForm[method]"]', function() {
+            var method = $(this).val();
+
+            self.updateFields(method);
+        });
+
+        $('input[name="OrderForm[method]"]:checked').trigger('change');
+    },
+    updateFields: function (method) {
+        var self = this;
+
+        $('button[type=submit]', self.fieldsContainer).show();
+        $('.fields', self.fieldsContainer).remove();
+        $('input,select', self.fieldsContainer).prop('disabled', false);
+
+        if ('undefined' == typeof self.fieldOptions
+            || 'undefined' == typeof self.fieldOptions[method]
+            || !self.fieldOptions[method]) {
+            return;
+        }
+
+        var fieldContent = [];
+        var inputTemplate = templates['cart/input'];
+        var hiddenTemplate = templates['cart/hidden'];
+        $.each(self.fieldOptions[method], function(key, field) {
+            if ('undefined' == typeof field || null == field || !field) {
+                return;
+            }
+            if ('input' == field.type) {
+                fieldContent.push(inputTemplate(field));
+            }
+
+            if ('hidden' == field.type) {
+                fieldContent.push(hiddenTemplate(field));
+            }
+        });
+
+        $(".form-group", self.fieldsContainer).last().after(fieldContent.join("\r\n"));
+    },
+    initAuthorize: function(params)
+    {
+        var self = this;
+        var email = $('input[name="OrderForm[email]');
+        var configure = params.configure;
+        var submitBtn = $('button[type=submit]', self.fieldsContainer);
+        var submitMethodBtn = $("<button />", configure).hide();
+        submitBtn.after(submitMethodBtn);
+
+        submitBtn.on('click', function (e) {
+            if ('' == ($.trim(email.val()))) {
+                return;
+            }
+            if ($('input[name="OrderForm[method]"]:checked').val() == params.type) {
+                e.stopImmediatePropagation();
+
+                submitMethodBtn.trigger('click');
+
+                $('body,html').animate({
+                    scrollTop: 0
+                }, 100);
+
+                return false;
+            }
+        });
+    },
+    initStripe: function(params)
+    {
+        var self = this;
+        var handler = StripeCheckout.configure($.extend({}, true, params.configure, {
+            token: function(token) {
+                $("#field-token").val(token.id);
+                $("#field-email").val(token.email);
+                self.fieldsContainer.submit();
+            }
+        }));
+
+        $('button', self.fieldsContainer).on('click', function(e) {
+            if (params.type != $('input[name="OrderForm[method]"]:checked').val()) {
+                return true;
+            }
+            var isValid = false;
+            $.ajax({
+                url: self.fieldsContainer.attr('action') + '/validate',
+                data: self.fieldsContainer.serialize(),
+                async: false,
+                method: "POST",
+                success: function(response) {
+                    if ('success' == response.status) {
+                        isValid = true;
+                    }
+                }
+            });
+
+            if (!isValid) {
+               return true;
+            }
+
+            // Open Checkout with further options
+            var openOptions = $.extend({}, true, params.open);
+            openOptions.amount = $('#amount').val() * 100;
+
+            handler.open(openOptions);
+
+            e.preventDefault();
+            return false;
+        });
+
+        // Close Checkout on page navigation
+        $(window).on('popstate', function() {
+            handler.close();
+        });
+    },
+    initStripe3dSecure: function(params)
+    {
+        var self = this;
+
+        if (Boolean(params.configure.key.trim())) {
+            var stripe = Stripe(params.configure.key);
+
+            // Create Checkout's handler
+            var handler = StripeCheckout.configure($.extend({}, true, params.configure, {
+                token: function (token) {
+
+                    // use Checkout's card token to create a card source
+                    stripe.createSource({
+                        type: 'card',
+                        token: token.id
+                    }).then(function (result) {
+                        if (result.error || !result.source) {
+                            console.log('ERROR!', result.error.message);
+                            window.location.replace(params.return_url);
+                        } else {
+                            // Send the source to your server
+                            stripeSourceHandler(result.source);
+                        }
+                    });
+                }
+            }));
+        }
+
+        $('button', self.fieldsContainer).on('click', function(e) {
+            if (params.type != $('input[name="OrderForm[method]"]:checked').val()) {
+                return true;
+            }
+            var isValid = false;
+            $.ajax({
+                url: self.fieldsContainer.attr('action') + '/validate',
+                data: self.fieldsContainer.serialize(),
+                async: false,
+                method: "POST",
+                success: function(response) {
+                    if ('success' === response.status) {
+                        isValid = true;
+                    }
+                }
+            });
+
+            if (!isValid) {
+               return true;
+            }
+
+            // Open Checkout with further options
+            var openOptions = $.extend({}, true, params.open);
+            openOptions.amount = self.cartTotal.amount * 100;
+            openOptions.currency = self.cartTotal.currency;
+
+            handler.open(openOptions);
+
+            e.preventDefault();
+            return false;
+        });
+
+        // Close Checkout on page navigation
+        $(window).on('popstate', function() {
+            handler.close();
+        });
+
+        function stripeSourceHandler(source) {
+            // check if the card supports 3DS
+            if (source.card.three_d_secure === 'not_supported') {
+                console.log("This card does not support 3D Secure!");
+                window.location.replace(params.return_url);
+                return;
+            }
+
+            var returnURL = params.return_url + '?method=' + params.type + '&email=' + $('input[name="OrderForm[email]').val();
+
+            // create the 3DS source from the card source
+            stripe.createSource({
+                type: 'three_d_secure',
+                amount: self.cartTotal.amount * 100,
+                currency: self.cartTotal.currency,
+                three_d_secure: {
+                    card: source.id
+                },
+                redirect: {
+                    return_url: returnURL
+                }
+            }).then(function(result) {
+                if (result.error) {
+                    console.log('ERROR!', result.error.message);
+                    window.location.replace(params.return_url);
+                } else {
+                    stripe3DSourceHandler(result.source);
+                }
+            });
+        }
+
+        function stripe3DSourceHandler(source) {
+
+            if (source.redirect && source.redirect.failure_reason) {
+                console.log('REDIRECT ERROR!', source.redirect.failure_reason);
+                window.location.replace(params.return_url);
+            }
+
+            // Redirect to 3D secure window
+            window.location.replace(source.redirect.url);
+        }
+    },
+    responseAuthorizeHandler: function(response)
+    {
+        if (response.messages.resultCode === "Error") {
+            var i = 0;
+            while (i < response.messages.message.length) {
+                alert(
+                    response.messages.message[i].code + ": " +
+                    response.messages.message[i].text
+                );
+                i = i + 1;
+            }
+        } else {
+            $("#field-data_descriptor").val(response.opaqueData.dataDescriptor);
+            $("#field-data_value").val(response.opaqueData.dataValue);
+            $('form').submit();
+        }
+    }
+
+};
+
+var responseAuthorizeHandler = customModule.cartFrontend.responseAuthorizeHandler;
+/******************************************************************
+ *            Contact form
+ ******************************************************************/
+$('#contactForm').on('click', '.block-contactus__form-button', function (e) {
+    e.preventDefault();
+    var form = $('#contactForm');
+    var errorBlock = $('#contactFormError', form);
+    var actionUrl = '/site/contact-us';
+    var csrfParam = $('meta[name="csrf-param"]').attr("content");
+    var csrfToken = $('meta[name="csrf-token"]').attr("content");
+    var postData = form.serializeArray();
+    postData.push({name: csrfParam, value:csrfToken});
+
+    $.ajax({
+        url: actionUrl,
+        async: false,
+        type: "POST",
+        dataType: 'json',
+        data: postData,
+        success: function (data) {
+            if (data.error == false) {
+                errorBlock.removeClass('alert-danger');
+                errorBlock.addClass('alert-success');
+                errorBlock.html(data.success);
+            } else {
+                errorBlock.removeClass('alert-success');
+                errorBlock.addClass('alert-danger');
+                errorBlock.html(data.error_message);
+            }
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            console.log('Error on send', textStatus, errorThrown);
+        }
+    });
+});
+
+customModule.orderFormFrontend = {
+
+    run : function(params) {
+
+        var self = this;
+
+        self.currentMethod = null;
+        self.packageId = null;
+
+        self.fieldsContainer = null;
+        self.modal = null;
+        self.fieldOptions = params.fieldOptions;
+        self.cartTotal = {};
+
+        self.paymentMethods = params.payment_methods;
+        self.orderDataUrl = params.order_data_url;
+        self.formActionUrl = params.form_action_url;
+        self.formValidateUlr = params.form_validate_ulr;
+
+        self.formValidated = false;
+
+        if (!self.paymentMethods || !self.orderDataUrl || !self.formActionUrl || !self.formValidateUlr) {
+            console.log('Bad config!');
+            return;
+        }
+
+        if ('undefined' != typeof params.options) {
+            if ('undefined' != typeof params.options.authorize) {
+                self.initAuthorize(params.options.authorize);
+            }
+            if ('undefined' != typeof params.options.stripe) {
+                self.initStripe(params.options.stripe);
+            }
+            if ('undefined' != typeof params.options.stripe_3d_secure) {
+                self.initStripe3dSecure(params.options.stripe_3d_secure);
+            }
+        }
+
+        $('.buy-package').on('click', function (event) {
+            event.preventDefault();
+            event.stopPropagation();
+
+            var $this =  $(this);
+            self.packageId = $this.data('id');
+
+            if ($(self.modal).length) {
+                self.modal.remove();
+            }
+
+            if (!self.packageId) {
+                throw 'Package id is undefined!';
+            }
+
+            self.orderDataUrl = self.orderDataUrl.replace('_id_', self.packageId);
+
+            custom.ajax({
+                url: self.orderDataUrl,
+                type: 'GET',
+                success: function(data, textStatus, jqXHR) {
+                    if (!data.success || !data.data) {
+                        console.log('Bad response data!', data, textStatus, jqXHR);
+                        return;
+                    }
+                    self.initModal(data.data);
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.log('Bad response data!', jqXHR, textStatus, errorThrown);
+                }
+            });
+        });
+
+    },
+    initModal: function(data) {
+        var self = this;
+
+        self.cartTotal.amount = data.price_raw;
+        self.cartTotal.currency = data.currency;
+
+        $('body').append(templates['order/order_modal']({
+            'package_id': data.id,
+            'package_name': data.name,
+            'package_price': data.price,
+            'payment_methods': self.paymentMethods,
+            'form_action_url': self.formActionUrl
+        }));
+
+        self.modal = $('#order-package-modal');
+        self.fieldsContainer = $('form', '#order-package-modal');
+
+        _.defer(function(){
+            hideValidationError();
+            $('#order-package-modal').modal('show');
+        });
+
+        $(document).on('click', '#proceed_checkout', function (event) {
+            hideValidationError();
+            custom.ajax({
+                url: self.formValidateUlr,
+                type: 'POST',
+                data: self.fieldsContainer.serialize(),
+                success: function(data, textStatus, jqXHR) {
+                    if (!data.success || !data.data) {
+                        console.log('Bad response data!', data, textStatus, jqXHR);
+                        return;
+                    }
+                    if (
+                       self.currentMethod != '19' && // authorize
+                       self.currentMethod != '21' && // stripe
+                       self.currentMethod != '26'    // stripe_3d_secure
+                    ) {
+                        self.fieldsContainer.submit();
+                    } else {
+                        self.fieldsContainer.trigger('validated');
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    if (_.has(jqXHR,'responseJSON') && _.has(jqXHR.responseJSON, 'error_message')) {
+                        showValidationError(jqXHR.responseJSON.error_message);
+                        return;
+                    }
+                    console.log('Bad error data!', data, textStatus, jqXHR);
+                }
+            });
+        });
+
+        $(document).on('change', 'input[name="OrderForm[method]"]', function() {
+            var method = $(this).val();
+            self.currentMethod = method;
+            self.updateFields(method);
+        });
+
+        $('input[name="OrderForm[method]"]:checked').trigger('change');
+
+        function hideValidationError() {
+            self.modal.find('.sommerce-modals__alert').html('').css('display', 'none');
+        }
+
+        function showValidationError(errorMessage) {
+            self.modal.find('.sommerce-modals__alert').html(errorMessage).css('display', 'block');
+        }
+    },
+    updateFields: function (method) {
+        var self = this;
+
+        $('button[type=submit]', self.fieldsContainer).show();
+        $('.fields', self.fieldsContainer).remove();
+        $('input,select', self.fieldsContainer).prop('disabled', false);
+
+        if ('undefined' == typeof self.fieldOptions
+            || 'undefined' == typeof self.fieldOptions[method]
+            || !self.fieldOptions[method]
+        ) {
+            return;
+        }
+
+        var fieldContent = [];
+        var inputTemplate = templates['order/input'];
+        var hiddenTemplate = templates['order/hidden'];
+        $.each(self.fieldOptions[method], function(key, field) {
+            if ('undefined' == typeof field || null == field || !field) {
+                return;
+            }
+            if ('input' == field.type) {
+                fieldContent.push(inputTemplate(field));
+            }
+
+            if ('hidden' == field.type) {
+                fieldContent.push(hiddenTemplate(field));
+            }
+        });
+
+        $(self.fieldsContainer).prepend(fieldContent.join("\r\n"));
+    },
+    initAuthorize: function(params)
+    {
+        var self = this;
+        var email = $('input[name="OrderForm[email]');
+        var configure = params.configure;
+        var submitBtn = $('button[type=submit]', self.fieldsContainer);
+        var submitMethodBtn = $("<button />", configure).hide();
+        submitBtn.after(submitMethodBtn);
+
+        $(document).on('validated', self.fieldsContainer, function(e) {
+            if ('' == ($.trim(email.val()))) {
+                return;
+            }
+            if ($('input[name="OrderForm[method]"]:checked').val() == params.type) {
+                e.stopImmediatePropagation();
+
+                submitMethodBtn.trigger('click');
+
+                $('body,html').animate({
+                    scrollTop: 0
+                }, 100);
+
+                return false;
+            }
+        });
+    },
+    initStripe: function(params)
+    {
+        var self = this;
+        var handler = StripeCheckout.configure($.extend({}, true, params.configure, {
+            token: function(token) {
+                $("#field-token").val(token.id);
+                $("#field-email").val(token.email);
+                self.fieldsContainer.submit();
+            }
+        }));
+
+        $(document).on('validated', self.fieldsContainer, function(e) {
+
+            if (params.type != $('input[name="OrderForm[method]"]:checked').val()) {
+                return true;
+            }
+
+            // Open Checkout with further options
+            var openOptions = $.extend({}, true, params.open);
+            openOptions.amount = $('#amount').val() * 100;
+
+            handler.open(openOptions);
+
+            e.preventDefault();
+            return false;
+        });
+
+        // Close Checkout on page navigation
+        $(window).on('popstate', function() {
+            handler.close();
+        });
+    },
+    initStripe3dSecure: function(params)
+    {
+        var self = this;
+
+        if (Boolean(params.configure.key.trim())) {
+            var stripe = Stripe(params.configure.key);
+
+            // Create Checkout's handler
+            var handler = StripeCheckout.configure($.extend({}, true, params.configure, {
+                token: function (token) {
+
+                    // use Checkout's card token to create a card source
+                    stripe.createSource({
+                        type: 'card',
+                        token: token.id
+                    }).then(function (result) {
+                        if (result.error || !result.source) {
+                            console.log('ERROR!', result.error.message);
+                            window.location.replace(params.return_url);
+                        } else {
+                            // Send the source to your server
+                            stripeSourceHandler(result.source);
+                        }
+                    });
+                }
+            }));
+        }
+
+        $(document).on('validated', self.fieldsContainer, function(e) {
+
+            if (params.type != $('input[name="OrderForm[method]"]:checked').val()) {
+                return true;
+            }
+
+            // Open Checkout with further options
+            var openOptions = $.extend({}, true, params.open);
+            openOptions.amount = self.cartTotal.amount * 100;
+            openOptions.currency = self.cartTotal.currency;
+
+            handler.open(openOptions);
+
+            e.preventDefault();
+            return false;
+        });
+
+        // Close Checkout on page navigation
+        $(window).on('popstate', function() {
+            handler.close();
+        });
+
+        function stripeSourceHandler(source) {
+            // check if the card supports 3DS
+            if (source.card.three_d_secure === 'not_supported') {
+                console.log("This card does not support 3D Secure!");
+                window.location.replace(params.return_url);
+                return;
+            }
+
+            var returnURL = params.return_url + '?' + $.param({
+                    "method": params.type,
+                    "email": $('input[name="OrderForm[email]').val(),
+                    "package_id": self.packageId,
+                    "link": $('input[name="OrderForm[link]').val()
+            });
+
+            console.log(self.fieldsContainer.serialize());
+            console.log(returnURL);
+
+            //    '?method=' + params.type + '&email=' + $('input[name="OrderForm[email]').val();
+
+            // create the 3DS source from the card source
+            stripe.createSource({
+                type: 'three_d_secure',
+                amount: self.cartTotal.amount * 100,
+                currency: self.cartTotal.currency,
+                three_d_secure: {
+                    card: source.id
+                },
+                redirect: {
+                    return_url: returnURL
+                }
+            }).then(function(result) {
+                if (result.error) {
+                    console.log('ERROR!', result.error.message);
+                    window.location.replace(params.return_url);
+                } else {
+                    stripe3DSourceHandler(result.source);
+                }
+            });
+        }
+
+        function stripe3DSourceHandler(source) {
+
+            if (source.redirect && source.redirect.failure_reason) {
+                console.log('REDIRECT ERROR!', source.redirect.failure_reason);
+                window.location.replace(params.return_url);
+            }
+
+            // Redirect to 3D secure window
+            window.location.replace(source.redirect.url);
+        }
+    },
+    responseAuthorizeHandler: function(response)
+    {
+        if (response.messages.resultCode === "Error") {
+            var i = 0;
+            while (i < response.messages.message.length) {
+                alert(
+                    response.messages.message[i].code + ": " +
+                    response.messages.message[i].text
+                );
+                i = i + 1;
+            }
+        } else {
+            $("#field-data_descriptor").val(response.opaqueData.dataDescriptor);
+            $("#field-data_value").val(response.opaqueData.dataValue);
+            $('form').submit();
+        }
+    }
+};
+customModule.paymentResultModal = {
+    run : function(params) {
+        var selector = null;
+        var modal = null;
+
+        switch(params.type) {
+            case 'payment_fail':
+                modal = templates['payments_modal/failed']();
+                selector = '#modal-payment-failed';
+                break;
+            case 'payment_success':
+                modal = templates['payments_modal/success'](params.data);
+                selector = '#modal-payment-success';
+                break;
+            case 'payment_awaiting':
+                modal = templates['payments_modal/awaiting']();
+                selector = '#modal-payment-awaiting';
+                break;
+        }
+
+        $('body').append(modal);
+        $(selector).modal('show');
+    }
+};
+                var templates = templates || {};
+                
+
+templates['order/hidden'] = _.template("<input class=\"fields\" name=\"OrderForm[fields][<%= name %>]\" value=\"<%= value %>\" type=\"hidden\" id=\"field-<%= name %>\"/>");
+
+templates['order/input'] = _.template("<div class=\"form-group fields\" id=\"order_<%= name %>\">\n    <label class=\"control-label\" for=\"orderform-<%= name %>\"><%= label %><\/label>\n    <input class=\"form-control\" name=\"OrderForm[fields][<%= name %>]\" value=\"<%= value %>\" type=\"text\" id=\"field-<%= name %>\">\n<\/div>");
+
+templates['order/order_modal'] = _.template("<div class=\"modal fade\" id=\"order-package-modal\" tabindex=\"-1\" role=\"dialog\">\n    <div class=\"modal-dialog sommerce-modals__dialog\" role=\"document\">\n        <div class=\"modal-content sommerce-modals__content\">\n            <div class=\"modal-body sommerce-modals__body\">\n                <div class=\"sommerce-modals__header\">\n                    <div class=\"sommerce-modals__header-title\">Order details<\/div>\n                    <div class=\"sommerce-modals__header-close\" data-dismiss=\"modal\" aria-label=\"Close\">\n                        <span class=\"sommerce-modals__order-icons-close\"><\/span>\n                    <\/div>\n                <\/div>\n                <div class=\"sommerce-modals__alert sommerce-modals__alert-danger\">\n                    <span>Please enter your link in format <strong>https://instagram.com/nickname<\/strong><\/span>\n                <\/div>\n                <div class=\"sommerce-modals__order-details\">\n                    <table class=\"sommerce-modals__order-table\">\n                        <tbody>\n                        <tr>\n                            <td class=\"sommerce-modals__order-name\">Package:<\/td>\n                            <td class=\"sommerce-modals__order-value\"><%= package_name %><\/td>\n                        <\/tr>\n                        <tr>\n                            <td class=\"sommerce-modals__order-name\">Price:<\/td>\n                            <td class=\"sommerce-modals__order-value\"><%= package_price %><\/td>\n                        <\/tr>\n                        <\/tbody>\n                    <\/table>\n                <\/div>\n                <form action=\"<%= form_action_url %>\" method=\"post\">\n                    <input type=\"hidden\" name=\"OrderForm[package_id]\" value=\"<%= package_id %>\">\n                    <div class=\"sommerce-modals__forms\">\n                        <div class=\"form-group sommerce-modals__form-group\">\n                            <label for=\"link\">Link<\/label>\n                            <input type=\"text\" class=\"form-control\" id=\"link\" name=\"OrderForm[link]\">\n                        <\/div>\n                        <div class=\"form-group sommerce-modals__form-group\">\n                            <label for=\"email\">Email<\/label>\n                            <input type=\"email\" class=\"form-control\" id=\"email\" name=\"OrderForm[email]\">\n                            <small class=\"form-text text-muted\">You will be notified on this email address<\/small>\n                        <\/div>\n                    <\/div>\n                    <% if (payment_methods) { %>\n                        <% if (payment_methods.length > 1) { %>\n                        <div class=\"sommerce-modals__payments\">\n                            <div class=\"form-group\">\n                                <div class=\"sommerce-modals__payments-title\">Payment methods<\/div>\n                                <% _.each(payment_methods, function(method) { %>\n                                <div class=\"form-check form-check-inline\">\n                                    <input class=\"form-check-input\" type=\"radio\" name=\"OrderForm[method]\"\n                                           id=\"method-<%= method.id %>\"\n                                           <% if (method.id === payment_methods[0].id) { %> checked <% } %>\n                                           value=\"<%= method.id %>\">\n                                    <label class=\"form-check-label\" for=\"method-<%= method.id %>\"><%= method.name %><\/label>\n                                <\/div>\n                                <% }); %>\n                            <\/div>\n                        <\/div>\n                        <% } else { %>\n                        <input type=\"hidden\" name=\"OrderForm[method]\" value=\"<%= payment_methods[0].id %>\">\n                        <% }; %>\n                    <% }; %>\n                    <div class=\"sommerce-modals__actions\">\n                        <button type=\"button\" class=\"btn btn-block sommerce-modals__btn-primary\" id=\"proceed_checkout\">Proceed to Checkout<\/button>\n                    <\/div>\n                <\/form>\n            <\/div>\n        <\/div>\n    <\/div>\n<\/div>");
+
+templates['payments_modal/awaiting'] = _.template("<div class=\"modal fade\" id=\"modal-payment-awaiting\" tabindex=\"-1\" role=\"dialog\" data-backdrop=\"static\">\n    <div class=\"modal-dialog sommerce-modals__dialog\" role=\"document\">\n        <div class=\"modal-content sommerce-modals__content\">\n            <div class=\"modal-body sommerce-modals__body\">\n                <div class=\"sommerce-modals__header\">\n                    <div class=\"sommerce-modals__header-title\"><\/div>\n                    <div class=\"sommerce-modals__header-close\" data-dismiss=\"modal\" aria-label=\"Close\">\n                        <span class=\"sommerce-modals__order-icons-close\"><\/span>\n                    <\/div>\n                <\/div>\n\n                <div class=\"sommerce-modals__order-header\">\n                    <div class=\"sommerce-modals__order-header-icon\">\n                        <div class=\"sommerce-modals__order-icons-awaiting\"><\/div>\n                    <\/div>\n                    <div class=\"sommerce-modals__order-header-title\">\n                        Payment awaiting\n                    <\/div>\n                    <div class=\"sommerce-modals__order-header-description\">\n                        Your payment is being verified. You will be informed on your email.\n                    <\/div>\n                <\/div>\n                <div class=\"sommerce-modals__actions text-center\">\n                    <button class=\"btn sommerce-modals__btn-default sommerce-modals__actions-btn-center\" data-dismiss=\"modal\">Ok, got it!<\/button>\n                <\/div>\n            <\/div>\n        <\/div>\n    <\/div>\n<\/div>");
+
+templates['payments_modal/failed'] = _.template("<div class=\"modal fade\" id=\"modal-payment-failed\" tabindex=\"-1\" role=\"dialog\" data-backdrop=\"static\">\n    <div class=\"modal-dialog sommerce-modals__dialog\" role=\"document\">\n        <div class=\"modal-content sommerce-modals__content\">\n            <div class=\"modal-body sommerce-modals__body\">\n                <div class=\"sommerce-modals__header\">\n                    <div class=\"sommerce-modals__header-title\"><\/div>\n                    <div class=\"sommerce-modals__header-close\" data-dismiss=\"modal\" aria-label=\"Close\">\n                        <span class=\"sommerce-modals__order-icons-close\"><\/span>\n                    <\/div>\n                <\/div>\n\n                <div class=\"sommerce-modals__order-header\">\n                    <div class=\"sommerce-modals__order-header-icon\">\n                        <div class=\"sommerce-modals__order-icons-failed\"><\/div>\n                    <\/div>\n                    <div class=\"sommerce-modals__order-header-title\">\n                        Payment failed\n                    <\/div>\n                    <div class=\"sommerce-modals__order-header-description\">\n                        Your payment was failed by some reasons. Try to do it again.\n                    <\/div>\n                <\/div>\n                <div class=\"sommerce-modals__actions text-center\">\n                    <button class=\"btn sommerce-modals__btn-default sommerce-modals__actions-btn-center\" data-dismiss=\"modal\">Ok, got it!<\/button>\n                <\/div>\n            <\/div>\n        <\/div>\n    <\/div>\n<\/div>");
+
+templates['payments_modal/success'] = _.template("<div class=\"modal fade\" id=\"modal-payment-success\" tabindex=\"-1\" role=\"dialog\" data-backdrop=\"static\">\n    <div class=\"modal-dialog modal-lg\" role=\"document\">\n        <div class=\"modal-content sommerce-modals__content\">\n            <div class=\"modal-body sommerce-modals__body\">\n                <div class=\"sommerce-modals__header\">\n                    <div class=\"sommerce-modals__header-title\"><\/div>\n                    <div class=\"sommerce-modals__header-close\" data-dismiss=\"modal\" aria-label=\"Close\">\n                        <span class=\"sommerce-modals__order-icons-close\"><\/span>\n                    <\/div>\n                <\/div>\n\n                <div class=\"sommerce-modals__order-header\">\n                    <div class=\"sommerce-modals__order-header-icon\">\n                        <div class=\"sommerce-modals__order-icons-success\"><\/div>\n                    <\/div>\n                    <div class=\"sommerce-modals__order-header-title\">\n                        Successfull payment\n                    <\/div>\n                    <div class=\"sommerce-modals__order-header-description\">\n                        Thank you! Your payment was successful. Here is your order details.\n                    <\/div>\n                <\/div>\n\n                <div class=\"sommerce-modals__order-result\">\n                    <table class=\"sommerce-modals__order-result-table\">\n                        <thead>\n                        <tr>\n                            <th>Order ID<\/th>\n                            <th>Package<\/th>\n                            <th>Details<\/th>\n                            <th>Price<\/th>\n                            <th>Status<\/th>\n                        <\/tr>\n                        <\/thead>\n                        <tbody>\n                        <tr>\n                            <td data-label=\"Order ID\"><%= order_id %><\/td>\n                            <td data-label=\"Package\"><%= package %><\/td>\n                            <td data-label=\"Details\"><%= details %><\/td>\n                            <td data-label=\"Price\" nowrap=\"\"><%= price %><\/td>\n                            <td data-label=\"Status\">\n                                <span class=\"sommerce-status-text\"><%= status %><\/span>\n                            <\/td>\n                        <\/tr>\n                        <\/tbody>\n                    <\/table>\n                <\/div>\n                <div class=\"sommerce-modals__actions text-center\">\n                    <button class=\"btn sommerce-modals__btn-default sommerce-modals__actions-btn-center\" data-dismiss=\"modal\">Continue<\/button>\n                <\/div>\n            <\/div>\n        <\/div>\n    <\/div>\n<\/div>");

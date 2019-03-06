@@ -82,8 +82,6 @@ class CartController extends CustomController
     {
         $this->pageTitle = Yii::t('app', 'cart.title');
 
-        Url::remember();
-
         $payload = null;
         $request = Yii::$app->request;
 
@@ -94,6 +92,8 @@ class CartController extends CustomController
         } elseif ($request->get('method')) {
             $payload = [
                 $model->formName() => [
+                    'package_id' => $request->get('package_id'),
+                    'link' => $request->get('link'),
                     'email' => $request->get('email'),
                     'method' => $request->get('method'),
                     'fields' => $request->get(),
@@ -128,6 +128,7 @@ class CartController extends CustomController
             'id' => $package->id,
             'name' => Html::encode($package->name),
             'price_raw' => $package->price,
+            'currency' => $this->store->currency,
             'price' => PriceHelper::getPrice($package->price, $this->store->currency),
         ];
     }
