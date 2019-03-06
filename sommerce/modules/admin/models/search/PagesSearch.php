@@ -25,7 +25,7 @@ class PagesSearch extends Pages
         $this->_db = $store->db_name;
         $this->_pagesTable = $this->_db . "." . Pages::tableName();
     }
-
+    
     /**
      * Return array of Pages data
      * @return array
