@@ -51,12 +51,14 @@ class DuplicatePackageForm extends BaseForm
             return false;
         }
 
-        $moveModel = new MovePackageForm();
-        $moveModel->setPackage($duplicate);
+        if ($duplicate->position != ($this->_package->position + 1)) {
+            $moveModel = new MovePackageForm();
+            $moveModel->setPackage($duplicate);
 
-        if (!$moveModel->changePosition(($this->_package->position + 1))) {
-            $transaction->rollBack();
-            return false;
+            if (!$moveModel->changePosition(($this->_package->position + 1))) {
+                $transaction->rollBack();
+                return false;
+            }
         }
 
         ActivityLog::log($this->_user, ActivityLog::E_PACKAGES_PACKAGE_DUPLICATED, $duplicate->id, $duplicate->id);
