@@ -34,21 +34,8 @@ $(document).ready(function() {
 		});
 	});
 
-	// function slickify() {
-	// 	$('.slick').slick({
-	// 		autoplay: false,
-	// 		delay: 5000,
-	// 		speed: 700
-	// 	});
-	// }
 
-	// slickify();
-
-	// $(window).on('resize', () => {
-	// 	if (document.body.clientWidth > 576) {
-	// 		$('.slick').slick('unslick');
-	// 	} else {
-	// 		slickify();
-	// 	}
-	// });
+	$(window).scroll(function () {
+		$('.navbar').toggleClass('new', $(this).scrollTop() > 0);
+	});
 });

@@ -7,6 +7,12 @@ body {
 	-ms-backface-visibility: hidden;
 }
 
+.new {
+	padding-top: 30px;
+    background: white;
+	/* opacity: 0.5; */
+}
+
 #features img {
 	width: 80px;
 	height: 80px;
