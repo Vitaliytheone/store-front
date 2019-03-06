@@ -60,10 +60,6 @@ $config = [
             'class' => 'console\controllers\superadmin\SystemController',
         ],
 
-        'blocks-sommerce' => [
-            'class' => 'console\controllers\sommerce\BlocksController',
-        ],
-
         'cron-store' => [
             'class' => 'console\controllers\store\CronController',
         ],
