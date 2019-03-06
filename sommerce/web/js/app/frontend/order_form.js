@@ -4,6 +4,8 @@ customModule.orderFormFrontend = {
 
         var self = this;
 
+        self.params = params;
+
         self.fieldsContainer = null;
         self.modal = null;
         self.fieldOptions = params.fieldOptions;
@@ -22,18 +24,6 @@ customModule.orderFormFrontend = {
         }
 
         self.currentMethod = self.paymentMethods[0].id;
-
-        if ('undefined' != typeof params.options) {
-            if ('undefined' != typeof params.options.authorize) {
-                self.initAuthorize(params.options.authorize);
-            }
-            if ('undefined' != typeof params.options.stripe) {
-                self.initStripe(params.options.stripe);
-            }
-            if ('undefined' != typeof params.options.stripe_3d_secure) {
-                self.initStripe3dSecure(params.options.stripe_3d_secure);
-            }
-        }
 
         $('.buy-package').on('click', function (event) {
             event.preventDefault();
@@ -89,6 +79,18 @@ customModule.orderFormFrontend = {
             hideValidationError();
             $('#order-package-modal').modal('show');
         });
+
+        if ('undefined' != typeof self.params.options) {
+            if ('undefined' != typeof self.params.options.authorize) {
+                self.initAuthorize(self.params.options.authorize);
+            }
+            if ('undefined' != typeof self.params.options.stripe) {
+                self.initStripe(self.params.options.stripe);
+            }
+            if ('undefined' != typeof self.params.options.stripe_3d_secure) {
+                self.initStripe3dSecure(self.params.options.stripe_3d_secure);
+            }
+        }
 
         $(document).on('click', '#proceed_checkout', function (event) {
             hideValidationError();
@@ -179,7 +181,7 @@ customModule.orderFormFrontend = {
         var email = $('input[name="OrderForm[email]');
         var configure = params.configure;
         var submitBtn = $('#proceed_checkout');
-        var submitMethodBtn = $("<button />", configure);
+        var submitMethodBtn = $("<button />", configure).hide();
         submitBtn.after(submitMethodBtn);
 
         $(document).on('click', submitBtn, function (e) {
@@ -347,4 +349,4 @@ customModule.orderFormFrontend = {
     }
 };
 
-var responseAuthorizeHandler = customModule.cartFrontend.responseAuthorizeHandler;
+var responseAuthorizeHandler = customModule.orderFormFrontend.responseAuthorizeHandler;
