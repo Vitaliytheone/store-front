@@ -4,13 +4,13 @@ namespace console\controllers\sommerce;
 
 use sommerce\events\Events;
 use common\helpers\CurrencyHelper;
-use common\models\store\Checkouts;
-use common\models\store\Payments;
-use common\models\stores\PaymentMethods;
-use common\models\stores\PaymentMethodsCurrency;
-use common\models\stores\StoreAdminsHash;
-use common\models\stores\StorePaymentMethods;
-use common\models\stores\Stores;
+use common\models\sommerce\Checkouts;
+use common\models\sommerce\Payments;
+use common\models\sommerces\PaymentMethods;
+use common\models\sommerces\PaymentMethodsCurrency;
+use common\models\sommerces\StoreAdminsHash;
+use common\models\sommerces\StorePaymentMethods;
+use common\models\sommerces\Stores;
 use sommerce\components\getstatus\GetstatusComponent;
 use sommerce\components\sender\SenderComponent;
 use sommerce\components\payments\methods\Authorize;
@@ -35,6 +35,8 @@ class CronController extends CustomController
 
     /**
      * Orders sender & processor
+     * @throws \yii\base\Exception
+     * @throws \yii\db\Exception
      */
     public function actionSender()
     {
@@ -48,6 +50,7 @@ class CronController extends CustomController
 
     /**
      * Get status
+     * @throws \yii\db\Exception
      */
     public function actionGetstatus()
     {

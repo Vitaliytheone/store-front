@@ -1,6 +1,7 @@
 <?php
 namespace control_panel\helpers\order;
 
+use common\components\models\SslCertLetsencrypt;
 use control_panel\components\ddos\Ddos;
 use control_panel\components\ssl\Ssl;
 use common\helpers\CurlHelper;
@@ -19,7 +20,7 @@ class OrderSslHelper {
 
     /**
      * Add config
-     * @param SslCert $ssl
+     * @param SslCert|SslCertLetsencrypt $ssl
      * @param array $data
      * @return boolean
      */
@@ -132,13 +133,13 @@ class OrderSslHelper {
 
     /**
      * @param Orders $order
-     * @param SslCert $ssl
+     * @param SslCert|SslCertLetsencrypt $ssl
      * @return mixed
      * @throws Exception
      */
-    public static function addSslRenewOrder(Orders $order, SslCert $ssl)
+    public static function addSslRenewOrder(Orders $order, $ssl)
     {
-        if (!$ssl instanceof SslCert) {
+        if (!$ssl instanceof SslCert || !$ssl instanceof SslCertLetsencrypt) {
             ThirdPartyLog::log(ThirdPartyLog::ITEM_PROLONGATION_SSL, $order->item_id, 'SslCert is undefined!', 'cron.ssl.send_order_renew_ssl');
 
             throw new Exception('SslCert is undefined!');
@@ -209,10 +210,10 @@ class OrderSslHelper {
 
     /**
      * Get order status
-     * @param SslCert $ssl
+     * @param SslCert|SslCertLetsencrypt $ssl
      * @return mixed
      */
-    public static function getOrderStatus(SslCert $ssl)
+    public static function getOrderStatus($ssl)
     {
         $order = $ssl->getOrderDetails();
         $orderId = ArrayHelper::getValue($order, 'order_id');
@@ -227,11 +228,11 @@ class OrderSslHelper {
 
     /**
      * Add to ddos guard service
-     * @param SslCert $ssl
+     * @param SslCert|SslCertLetsencrypt $ssl
      * @param array $data
      * @return bool
      */
-    public static function addDdos(SslCert $ssl, $data)
+    public static function addDdos($ssl, $data)
     {
         $data = array_merge(Yii::$app->params['ddosGuardOptions'], $data);
 

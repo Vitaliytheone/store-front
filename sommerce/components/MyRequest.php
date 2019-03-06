@@ -1,7 +1,6 @@
 <?php
 namespace sommerce\components;
 
-use common\helpers\UrlHelper;
 use common\models\sommerces\Stores;
 use sommerce\helpers\RouteHelper;
 use Yii;
@@ -34,17 +33,7 @@ class MyRequest extends Request
         $isAdminModule = strpos($pathInfo, 'admin') !== false;
 
         if ($store && !$isAdminModule) {
-            $sources = [
-                'pages'
-            ];
-
-            // Check payments urls when call from referrer domains (payment services)
-            if (!UrlHelper::isOurCall()) {
-                $sources[] = 'payments';
-            }
-
-            $urls = RouteHelper::getRoutes($sources);
-
+            $urls = RouteHelper::getRoutes();
             foreach ($urls as $url => $options) {
                 if (preg_match($options['rule'], $pathInfo, $match)) {
                     $pathInfo = $options['url'];

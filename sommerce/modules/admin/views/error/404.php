@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title><?= Yii::t('app', '404.title')?></title>
+    <title><?= Yii::t('admin', '404.title')?></title>
 </head>
 <style>
     html,body{
@@ -55,7 +55,7 @@
             404
         </div>
         <div class="page-description">
-            <p><?= Yii::t('app', '404.text')?></p>
+            <p><?= Yii::t('admin', '404.text')?></p>
         </div>
     </div>
 </div>

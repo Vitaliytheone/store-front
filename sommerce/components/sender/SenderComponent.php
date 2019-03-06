@@ -1,6 +1,6 @@
 <?php
 
-namespace console\components\sender;
+namespace sommerce\components\sender;
 
 use sommerce\events\Events;
 use common\models\panels\AdditionalServices;

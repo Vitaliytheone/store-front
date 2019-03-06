@@ -58,6 +58,11 @@ class NavbarHelper {
                         'icon' => 'flaticon-app',
                         'label' => Yii::t('admin', 'header.menu_settings_integrations'),
                     ],
+                    'settings-languages' => [
+                        'url' => '/admin/settings/integrations',
+                        'icon' => 'flaticon-speech-bubble',
+                        'label' => Yii::t('admin', 'header.menu_settings_languages'),
+                    ],
                 ],
             ],
         ];

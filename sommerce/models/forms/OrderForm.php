@@ -297,7 +297,7 @@ class OrderForm extends Model
         $checkout->currency = $this->_store->currency;
         $checkout->currency_id = $storePayMethod->currency_id;
         $checkout->redirect_url = Url::previous();
-        $checkout->setDetails($this->attributes);
+        $checkout->setDetails([$this->attributes]);
         $checkout->setUserDetails($this->_userData);
 
         if (!$checkout->save()) {

@@ -17,7 +17,8 @@ body {
 	height: 72px;
 }
 
-#started .numbers {
+#started .numbers,
+.carousel-item img {
 	width: 115px;
 	height: 112px;
 }
@@ -60,7 +61,9 @@ button:focus {
     padding-bottom: 30px;
 }
 
-@media (min-width: 768px) and (max-width: 1199px) {
+
+
+/* @media (min-width: 768px) and (max-width: 1199px) {
 	.provide-container {
 		margin-bottom: 100px !important;
 	}
@@ -70,7 +73,7 @@ button:focus {
 	.provide-container {
 		margin-bottom: 125px !important;
 	}
-}
+} */
 /* ********************* */
 
 .sommerce-bolder {
@@ -89,7 +92,7 @@ button:focus {
 }
 
 #header {
-	background-image: url("../images/webp/Illustrations/main@2x.webp");
+	background-image: url("../images/big/Main@2x-min\ 2.png");
 	background-size: contain;
 	background-repeat: no-repeat;
 	background-position: top right;
@@ -147,7 +150,7 @@ button:focus {
 	height: 48px;
 	border-radius: 2px;
 	margin-right: 10px;
-	background-color: #ffffff;
+	border-color: #BDBCC8;
 }
 
 .nav li {
@@ -188,6 +191,7 @@ button:focus {
 }
 
 .why-sommerce {
+	padding-top: 10px;
 	width: 730px;
 }
 
@@ -200,6 +204,7 @@ button:focus {
 	font-size: 16px;
 	font-weight: bold;
 	color: #312e55;
+	margin-bottom: 0px;
 }
 
 .col-3 h4 {
@@ -302,10 +307,10 @@ button:focus {
 	color: #eae7fa;
 }
 
-.provide-container {
+/* .provide-container {
 	padding-top: 30px;
 	margin-bottom: 70px;
-}
+} */
 
 .demo-buttons button {
     margin-right: 20px;
@@ -576,10 +581,10 @@ ul li {
 }
 
 .mail {
-	background-image: url("../images/webp/Illustrations/mail@2x.webp");
+	background-image: url("../images/big/mail.png");
 	background-size: contain;
 	background-repeat: no-repeat;
-	background-position: top right;
+	background-position: 100% 20px;
 	padding-left: 0px;
 }
 
@@ -632,9 +637,13 @@ ul li {
 	.footer-input {
 		width: 280px;
 	}
+
+	.collapse-container {
+		width: 100%;
+	}
 }
 
-@media screen and (max-width: 992px) {
+@media screen and (max-width: 991px) {
 	.faq-container {
 		width: 100%;
 	}
@@ -643,12 +652,8 @@ ul li {
 		width: 100%;
 	}
 
-	.collapse-container {
-		width: 100%;
-	}
-
 	.mail {
-		background-position: 160% 40%;
+		background-position: 150% 20px;
 	}
 
 	.gradient {
@@ -733,6 +738,11 @@ ul li {
 	.header-descr {
 		max-width: 100%;
 	}
+
+	.price div {
+    padding: 24px 12px 30px 12px;
+}
+
 }
 
 @media screen and (max-width: 350px) {
@@ -748,40 +758,36 @@ ul li {
 @media (min-width: 992px) and (max-width: 1440px) {
 	#header {
 		background-position: 100%;
-	}
-
-	.technology-driven {
-		padding-bottom: 500px;
+    	background-size: 70%;
 	}
 }
 
-@media (min-width: 768px) and (max-width: 992px) {
+@media (min-width: 768px) and (max-width: 991px) {
 	#header {
-		background-position: 100%;
+		background-size: 80%;
+   		background-position: 100% 100%;
 	}
 
-	.technology-driven {
-		padding-bottom: 600px;
-	}
+
 }
 
-@media (min-width: 768px) and (max-width: 900px) {
-	#header {
-		background-size: contain;
-		height: 1000px;
-	}
-}
 
 @media (max-width: 769px) {
 	#header {
 		background-position: right bottom;
-		background-size: contain;
+		background-size: 90%;
 	}
 }
 
-@media (max-width: 500px) {
+@media (min-width:400px) and (max-width: 600px) {
 	.technology-driven {
 		padding-bottom: 150px;
+	}
+}
+
+@media (max-width: 399px) {
+	.technology-driven {
+		padding-bottom: 50px;
 	}
 }
 
@@ -797,8 +803,18 @@ ul li {
 	.slick {
 		display: none;
 	}
+
+	.mail {
+		padding-right: 0px;
+	}
+	
 }
 
+@media (max-width: 425px) {
+	.mail {
+		background-position: 50% 100%;
+	}
+}
 
 /* ANIMATION HOVERS IN DEMO  */
 

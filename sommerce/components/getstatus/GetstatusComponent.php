@@ -1,6 +1,6 @@
 <?php
 
-namespace store\components\getstatus;
+namespace sommerce\components\getstatus;
 
 use sommerce\events\Events;
 use common\models\panels\AdditionalServices;

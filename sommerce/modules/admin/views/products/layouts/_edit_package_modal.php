@@ -1,9 +1,9 @@
 <?php
 
-use yii\helpers\Url;
-use yii\bootstrap\Html;
 use admin\models\forms\package\EditPackageForm;
 use common\components\ActiveForm;
+use yii\bootstrap\Html;
+use yii\helpers\Url;
 
 /* @var $this yii\web\View */
 /* @var $store \common\models\sommerces\Stores */
@@ -16,7 +16,7 @@ $model->setStore($store);
     <div class="modal-dialog modal-md">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title"><?= Yii::t('admin', 'products.create_package.header') ?> (ID: <span id="packageId"></span>)</h5>
+                <h5 class="modal-title"><?= Yii::t('admin', 'products.edit_package.header') ?> (ID: <span id="packageId"></span>)</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
