@@ -2,7 +2,6 @@
 
 namespace common\helpers;
 
-
 use common\models\gateways\Sites;
 use my\helpers\DomainsHelper;
 use Yii;
@@ -10,6 +9,8 @@ use common\components\dns\Dns;
 use common\models\panels\ThirdPartyLog;
 use common\models\stores\Stores;
 use common\models\panels\Project;
+use common\models\sommerces\Stores as Sommerce;
+use common\models\sommerces\ThirdPartyLog as SommerceThirdPartyLog;
 
 /**
  * Class DnsHelper
@@ -18,7 +19,7 @@ use common\models\panels\Project;
 class DnsHelper
 {
     /**
-     * @param Stores|Project|Sites $project
+     * @param Stores|Project|Sites|Sommerce $project
      * @return bool
      */
     public static function addMainDns($project)
@@ -37,8 +38,11 @@ class DnsHelper
             return true;
         }
 
+        /** @var ThirdPartyLog|SommerceThirdPartyLog $thirdPartyLog */
+        $thirdPartyLog = $project instanceof Sommerce ? SommerceThirdPartyLog::class : ThirdPartyLog::class;
+
         // Add master
-        ThirdPartyLog::log($params['logItem'], $project->id, [
+        $thirdPartyLog::log($params['logItem'], $project->id, [
             'auth-id' => Yii::$app->params['dnsId'],
             'auth-password' => Yii::$app->params['dnsPassword'],
             'domain-name' => $params['domain'],
@@ -49,11 +53,11 @@ class DnsHelper
         if (!Dns::addMaster($params['domain'], $params['registrarParams'], $results)) {
             $result = false;
         }
-        ThirdPartyLog::log($params['logItem'], $project->id, $results, $logCodes['master_dns']);
+        $thirdPartyLog::log($params['logItem'], $project->id, $results, $logCodes['master_dns']);
 
 
         // Add dns record type A
-        ThirdPartyLog::log($params['logItem'], $project->id, [
+        $thirdPartyLog::log($params['logItem'], $project->id, [
             'auth-id' => Yii::$app->params['dnsId'],
             'auth-password' => Yii::$app->params['dnsPassword'],
             'domain-name' => $params['domain'],
@@ -70,11 +74,11 @@ class DnsHelper
         ], $results)) {
             $result = false;
         }
-        ThirdPartyLog::log($params['logItem'], $project->id, $results, $logCodes['dns_record_a']);
+        $thirdPartyLog::log($params['logItem'], $project->id, $results, $logCodes['dns_record_a']);
 
 
         // Add dns record type CNAME for www
-        ThirdPartyLog::log($params['logItem'], $project->id, [
+        $thirdPartyLog::log($params['logItem'], $project->id, [
             'auth-id' => Yii::$app->params['dnsId'],
             'auth-password' => Yii::$app->params['dnsPassword'],
             'domain-name' => $params['domain'],
@@ -91,13 +95,13 @@ class DnsHelper
         ], $results)) {
             $result = false;
         }
-        ThirdPartyLog::log($params['logItem'], $project->id, $results, $logCodes['dns_record_www_cname']);
+        $thirdPartyLog::log($params['logItem'], $project->id, $results, $logCodes['dns_record_www_cname']);
 
         return $result;
     }
 
     /**
-     * @param Stores|Project|Sites $project
+     * @param Stores|Project|Sites|Sommerce $project
      * @return bool
      */
     public static function addSubDns($project)
@@ -119,7 +123,10 @@ class DnsHelper
             return true;
         }
 
-        ThirdPartyLog::log($params['logItem'], $project->id, [
+        /** @var ThirdPartyLog|SommerceThirdPartyLog $thirdPartyLog */
+        $thirdPartyLog = $project instanceof Sommerce ? SommerceThirdPartyLog::class : ThirdPartyLog::class;
+
+        $thirdPartyLog::log($params['logItem'], $project->id, [
             'auth-id' => Yii::$app->params['dnsId'],
             'auth-password' => Yii::$app->params['dnsPassword'],
             'domain-name' => $params['domain'],
@@ -136,13 +143,14 @@ class DnsHelper
         ], $results)) {
             $result = false;
         }
-        ThirdPartyLog::log($params['logItem'], $project->id, $results, $logCodes['dns_record_cname']);
+
+        $thirdPartyLog::log($params['logItem'], $project->id, $results, $logCodes['dns_record_cname']);
 
         return $result;
     }
 
     /**
-     * @param Stores|Project|Sites $project
+     * @param Stores|Project|Sites|Sommerce $project
      * @return bool
      */
     public static function removeMainDns($project)
@@ -159,7 +167,12 @@ class DnsHelper
         if (!Dns::removeMaster($params['domain'], $results)) {
             $result = false;
         }
-        ThirdPartyLog::log($params['logItem'], $project->id, $results, $logCodes['remove_master']);
+
+        if ($project instanceof Sommerce) {
+            SommerceThirdPartyLog::log($params['logItem'], $project->id, $results, $logCodes['remove_master']);
+        } else {
+            ThirdPartyLog::log($params['logItem'], $project->id, $results, $logCodes['remove_master']);
+        }
 
         return $result;
     }
@@ -184,7 +197,12 @@ class DnsHelper
         ], $results)) {
             $result = false;
         }
-        ThirdPartyLog::log($params['logItem'], $project->id, $results, $logCodes['remove_record']);
+
+        if ($project instanceof Sommerce) {
+            SommerceThirdPartyLog::log($params['logItem'], $project->id, $results, $logCodes['remove_record']);
+        } else {
+            ThirdPartyLog::log($params['logItem'], $project->id, $results, $logCodes['remove_record']);
+        }
 
         return $result;
     }
@@ -263,6 +281,14 @@ class DnsHelper
                 'logCodes' => static::getLogCodes('gateway'),
                 'logItem' => ThirdPartyLog::ITEM_BUY_GATEWAY,
                 'registrarParams' => Yii::$app->params[static::_getDns($project->domain).'.gateway.ns'],
+            ];
+        } elseif ($project instanceof Sommerce) {
+            return [
+                'domain' => $project->domain,
+                'projectDomainName' => Yii::$app->params['storeDomain'],
+                'logCodes' => static::getLogCodes('store'),
+                'logItem' => SommerceThirdPartyLog::ITEM_BUY_STORE,
+                'registrarParams' => Yii::$app->params[static::_getDns($project->domain).'.sommerce.ns'],
             ];
         } else {
             return false;
