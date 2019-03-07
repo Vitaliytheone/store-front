@@ -8876,3 +8876,8 @@ a:hover, a:focus {
         border-bottom-right-radius: 5px; }
     .sommerce-settings__payment-cart .payment-cart__preview img {
         max-width: 35px; } }
+
+.sommerce_dragtable .disabled-product span {
+    color: #b3b3b3 !important;
+    background-color: #fdfdfd !important;
+}

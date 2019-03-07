@@ -11,7 +11,7 @@ use yii\helpers\ArrayHelper;
 ?>
 
 <?php if (!empty($products)) : ?>
-    <div class="sortable">
+    <div class="sortable sommerce_dragtable">
         <?php foreach ($products as $product) : ?>
             <div class="sommerce-products-editor__product product-item"  data-action-url="<?= Url::to(['products/move-product', 'id' => $product['id'], 'position' => ""]) ?>">
                 <div class="sommerce-products-editor__product-title">

@@ -40,11 +40,13 @@ $model->setStore($store);
 
                 <?= $form->field($model, 'name') ?>
 
-                <?= $form->field($model, 'price') ?>
+                <?= $form->field($model, 'price')->textInput([
+                    'type' => 'number',
+                    'min' => '0.01',
+                    'step' => '0.01',
+                ]) ?>
 
                 <?= $form->field($model, 'quantity') ?>
-
-                <?= $form->field($model, 'best')->dropDownList($model->getBestVariants()) ?>
 
                 <?= $form->field($model, 'link_type')->dropDownList($model->getLinkTypes()) ?>
 
