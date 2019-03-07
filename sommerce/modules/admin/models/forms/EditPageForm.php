@@ -146,7 +146,11 @@ class EditPageForm extends Model
 
 
     /**
+     * Add new page
+     *
      * @return bool|int
+     * @throws \Throwable
+     * @throws \yii\db\Exception
      */
     public function add()
     {
@@ -163,8 +167,8 @@ class EditPageForm extends Model
                 'name' => $this->name,
                 'seo_keywords' => $this->keywords,
                 'seo_description' => $this->description,
-                'visibility' => intval($this->visibility),
-                'is_draft' => 1,
+                'visibility' => (int)$this->visibility,
+                'is_draft' => 0,
                 'url' => $this->url
             ];
 
