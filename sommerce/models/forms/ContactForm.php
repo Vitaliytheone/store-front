@@ -61,7 +61,7 @@ class ContactForm extends Model
      * Return success text if message successfully sent
      * @return string
      */
-    public function getSentSuccess()
+    public function getSentSuccess(): string
     {
         return $this->_sentSuccess;
     }
@@ -95,21 +95,6 @@ class ContactForm extends Model
         }
 
         return $sentResult;
-    }
-
-    /**
-     * Custom email validator
-     * @param $attribute
-     * @param $params
-     * @param $validator
-     * @return bool
-     */
-    public function emailValidator($attribute, $params, $validator)
-    {
-        if ($this->$attribute !== filter_var($this->$attribute, FILTER_VALIDATE_EMAIL)) {
-            return false;
-        }
-        return true;
     }
 
     /**

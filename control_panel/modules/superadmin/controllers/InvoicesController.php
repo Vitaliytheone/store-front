@@ -39,7 +39,7 @@ class InvoicesController extends CustomController
                 ],
             ],
             'verbs' => [
-                'class' => VerbFilter::className(),
+                'class' => VerbFilter::class,
                 'actions' => [
                     'index' => ['GET'],
                     'edit' => ['POST'],
