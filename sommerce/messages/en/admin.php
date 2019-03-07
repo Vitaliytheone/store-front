@@ -318,6 +318,7 @@ return [
     'settings.payments_mercadopago_client_id' => 'Client ID',
     'settings.payments_mercadopago_secret' => 'Secret Key',
     'settings.payments_mercadopago_course' => 'Course',
+    'settings.payments_mercadopago_test_mode' => 'Use test mode',
 
     'settings.payments_edit_mollie' => 'Edit Mollie',
     'settings.payments_mollie_api' => 'Enter your API key',
