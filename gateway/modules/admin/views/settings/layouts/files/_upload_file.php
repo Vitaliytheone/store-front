@@ -37,7 +37,9 @@ $model = new UploadFileForm();
                             <div>
                                 <?= Html::activeLabel($model, 'file')?>
                             </div>
-                            <?= Html::activeFileInput($model, 'file')?>
+                            <?= Html::activeFileInput($model, 'file[]', [
+                                'multiple' => true,
+                            ])?>
                         </div>
                     </div>
 

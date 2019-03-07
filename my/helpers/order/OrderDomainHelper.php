@@ -2,6 +2,8 @@
 
 namespace my\helpers\order;
 
+use common\components\domains\Domain;
+use common\models\panels\Domains;
 use my\helpers\DomainsHelper;
 use Yii;
 use common\models\panels\Orders;
@@ -26,7 +28,6 @@ class OrderDomainHelper
     {
         $orderDetails = $order->getDetails();
         $details = ArrayHelper::getValue($orderDetails, 'details', []);
-        $domain = $order->getDomain();
 
         $data = [
             'email' => ArrayHelper::getValue($details, 'domain_email'),
@@ -42,7 +43,7 @@ class OrderDomainHelper
             'fax_phone' => ArrayHelper::getValue($details, 'domain_fax'),
         ];
 
-        $registrar = DomainsHelper::getRegistrarClass($domain);
+        $registrar = static::getRegistrarClass($order);
         ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_DOMAIN, $order->id, array_merge($data, $registrar::getDefaultOptions()), 'cron.order.send_domain_contact');
 
         $contactResult = $registrar::contactCreate($data);
@@ -65,7 +66,7 @@ class OrderDomainHelper
         $contactResult = ArrayHelper::getValue($orderDetails, 'domain_contact');
         $contactId = ArrayHelper::getValue($contactResult, 'id');
         $period = 1;
-        $registrar = DomainsHelper::getRegistrarClass($domain);
+        $registrar = static::getRegistrarClass($order);
 
         ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_DOMAIN, $order->id, array_merge([
             'domain' => $domain,
@@ -94,7 +95,7 @@ class OrderDomainHelper
         $orderDetails = $order->getDetails();
         $domain = ArrayHelper::getValue($orderDetails, 'domain');
 
-        $registrar = DomainsHelper::getRegistrarClass($domain);
+        $registrar = static::getRegistrarClass($order);
 
         ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_DOMAIN, $order->id, array_merge([
             'domain' => $domain,
@@ -118,7 +119,7 @@ class OrderDomainHelper
         $orderDetails = $order->getDetails();
         $domain = ArrayHelper::getValue($orderDetails, 'domain');
 
-        $registrar = DomainsHelper::getRegistrarClass($domain);
+        $registrar = static::getRegistrarClass($order);
 
         ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_DOMAIN, $order->id, array_merge([
             'domain' => $domain,
@@ -141,8 +142,8 @@ class OrderDomainHelper
     {
         $orderDetails = $order->getDetails();
         $domain = ArrayHelper::getValue($orderDetails, 'domain');
-        $registrar = DomainsHelper::getRegistrarClass($domain);
-        $registrarName = DomainsHelper::getRegistrarName($domain);
+        $registrar = static::getRegistrarClass($order);
+        $registrarName = static::getRegistrarName($order);
 
         ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_DOMAIN, $order->id, array_merge([
             'domain' => $domain,
@@ -166,7 +167,7 @@ class OrderDomainHelper
     {
         $orderDetails = $order->getDetails();
         $domain = ArrayHelper::getValue($orderDetails, 'domain');
-        $registrar = DomainsHelper::getRegistrarClass($domain);
+        $registrar = static::getRegistrarClass($order);
 
         ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_DOMAIN, $order->id, array_merge([
             'domain' => $domain,
@@ -191,7 +192,7 @@ class OrderDomainHelper
         $orderDetails = $order->getDetails();
         $domain = ArrayHelper::getValue($orderDetails, 'domain');
 
-        $domainInfoResult = self::domainGetInfo($order);
+        $domainInfoResult = static::domainGetInfo($order);
 
         ThirdPartyLog::log(ThirdPartyLog::ITEM_PROLONGATION_DOMAIN, $order->item_id, $domainInfoResult, 'cron.prolong.domain_info_result');
 
@@ -212,7 +213,7 @@ class OrderDomainHelper
             'expiry' => $expiry
         ], 'cron.prolong.send_renew_domain');
 
-        $registrar = DomainsHelper::getRegistrarClass($domain);
+        $registrar = static::getRegistrarClass($order);
         $domainRenewResult = $registrar::domainRenew($domain, $expiry);
 
         ThirdPartyLog::log(ThirdPartyLog::ITEM_PROLONGATION_DOMAIN, $order->item_id, $domainRenewResult, 'cron.prolong.renew_domain');
@@ -222,5 +223,42 @@ class OrderDomainHelper
         }
 
         return $domainRenewResult;
+    }
+
+    /**
+     * @param Orders $order
+     * @return \common\components\domains\BaseDomain
+     * @throws \yii\base\UnknownClassException
+     */
+    protected static function getRegistrarClass(Orders $order)
+    {
+        if (Orders::ITEM_PROLONGATION_DOMAIN === $order->item) {
+            $domain = Domains::findOne($order->item_id);
+            if (!empty($domain)) {
+                return Domain::createRegistrarClass($domain->registrar);
+            }
+        }
+
+        $orderDetails = $order->getDetails();
+        $domain = ArrayHelper::getValue($orderDetails, 'domain');
+        return DomainsHelper::getRegistrarClass($domain);
+    }
+
+    /**
+     * @param Orders $order
+     * @return string
+     */
+    protected static function getRegistrarName(Orders $order)
+    {
+        if (Orders::ITEM_PROLONGATION_DOMAIN === $order->item) {
+            $domain = Domains::findOne($order->item_id);
+            if (!empty($domain)) {
+                return $domain->registrar;
+            }
+        }
+
+        $orderDetails = $order->getDetails();
+        $domain = ArrayHelper::getValue($orderDetails, 'domain');
+        return DomainsHelper::getRegistrarName($domain);
     }
 }
