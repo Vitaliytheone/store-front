@@ -170,6 +170,7 @@ return [
 
 
     'products.package_create' => 'Create package',
+    'products.package_service_default' => 'Choose service',
 
     'products.message_product_created' => 'Product was successfully created!',
     'products.message_product_updated' => 'Product was successfully updated!',

@@ -3,13 +3,13 @@
 namespace sommerce\modules\admin\models\search;
 
 use common\models\panels\AdditionalServices;
+use common\models\sommerce\Packages;
+use common\models\sommerce\Products;
 use common\models\sommerces\StoreProviders;
 use common\models\sommerces\Stores;
 use yii;
-use yii\db\Query;
 use yii\base\Model;
-use common\models\sommerce\Products;
-use common\models\sommerce\Packages;
+use yii\db\Query;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -104,7 +104,11 @@ class ProductsSearch extends Model
             });
             array_walk($productPackages, function (&$package, $key) use ($providers) {
 
+                // fixme если не указан провайдер_ид или он не существует то выдавать первый из списка провайдеров
+                Yii::debug($providers); //todo del
+                Yii::debug($package['provider_id'] . '.site'); //todo del
                 $provider = ArrayHelper::getValue($providers, $package['provider_id'] . '.site', '');
+
 
                 $package = [
                     'id' => $package['pk_id'],
