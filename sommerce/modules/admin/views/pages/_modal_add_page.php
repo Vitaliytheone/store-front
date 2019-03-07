@@ -136,7 +136,7 @@ $model = new EditPageForm();
                             <a href="#" class="btn btn-danger btn-sm mr-2 sommerce-dropdown__delete-cancel"><?= Yii::t('admin', 'pages.cancel')?></a>
 
                             <?= Html::a(Yii::t('admin', 'pages.delete'),
-                                [Url::toRoute(array_merge(['/pages/delete-page']))], [
+                                [Url::toRoute(['/pages/delete-page'])], [
                                     'class' => 'delete-page btn btn-secondary btn-sm'
                                 ])
                             ?>
