@@ -50,7 +50,7 @@ class PageController extends CustomController
         $content = $page['twig'] ?? '';
 
         $this->addModule('contactsForm', [
-            'action' => '/system/contacts'
+            'contact_action_url' => Url::toRoute(['/system/contacts']),
         ]);
         $this->addPaymentModal();
         $orderForm = new OrderForm();
