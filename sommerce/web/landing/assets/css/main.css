@@ -8,11 +8,15 @@ body {
 	/* padding-top: 30px; */
 }
 
-.new {
-  /* height: 73px; */
+.nav-scroll {
   box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.04);
   background-color: #ffffff;
   padding-top: 0px;
+  border-bottom: 1px solid #e5e5e9;
+}
+
+#footer .form-control {
+	border: 0px;
 }
 
 #features img {
@@ -107,7 +111,7 @@ button:focus {
 }
 
 .navbar {
-	padding-top: 20px;
+	padding-top: 10px;
 }
 
 .navbar-toggler {
@@ -451,7 +455,7 @@ a .hello {
 }
 
 a:hover .hello {
-	border-bottom: 1px solid!important;
+	border-bottom: 1px solid #8672ED !important;
 }
 
 .hello-faq-button {
