@@ -83,7 +83,7 @@ class DomainsHelper
      */
     public static function getRegistrarClass($domain)
     {
-        $name = self::getRegistrarName($domain);
+        $name = static::getRegistrarName($domain);
 
         $result = Domain::createRegistrarClass($name);
 
@@ -98,7 +98,7 @@ class DomainsHelper
     public static function getRegistrarName($domain): string
     {
 
-        $domain = self::idnToUtf8($domain);
+        $domain = static::idnToUtf8($domain);
 
         $zone = mb_strtoupper('.' . explode('.', $domain)[1]);
         if (empty($zone)) {
@@ -131,7 +131,7 @@ class DomainsHelper
 
         $domain = mb_strtolower(trim($domain));
 
-        $registrar = self::getRegistrarClass($domain);
+        $registrar = static::getRegistrarClass($domain);
         $result = $registrar::domainsCheck($domain);
 
         if (empty($result[$domain])) {
@@ -139,7 +139,7 @@ class DomainsHelper
         }
 
         $existsDomain = Orders::find()->andWhere([
-            'domain' => self::idnToAscii($domain),
+            'domain' => static::idnToAscii($domain),
             'item' => Orders::ITEM_BUY_DOMAIN,
             'status' => [
                 Orders::STATUS_PENDING,
