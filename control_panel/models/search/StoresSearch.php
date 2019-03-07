@@ -90,8 +90,8 @@ class StoresSearch
 
         return [
             'pending' => $orderPending,
-            'canceled' => $orderCanceled,
             'stores' => $stores,
+            'canceled' => $orderCanceled,
         ];
     }
 
