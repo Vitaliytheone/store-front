@@ -2,7 +2,7 @@
 
 namespace common\components\letsencrypt;
 
-use common\components\models\SslCertLetsencrypt;
+use common\models\panels\SslCertLetsencrypt;
 use common\models\panels\Customers;
 use common\models\panels\Project;
 use common\models\panels\SslCert;
@@ -11,7 +11,6 @@ use console\controllers\my\SystemController;
 use yii\base\Component;
 use Yii;
 use yii\base\Exception;
-use yii\base\ExitException;
 use yii\helpers\Console;
 use yii\console\ExitCode;
 

@@ -3,7 +3,7 @@
 namespace control_panel\helpers;
 
 use common\components\letsencrypt\Letsencrypt;
-use common\components\models\SslCertLetsencrypt;
+use common\models\sommerces\SslCertLetsencrypt;
 use common\helpers\DbHelper;
 use control_panel\helpers\super_tasks\SuperTaskHelper;
 use common\models\common\ProjectInterface;
@@ -747,7 +747,7 @@ class OrderHelper
             throw new Exception('Cannot update Ssl order [orderId=' . $order->id . ']');
         }
 
-        $project->ssl = Project::SSL_MODE_ON;
+        $project->ssl = Stores::SSL_MODE_ON;
 
         if (!$project->save(false)) {
             throw new Exception('Cannot update project [' . $project->id . ']');

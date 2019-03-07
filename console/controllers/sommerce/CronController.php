@@ -26,14 +26,6 @@ use Yii;
 class CronController extends CustomController
 {
     /**
-     * Clear cart items
-     */
-    public function actionClearCartItems()
-    {
-        StoresHelper::clearStoresCarts(30);
-    }
-
-    /**
      * Orders sender & processor
      * @throws \yii\base\Exception
      * @throws \yii\db\Exception

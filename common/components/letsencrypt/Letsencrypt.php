@@ -1,10 +1,8 @@
 <?php
-
 namespace common\components\letsencrypt;
 
 use common\components\letsencrypt\exceptions\LetsencryptException;
-use common\components\models\SslCertLetsencrypt;
-use common\models\panels\Params;
+use common\components\letsencrypt\interfaces\SslCertLetsencryptInterface;
 use my\helpers\ExpiryHelper;
 use yii\console\ExitCode;
 use yii\helpers\ArrayHelper;
@@ -20,24 +18,24 @@ class Letsencrypt extends Acme
 
     /**
      * Current Letsencrypt SSL model
-     * @var SslCertLetsencrypt
+     * @var SslCertLetsencryptInterface
      */
     private $_ssl;
 
     /**
-     * Set current SslCertLetsencrypt
-     * @param SslCertLetsencrypt $sslCert
+     * Set current SslCertLetsencryptInterface
+     * @param SslCertLetsencryptInterface $sslCert
      */
-    public function setSsl(SslCertLetsencrypt &$sslCert)
+    public function setSsl(SslCertLetsencryptInterface &$sslCert)
     {
         $this->_ssl = &$sslCert;
     }
 
     /**
-     * Return current SslCertLetsencrypt
-     * @return SslCertLetsencrypt
+     * Return current SslCertLetsencryptInterface
+     * @return SslCertLetsencryptInterface
      */
-    public function getSsl() : SslCertLetsencrypt
+    public function getSsl() : SslCertLetsencryptInterface
     {
        return $this->_ssl;
     }
@@ -50,9 +48,9 @@ class Letsencrypt extends Acme
     public function install()
     {
         $dirs = [
-            $this->getPath(self::CONFIG_PATH_CONFIG_HOME),
-            $this->getPath(self::CONFIG_PATH_ACCOUNT),
-            $this->getPath(self::CONFIG_PATH_SSL),
+            $this->getPath(static::CONFIG_PATH_CONFIG_HOME),
+            $this->getPath(static::CONFIG_PATH_ACCOUNT),
+            $this->getPath(static::CONFIG_PATH_SSL),
         ];
 
         foreach ($dirs as $dir) {
@@ -91,18 +89,18 @@ class Letsencrypt extends Acme
             $accountParams->code = Params::CODE_LETSENCRYPT;
         }
 
-        if (!$force && $accountParams->getOption(self::OPTION_ACCOUNT_KEY)) {
+        if (!$force && $accountParams->getOption(static::OPTION_ACCOUNT_KEY)) {
             throw new LetsencryptException('Account already exist! Use "Restore Letsencrypt account from DB" menu options or  $force = true param for register new one!');
         }
 
         $accountPrivateKey = null;
         $accountThumbprint = $this->cmdRegisterAccount();
 
-        if (!$accountThumbprint || !@file_exists($this->getPath(self::CONFIG_PATH_ACCOUNT_KEY))) {
+        if (!$accountThumbprint || !@file_exists($this->getPath(static::CONFIG_PATH_ACCOUNT_KEY))) {
             throw new LetsencryptException("Account private key was not created!");
         }
 
-        $accountPrivateKey = @file_get_contents($this->getPath(self::CONFIG_PATH_ACCOUNT_KEY));
+        $accountPrivateKey = @file_get_contents($this->getPath(static::CONFIG_PATH_ACCOUNT_KEY));
 
         if (!$accountPrivateKey) {
             throw new LetsencryptException('Cannot read account private key!');
@@ -134,14 +132,14 @@ class Letsencrypt extends Acme
             'code' => Params::CODE_LETSENCRYPT
         ]);
 
-        $backupAccountKey = $accountParams->getOption(self::OPTION_ACCOUNT_KEY);
-        $backupAccountThumbprint = $accountParams->getOption(self::OPTION_ACCOUNT_THUMBPRINT);
+        $backupAccountKey = $accountParams->getOption(static::OPTION_ACCOUNT_KEY);
+        $backupAccountThumbprint = $accountParams->getOption(static::OPTION_ACCOUNT_THUMBPRINT);
 
         if (!$backupAccountKey) {
             throw new LetsencryptException('No backup copy of private account key in database!');
         }
 
-        $accountKeyPath = $this->getPath(self::CONFIG_PATH_ACCOUNT_KEY);
+        $accountKeyPath = $this->getPath(static::CONFIG_PATH_ACCOUNT_KEY);
 
         // Skip restoring if backup & current keys are equal
         if (@file_exists($accountKeyPath) && (@file_get_contents($accountKeyPath) === $backupAccountKey)) {
@@ -200,8 +198,8 @@ class Letsencrypt extends Acme
 
         $this->_ssl->setCsrFiles($certFiles);
         $this->_ssl->expiry_at_timestamp = static::_expiryDate($parsedCert);
-        $this->_ssl->csr_code = $this->getCertFileContent(SslCertLetsencrypt::SSL_FILE_CSR);
-        $this->_ssl->csr_key = $this->getCertFileContent(SslCertLetsencrypt::SSL_FILE_KEY);
+        $this->_ssl->csr_code = $this->getCertFileContent(SslCertLetsencryptInterface::SSL_FILE_CSR);
+        $this->_ssl->csr_key = $this->getCertFileContent(SslCertLetsencryptInterface::SSL_FILE_KEY);
         $this->_ssl->setOrderDetails($this->getExecResult());
     }
 
@@ -229,8 +227,8 @@ class Letsencrypt extends Acme
 
         $this->_ssl->setCsrFiles($certFiles);
         $this->_ssl->expiry_at_timestamp = static::_expiryDate($parsedCert);
-        $this->_ssl->csr_code = $this->getCertFileContent(SslCertLetsencrypt::SSL_FILE_CSR);
-        $this->_ssl->csr_key = $this->getCertFileContent(SslCertLetsencrypt::SSL_FILE_KEY);
+        $this->_ssl->csr_code = $this->getCertFileContent(SslCertLetsencryptInterface::SSL_FILE_CSR);
+        $this->_ssl->csr_key = $this->getCertFileContent(SslCertLetsencryptInterface::SSL_FILE_KEY);
         $this->_ssl->setOrderDetails($this->getExecResult());
 
         if (!$this->_ssl->save(false)) {
