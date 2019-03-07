@@ -47,7 +47,6 @@ class EditPageForm extends Model
                     if (empty($this->page->url)) {
                         return true;
                     }
-
                     return $model->url !== $this->page->url;
                 }
             ]
@@ -122,7 +121,7 @@ class EditPageForm extends Model
                 'name' => $this->name,
                 'seo_keywords' => $this->keywords,
                 'seo_description' => $this->description,
-                'visibility' => intval($this->visibility),
+                'visibility' => (int)$this->visibility,
                 'url' => $this->url
             ];
 
@@ -168,7 +167,6 @@ class EditPageForm extends Model
                 'seo_keywords' => $this->keywords,
                 'seo_description' => $this->description,
                 'visibility' => (int)$this->visibility,
-                'is_draft' => 0,
                 'url' => $this->url
             ];
 

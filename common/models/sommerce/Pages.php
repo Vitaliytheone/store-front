@@ -28,11 +28,11 @@ use yii\db\Connection;
  */
 class Pages extends ActiveRecord
 {
-    const VISIBILITY_ON = 1;
-    const VISIBILITY_OFF = 0;
+    public const VISIBILITY_ON = 1;
+    public const VISIBILITY_OFF = 0;
 
-    const IS_DRAFT_ON = 1;
-    const IS_DRAFT_OFF = 0;
+    public const IS_DRAFT_ON = 1;
+    public const IS_DRAFT_OFF = 0;
 
     /**
      * @inheritdoc
@@ -82,6 +82,7 @@ class Pages extends ActiveRecord
             [['visibility', 'is_draft', 'created_at', 'updated_at', 'publish_at'], 'integer'],
             [['url', 'seo_title', 'name'], 'string', 'max' => 300],
             [['seo_description', 'seo_keywords'], 'string', 'max' => 2000],
+            ['is_draft', 'default', 'value' => 0]
         ];
     }
 
