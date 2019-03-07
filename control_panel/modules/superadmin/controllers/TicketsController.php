@@ -5,27 +5,27 @@ namespace superadmin\controllers;
 use common\models\sommerces\CustomersNote;
 use common\models\sommerces\SuperAdmin;
 use common\models\sommerces\TicketMessages;
-use control_panel\components\ActiveForm;
-use control_panel\helpers\Url;
-use control_panel\components\SuperAccessControl;
 use common\models\sommerces\Tickets;
+use control_panel\components\ActiveForm;
+use control_panel\components\SuperAccessControl;
+use control_panel\helpers\Url;
 use superadmin\helpers\SystemMessages;
 use superadmin\models\forms\CreateMessageForm;
 use superadmin\models\forms\CreateTicketForm;
 use superadmin\models\forms\EditMessageForm;
-use superadmin\models\search\TicketBlocksSearch;
-use superadmin\models\SystemMessages as ModelSystemMessages;
 use superadmin\models\forms\TicketNoteForm;
+use superadmin\models\search\TicketBlocksSearch;
 use superadmin\models\search\TicketMessagesSearch;
 use superadmin\models\search\TicketsSearch;
+use superadmin\models\SystemMessages as ModelSystemMessages;
 use Yii;
+use yii\filters\AjaxFilter;
+use yii\filters\ContentNegotiator;
+use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
 use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
-use yii\filters\ContentNegotiator;
 use yii\web\Response;
-use yii\filters\AjaxFilter;
-use \yii\filters\VerbFilter;
 
 /**
  * Account TicketsController for the `superadmin` module
@@ -125,6 +125,7 @@ class TicketsController extends CustomController
         $model = new CreateMessageForm();
         $model->setTicket($ticket);
         $model->setUser($admin);
+        $model->post = Yii::$app->request->post('qs-file');
 
         $blocks = TicketBlocksSearch::search($ticket->customer_id);
 
@@ -301,6 +302,7 @@ class TicketsController extends CustomController
 
     /**
      * Delete ticket message
+     *
      * @return Response
      * @throws ForbiddenHttpException
      * @throws NotFoundHttpException
@@ -313,7 +315,12 @@ class TicketsController extends CustomController
         if (!empty($params['ticketId']) && !empty($params['messageId'])) {
             $message = $this->findMessage($params['messageId']);
             if ($message->canAdminEdit()) {
-                $message->delete();
+                $transaction = Yii::$app->db->beginTransaction();
+                if (!$message->delete()) {
+                    $transaction->rollBack();
+                } else {
+                    $transaction->commit();
+                }
             }
 
             return $this->redirect(Url::toRoute(['/tickets/view', 'id' => $params['ticketId']]));

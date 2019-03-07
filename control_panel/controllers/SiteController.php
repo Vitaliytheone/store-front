@@ -2,19 +2,25 @@
 
 namespace control_panel\controllers;
 
+use common\components\filters\DisableCsrfToken;
+use common\helpers\CurlHelper;
 use common\helpers\PaymentHelper;
+use common\models\sommerces\Content;
+use common\models\sommerces\Customers;
+use common\models\sommerces\Invoices;
 use common\models\sommerces\Params;
+use common\models\sommerces\Payments;
 use common\models\sommerces\services\GetGeneralPaymentMethodsService;
+use common\models\sommerces\TicketMessages;
+use common\models\sommerces\Tickets;
 use control_panel\components\ActiveForm;
 use control_panel\components\bitcoin\Bitcoin;
-use common\components\filters\DisableCsrfToken;
 use control_panel\components\payments\Paypal;
-use common\helpers\CurlHelper;
-use common\models\sommerces\Content;
 use control_panel\models\forms\ChangeEmailForm;
 use control_panel\models\forms\ChangePasswordForm;
 use control_panel\models\forms\CreateMessageForm;
 use control_panel\models\forms\CreateTicketForm;
+use control_panel\models\forms\LoginForm;
 use control_panel\models\forms\ResetPasswordForm;
 use control_panel\models\forms\RestoreForm;
 use control_panel\models\forms\SettingsForm;
@@ -22,21 +28,15 @@ use control_panel\models\forms\SignupForm;
 use control_panel\models\search\DomainsAvailableSearch;
 use control_panel\models\search\InvoicesSearch;
 use control_panel\models\search\TicketsSearch;
-use common\models\sommerces\TicketMessages;
-use common\models\sommerces\Tickets;
 use Yii;
-use yii\helpers\ArrayHelper;
-use common\models\sommerces\Customers;
-use control_panel\models\forms\LoginForm;
-use common\models\sommerces\Invoices;
-use common\models\sommerces\Payments;
 use yii\filters\AccessControl;
+use yii\filters\AjaxFilter;
+use yii\filters\ContentNegotiator;
+use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
 use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
-use yii\filters\VerbFilter;
-use yii\filters\ContentNegotiator;
-use yii\filters\AjaxFilter;
 
 /**
  * Class SiteController
@@ -80,7 +80,7 @@ class SiteController extends CustomController
             ],
             'ajax' => [
                 'class' => AjaxFilter::class,
-                'only' => ['message', 'create-ticket', 'changeemail', 'changepassword', 'search-domains']
+                'only' => ['message', 'create-ticket', 'changeemail', 'changepassword', 'ticket', 'search-domains']
             ],
             'content' => [
                 'class' => ContentNegotiator::class,
@@ -126,6 +126,7 @@ class SiteController extends CustomController
 
     /**
      * Index
+     * @return \yii\web\Response
      */
     public function actionIndex()
     {
@@ -140,6 +141,7 @@ class SiteController extends CustomController
      * Create ticket message
      * @param int $id
      * @return array
+     * @throws \yii\base\Exception
      * @throws \yii\base\ExitException
      */
     public function actionMessage($id)
@@ -151,6 +153,8 @@ class SiteController extends CustomController
         $model = new CreateMessageForm();
         $model->setCustomer($customer);
         $model->setTicket($ticket);
+        $model->post = Yii::$app->request->post('qs-file');
+
 
         if ($model->load(Yii::$app->request->post())) {
             if (!$model->save()) {
@@ -193,7 +197,7 @@ class SiteController extends CustomController
         return $this->renderPartial('ticket', [
             'ticketMessages' => $ticketMessages,
             'ticket' => $ticket,
-            'showForm' => !$clear && $ticket->status != Tickets::STATUS_CLOSED
+            'showForm' => !$clear && $ticket->status != Tickets::STATUS_CLOSED,
         ]);
     }
 
@@ -208,6 +212,7 @@ class SiteController extends CustomController
 
         $model = new CreateTicketForm();
         $model->setCustomer($customer);
+        $model->post = Yii::$app->request->post('qs-file');
 
         if ($model->load(Yii::$app->request->post())) {
             if (!$model->save()) {
@@ -257,7 +262,7 @@ class SiteController extends CustomController
             'note' => Content::getContent('support'),
             'accesses' => [
                 'canCreate' => Tickets::canCreate(Yii::$app->user->identity->id)
-            ]
+            ],
         ]);
     }
 

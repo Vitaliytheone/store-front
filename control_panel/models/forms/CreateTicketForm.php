@@ -2,17 +2,20 @@
 
 namespace control_panel\models\forms;
 
-use control_panel\helpers\UserHelper;
 use common\models\sommerces\Customers;
 use common\models\sommerces\MyActivityLog;
 use common\models\sommerces\TicketMessages;
 use common\models\sommerces\Tickets;
+use control_panel\helpers\UserHelper;
 use Yii;
 use yii\base\Model;
 
 /**
  * Class CreateTicketForm
  * @package control_panel\models\forms
+ *
+ * @property string $ip
+ * @property Customers $customer
  */
 class CreateTicketForm extends Model
 {

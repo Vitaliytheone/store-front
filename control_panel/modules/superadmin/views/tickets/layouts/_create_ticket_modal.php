@@ -1,16 +1,15 @@
 <?php
-    /* @var $this yii\web\View */
-    /* @var $model \superadmin\models\forms\CreateTicketForm */
-    /* @var $ticket \common\models\sommerces\Tickets */
+/* @var $this yii\web\View */
+/* @var $model \superadmin\models\forms\CreateTicketForm */
+/* @var $ticket \common\models\sommerces\Tickets */
 
-    use superadmin\models\forms\CreateTicketForm;
-    use control_panel\helpers\Url;
-    use control_panel\components\ActiveForm;
-    use yii\bootstrap\Html;
-    use superadmin\widgets\SelectCustomer;
+use control_panel\components\ActiveForm;
+use superadmin\models\forms\CreateTicketForm;
+use superadmin\widgets\SelectCustomer;
+use yii\bootstrap\Html;
 
-    $model = new CreateTicketForm();
-    $this->context->addModule('superadminSelectCustomerController');
+$model = new CreateTicketForm();
+$this->context->addModule('superadminSelectCustomerController');
 ?>
 
 <div class="modal fade" id="create-ticket" data-backdrop="static" tabindex="-1">
@@ -48,7 +47,7 @@
                 <?= $form->field($model, 'subject') ?>
 
                 <?= $form->field($model, 'message')->textarea([
-                    'rows' => 5
+                    'rows' => 5,
                 ]) ?>
             </div>
             <div class="modal-footer">

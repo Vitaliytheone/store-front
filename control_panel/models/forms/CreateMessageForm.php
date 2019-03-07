@@ -2,35 +2,36 @@
 
 namespace control_panel\models\forms;
 
-use control_panel\helpers\UserHelper;
 use common\models\sommerces\Customers;
 use common\models\sommerces\MyActivityLog;
 use common\models\sommerces\TicketMessages;
 use common\models\sommerces\Tickets;
+use control_panel\helpers\UserHelper;
 use Yii;
 use yii\base\Model;
 
 /**
  * Class CreateMessageForm
  * @package control_panel\models\forms
+ *
+ * @property Tickets $ticket
+ * @property string $ip
+ * @property Customers $customer
  */
 class CreateMessageForm extends Model
 {
     public $message;
 
-    /**
-     * @var Tickets
-     */
+    /** @var string */
+    public $post;
+
+    /** @var Tickets */
     public $_ticket;
 
-    /**
-     * @var Customers
-     */
+    /** @var Customers */
     public $_customer;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     public $_ip;
 
     /**
@@ -75,7 +76,9 @@ class CreateMessageForm extends Model
     }
 
     /**
-     * Sign up method
+     * Save ticket message
+     * @return bool
+     * @throws \yii\db\Exception
      */
     public function save()
     {
@@ -88,12 +91,15 @@ class CreateMessageForm extends Model
             return false;
         }
 
+        $transaction = Yii::$app->db->beginTransaction();
+
         $this->_ticket->is_user = 1;
         $this->_ticket->updated_at = time();
         $this->_ticket->status = Tickets::STATUS_PENDING;
 
         if (!$this->_ticket->save(false)) {
             $this->addError('message', Yii::t('app', 'error.ticket.can_not_create_message'));
+            $transaction->rollBack();
             return false;
         }
 
@@ -101,15 +107,20 @@ class CreateMessageForm extends Model
         $ticketModel->message = $this->message;
         $ticketModel->customer_id = $this->_customer->id;
         $ticketModel->ticket_id = $this->_ticket->id;
+        $ticketModel->admin_id = 0;
         $ticketModel->created_at = time();
         $ticketModel->ip = $this->_ip ? $this->_ip : Yii::$app->request->userIP;
+        $ticketModel->post = $this->post;
 
         if (!$ticketModel->save()) {
             $this->addError('message', Yii::t('app', 'error.ticket.can_not_create_message'));
+            $transaction->rollBack();
             return false;
         }
 
         MyActivityLog::log(MyActivityLog::E_TICKETS_REPLY_TICKET, $ticketModel->id, $ticketModel->id, UserHelper::getHash());
+
+        $transaction->commit();
 
         return true;
     }

@@ -1115,12 +1115,14 @@ html,body{height:100%}body.my-login-page{background-color:#f7f9fb;font-size:14px
 .ticket-message__block .ticket-message__card-footer{padding-left:5px}.ticket-message__block .ticket-message__card-footer ul{margin:0;padding:0}
 .ticket-message__block .ticket-message__card-footer ul li{list-style:none;display:inline-block}
 .ticket-message__block .ticket-message__card-footer ul li a{display:inline-block;font-size:12px;padding-right:5px}
-.ticket-message__block .ticket-message__card-attach{color:#546980;padding-top:5px}
-.ticket-message__block .ticket-message__card-attach a{display:inline-block;font-size:12px;border-bottom:1px dashed transparent;color:#4e4e4e}
-.ticket-message__block .ticket-message__card-attach a:hover{text-decoration:none;border-bottom:1px dashed #546980}
+.ticket-message__block .ticket-message__card-attach{color:#546980;padding-top:10px}
+.ticket-message__block .ticket-message__card-attach .fa{vertical-align:-1px}
+.ticket-message__block .ticket-message__card-attach a{display:inline-block;font-size:12px;border-bottom:1px dotted #546980;color:#4e4e4e}
+.ticket-message__block .ticket-message__card-attach a:hover{text-decoration:none;color:#007bff;border-bottom:1px dotted #007bff}
 .ticket-message__block .ticket-message__client{padding-left:40px}.ticket-message__block .ticket-message__client .ticket-message__card-text{background:#0b93f6;color:#fff}
-.ticket-message__block .ticket-message__client .ticket-message__card-text .ticket-message__card-attach a{color:#fff}
-.ticket-message__block .ticket-message__client .ticket-message__card-text .ticket-message__card-attach a:hover{text-decoration:none;border-bottom:1px dashed #fff}
+.ticket-message__block .ticket-message__client .ticket-message__card-text .ticket-message__card-attach{color:#fff}
+.ticket-message__block .ticket-message__client .ticket-message__card-text .ticket-message__card-attach a{color:#fff; border-bottom:1px dotted #fff;}
+.ticket-message__block .ticket-message__client .ticket-message__card-text .ticket-message__card-attach a:hover{text-decoration:none}
 .ticket-message__block .ticket-message__support{padding-right:40px}.ticket-message__block .ticket-message__support .ticket-message__card-text{background:#e5e5ea;color:#333}
 .ticket-message__block .ticket-message__status .ticket-message__status-header{padding-left:6px}
 .ticket-message__block .ticket-message__status .ticket-message__status-header .ticket-message__status-header-name{font-weight:bold}

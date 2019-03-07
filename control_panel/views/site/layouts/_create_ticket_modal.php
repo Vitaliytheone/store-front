@@ -1,11 +1,11 @@
 <?php
-    /* @var $this yii\web\View */
-    /* @var $tickets \common\models\sommerces\Tickets */
-    /* @var $ticket \common\models\sommerces\Tickets */
-    /* @var $model \control_panel\models\forms\CreateTicketForm */
+/* @var $this yii\web\View */
+/* @var $tickets \common\models\sommerces\Tickets */
+/* @var $ticket \common\models\sommerces\Tickets */
+/* @var $model \control_panel\models\forms\CreateTicketForm */
 
-    use control_panel\components\ActiveForm;
-    use common\components\cdn\providers\widgets\UploadcareUploadWidget;
+use common\components\cdn\providers\widgets\UploadcareUploadWidget;
+use control_panel\components\ActiveForm;
 
 ?>
 <div class="modal fade" id="submitTicket" tabindex="-1">
