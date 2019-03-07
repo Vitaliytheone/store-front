@@ -172,8 +172,6 @@ if (YII_ENV_DEV) {
         'class' => 'yii\debug\Module',
         // uncomment the following to add your IP if you are not connecting from localhost.
         'allowedIPs' => $params['debugIps'],
-        'historySize' => 500,
-        'traceLine' => '<a href="phpstorm://open?file={file}&line={line}">{file}:{line}</a>',
     ];
 
     $config['bootstrap'][] = 'gii';
