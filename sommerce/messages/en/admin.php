@@ -264,6 +264,66 @@ return [
     'settings.payments_modal_save' => 'Add method',
     'settings.payments_modal_cancel' => 'Cancel',
     'settings.payments_modal_payment_method' => 'Payment method',
+    'settings.payments_test_mode' => 'Use test mode',
+
+    'settings.payments_2checkout_account_number' => 'Account Number',
+    'settings.payments_2checkout_secret_word' => 'Secret Word',
+    'settings.payments_2checkout_test_mode' => 'Use test mode',
+
+    'settings.payments_paypal_email' => 'Email',
+    'settings.payments_paypal_username' => 'Api username',
+    'settings.payments_paypal_password' => 'Api password',
+    'settings.payments_paypal_signature' => 'Api signature',
+    'settings.payments_paypal_test_mode' => 'Use test mode',
+
+    'settings.payments_coinpayments_merchant_id' => 'Merchant ID',
+    'settings.payments_coinpayments_ipn_secret' => 'IPN secret',
+
+    'settings.payments_stripe_secret_key' => 'Secret key',
+    'settings.payments_stripe_public_key' => 'Public key',
+    'settings.payments_stripe_webhook_secret' => 'Webhook secret',
+
+    'settings.payments_yandex_money_wallet_number' => 'Wallet number',
+    'settings.payments_yandex_cards_wallet_number' => 'Wallet number',
+    'settings.payments_yandex_money_secret_word' => 'Secret word',
+    'settings.payments_yandex_cards_secret_word' => 'Secret word',
+
+    'settings.payments_edit_freekassa' => 'Edit Free Kassa',
+    'settings.payments_free_kassa_merchant_id' => 'Merchant ID',
+    'settings.payments_free_kassa_secret_word' => 'Secret Word',
+    'settings.payments_free_kassa_secret_word2' => 'Secret Word 2',
+
+    'settings.payments_paytr_merchant_id' => 'Merchant id',
+    'settings.payments_paytr_merchant_key' => 'Merchant key',
+    'settings.payments_paytr_merchant_salt' => 'Merchant salt',
+    'settings.payments_paytr_merchant_comission' => 'Merchant Comission',
+
+    'settings.payments_paywant_apiKey' => 'API Key',
+    'settings.payments_paywant_apiSecret' => 'API Secret',
+    'settings.payments_paywant_fee' => 'Fee',
+
+    'settings.payments_billplz_secret' => 'Billplz Secret key',
+    'settings.payments_billplz_collectionId' => 'Billing Collection ID',
+
+    'settings.payments_pagseguro_email' => 'Email',
+    'settings.payments_pagseguro_token' => 'Token',
+
+    'settings.payments_webmoney_purse' => 'WMR Purse',
+    'settings.payments_webmoney_secret_key' => 'Secret Key',
+
+    'settings.payments_authorize_merchant_login_id' => 'Merchant login ID',
+    'settings.payments_authorize_merchant_transaction_id' => 'Merchant transaction ID',
+    'settings.payments_authorize_merchant_client_key' => 'Merchant client key',
+
+    'settings.payments_mercadopago_client_id' => 'Client ID',
+    'settings.payments_mercadopago_secret' => 'Secret Key',
+    'settings.payments_mercadopago_course' => 'Course',
+
+    'settings.payments_edit_mollie' => 'Edit Mollie',
+    'settings.payments_mollie_api' => 'Enter your API key',
+
+    'settings.payments.multi_input.add_description' => 'Add descriptions',
+
 
     'settings.providers_page_title' => 'Providers',
     'settings.providers_add' => 'Add provider',
