@@ -36,6 +36,7 @@ $(document).ready(function() {
 
 
 	$(window).scroll(function () {
-		$('.navbar').toggleClass('new', $(this).scrollTop() > 0);
+		$(".navbar").toggleClass("new", $(this).scrollTop() > 0);
 	});
+
 });
