@@ -116,7 +116,7 @@ button:focus {
 
 .navbar-toggler {
 	display: block;
-	background-image: url("../img/lp-sources/ic-other/close.svg");
+	background-image: url("../images/other/close.svg");
 	width: 40px;
 	height: 40px;
 	text-decoration: none;
@@ -133,7 +133,7 @@ button:focus {
 
 .navbar-toggler.collapsed {
 	display: block;
-	background-image: url("../img/lp-sources/ic-other/burger-menu.svg");
+	background-image: url("../images/other/burger-menu.svg");
 	width: 40px;
 	height: 40px;
 	text-decoration: none;
@@ -228,7 +228,8 @@ button:focus {
 
 #pricing {
 	margin-top: 200px;
-	background-image: linear-gradient(245deg, #ada0f8, #7765d6), url("../img/lp-sources/illustrations/demo.svg");
+	background-image: linear-gradient(245deg, #ada0f8, #7765d6);
+	/* url("../img/lp-sources/illustrations/demo.svg"); */
     position: relative;
     z-index:0;
 }
@@ -480,7 +481,7 @@ a:hover .hello {
 
 .toggle .plus {
 	display: block;
-	background-image: url("../img/lp-sources/ic-other/minus.svg");
+	background-image: url("../images/other/minus.svg");
 	width: 24px;
 	height: 24px;
 	text-decoration: none;
@@ -610,7 +611,7 @@ ul li {
 
 .d-flex .collapsed .plus {
 	display: block;
-	background-image: url("../img/lp-sources/ic-other/plus.svg");
+	background-image: url("../images/other/plus.svg");
 	width: 24px;
 	height: 24px;
 	text-decoration: none;
