@@ -48,3 +48,5 @@ defined('DB_SOMMERCES') or define('DB_SOMMERCES', 'sommerces');
 defined('DB_PANELS') or define('DB_PANELS', 'panels');
 defined('DB_GATEWAYS') or define('DB_GATEWAYS', 'gateways');
 defined('DB_GATEWAY') or define('DB_GATEWAY', 'gateway');
+
+defined('MAX_MYSQL_INT') or define('MAX_MYSQL_INT', 2147483647);

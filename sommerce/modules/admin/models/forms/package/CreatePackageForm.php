@@ -23,7 +23,6 @@ class CreatePackageForm extends BaseForm
     public $price;
     public $quantity;
     public $mode;
-    public $best;
     public $visibility;
     public $provider_service;
     public $link_type;
@@ -46,8 +45,9 @@ class CreatePackageForm extends BaseForm
     {
         return [
             [['name', 'price', 'quantity',], 'required'],
-            [['link_type', 'visibility', 'best', 'mode', 'provider_id'], 'integer'],
-            ['price', 'number', 'min' => 0.01],
+            [['link_type', 'visibility', 'mode', 'provider_id'], 'integer'],
+            ['price', 'number', 'min' => 0.01, 'max' => MAX_MYSQL_INT],
+            [['quantity',], 'number', 'min' => 1, 'max' => MAX_MYSQL_INT],
             [['name', 'provider_service'], 'string', 'max' => 255],
             ['provider_id', 'required', 'when' => function($model){
                 return $model->mode == Packages::MODE_AUTO;
@@ -103,7 +103,6 @@ class CreatePackageForm extends BaseForm
             'name' => Yii::t('admin', 'products.create_package.name'),
             'price' => Yii::t('admin', 'products.create_package.price'),
             'quantity' => Yii::t('admin', 'products.create_package.quantity'),
-            'best' => Yii::t('admin', 'products.create_package.best'),
             'link_type' => Yii::t('admin', 'products.create_package.link'),
             'visibility' => Yii::t('admin', 'products.create_package.availability'),
             'mode' => Yii::t('admin', 'products.create_package.mode'),
@@ -120,17 +119,6 @@ class CreatePackageForm extends BaseForm
         return [
             Packages::VISIBILITY_YES => Yii::t('admin', 'products.create_package.availability_enabled'),
             Packages::VISIBILITY_NO => Yii::t('admin', 'products.create_package.availability_disabled'),
-        ];
-    }
-
-    /**
-     * @return array
-     */
-    public function getBestVariants()
-    {
-        return [
-            Packages::BEST_YES => Yii::t('admin', 'products.create_package.best_enabled'),
-            Packages::BEST_NO => Yii::t('admin', 'products.create_package.best_disabled'),
         ];
     }
 
