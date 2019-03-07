@@ -37,6 +37,7 @@ class CreateProductForm extends BaseForm
     {
         return [
             [['name',], 'required'],
+            [['name',],'match','pattern'=>'/^([\w\d\s]+)$/i'],
             [['create_page'], 'integer'],
             [['name', 'url'], 'string', 'max' => 255],
         ];
