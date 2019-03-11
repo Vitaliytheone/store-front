@@ -113,6 +113,7 @@ use yii\helpers\ArrayHelper;
  * @property string $affiliate_commission_rate
  * @property int $affiliate_approve_payouts 0 - manual, 1 - auto
  * @property int $affiliate_system 0 - off, 1 - active
+ * @property string $languages_for_child_panel
  *
  * @property PanelDomains[] $panelDomains
  * @property SslValidation[] $sslValidations
@@ -191,7 +192,7 @@ class Project extends ActiveRecord implements ProjectInterface
             [['lang'], 'string', 'max' => 32],
             [['folder'], 'string', 'max' => 6],
             [['currency_code'], 'string', 'max' => 3],
-            [['folder_content', 'paypal_fraud_settings'], 'string'],
+            [['folder_content', 'paypal_fraud_settings', 'languages_for_child_panel'], 'string'],
             [['custom_header', 'custom_footer', 'seo_title', 'seo_desc', 'seo_key'], 'string', 'max' => 3000],
             [['drip_feed'], 'default', 'value' => static::DRIP_FEED_OFF],
             [['notification_email'], 'default', 'value' => ' '],
@@ -291,6 +292,7 @@ class Project extends ActiveRecord implements ProjectInterface
             'nameservers' => Yii::t('app', 'Nameservers'),
             'dns_checked_at' => Yii::t('app', 'Dns checked at'),
             'dns_status' => Yii::t('app', 'Dns status'),
+            'languages_for_child_panel' => Yii::t('app', 'Languages For Child Panel'),
         ];
     }
 
@@ -1059,4 +1061,21 @@ class Project extends ActiveRecord implements ProjectInterface
         $this->paypal_fraud_settings = json_encode($settings);
     }
 
+    /**
+     * Get languages for child panel
+     * @return array
+     */
+    public function getChildPanelLanguages(): array
+    {
+        return !empty($this->languages_for_child_panel) ? json_decode($this->languages_for_child_panel) : [];
+    }
+
+    /**
+     * Set languages for child panel
+     * @param array $langList
+     */
+    public function setChildPanelLanguages(array $langList)
+    {
+        $this->languages_for_child_panel = json_encode($langList);
+    }
 }

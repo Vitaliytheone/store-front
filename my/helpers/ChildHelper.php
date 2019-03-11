@@ -1,14 +1,19 @@
 <?php
+
 namespace my\helpers;
 
+use common\models\panels\AdditionalServices;
+use common\models\panels\PanelLanguages;
+use common\models\panels\Project;
 use yii\db\Query;
+use Yii;
 
 /**
  * Class ChildHelper
  * @package my\helpers
  */
-class ChildHelper {
-
+class ChildHelper
+{
     /**
      * Get customer providers
      * @param $userId
@@ -38,5 +43,53 @@ class ChildHelper {
         }
 
         return $providers;
+    }
+
+    /**
+     * Set languages for child panel
+     * @param Project $child
+     * @return bool
+     * @throws \yii\db\Exception
+     */
+    public static function setChildLanguages(Project $child): bool
+    {
+        $providerModel = AdditionalServices::findOne(['provider_id' => $child->provider_id]);
+        $parent = Project::findOne(['site' => $providerModel->name]);
+        $languages = $parent->getChildPanelLanguages();
+
+        if (!empty($languages)) {
+            foreach ($languages as $lang) {
+                $language = PanelLanguages::findOne($lang);
+                if (!$language) {
+                    continue;
+                }
+
+                $exist = (new Query())
+                    ->select('code')
+                    ->from($child->db . '.languages')
+                    ->where(['code' => $lang])
+                    ->exists();
+                if ($exist) {
+                    continue;
+                }
+
+                $position = (new Query())
+                    ->select('MAX(position) + 1')
+                    ->from($child->db . '.languages')
+                    ->scalar();
+                $position = isset($position) ? $position : 1;
+
+                $rows = Yii::$app->db->createCommand()->insert($child->db . '.languages',
+                        array_merge($language->attributes, [
+                            'position' => $position,
+                        ])
+                    )->execute();
+                if (!$rows) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 }
