@@ -2,7 +2,7 @@
 
 namespace control_panel\helpers;
 
-use common\components\letsencrypt\Letsencrypt;
+use control_panel\components\letsencrypt\Letsencrypt;
 use common\models\sommerces\SslCertLetsencrypt;
 use common\helpers\DbHelper;
 use control_panel\helpers\super_tasks\SuperTaskHelper;
