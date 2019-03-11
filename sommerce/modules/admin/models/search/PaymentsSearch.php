@@ -113,10 +113,6 @@ class PaymentsSearch extends Model
         $query->leftJoin($this->_db . '.checkouts', 'checkouts.id = payments.checkout_id');
         $query->addSelect('checkouts.method_id');
 
-        $min = (new Query())->from($this->_paymentsTable)->min('payments.checkout_id') ?? 0;
-        $max = (new Query())->from($this->_paymentsTable)->max('payments.checkout_id') ?? 1;
-        $query->andWhere(['between', 'checkouts.id', $min, $max]);
-
         $this->_dataProvider = new ActiveDataProvider([
             'query' => $query,
             'pagination' => [
