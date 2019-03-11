@@ -4,7 +4,6 @@ namespace sommerce\modules\admin\models\forms;
 
 use common\models\sommerce\ActivityLog;
 use common\models\sommerce\Pages;
-use common\models\sommerce\Products;
 use common\models\sommerces\StoreAdminAuth;
 use sommerce\modules\admin\components\CustomUser;
 use sommerce\modules\admin\models\search\PagesSearch;
@@ -40,7 +39,8 @@ class EditPageForm extends Model
             [['visibility'], 'integer'],
             [['url', 'title'], 'string', 'max' => 70],
             [['description'], 'string', 'max' => 160],
-            ['url', 'match', 'pattern' => '/^[a-z0-9-_]+$/i'],
+            ['url', 'linkPrepare'],
+            ['url', 'match', 'pattern' => '/^[a-z\d][a-z\d-]*[a-z\d]$/iu'],
             ['url', 'unique', 'targetClass' => Pages::class, 'targetAttribute' => ['url' => 'url'],
                 'when' => function ($model) {
                     if (empty($this->page->url)) {
@@ -103,7 +103,11 @@ class EditPageForm extends Model
     }
 
     /**
+     * Edit page
+     *
      * @return bool|int
+     * @throws \Throwable
+     * @throws \yii\db\Exception
      */
     public function edit()
     {
@@ -188,7 +192,11 @@ class EditPageForm extends Model
     }
 
     /**
+     * Delete current page
+     *
      * @return bool|false|int
+     * @throws \Throwable
+     * @throws \yii\db\Exception
      */
     public function delete()
     {
@@ -235,5 +243,29 @@ class EditPageForm extends Model
         return $newPage->save(false);
 
 
+    }
+
+    /**
+     * Custom link prepare with rules
+     *
+     * @param $attribute
+     * @param $params
+     * @param $validator
+     * @return bool
+     */
+    public function linkPrepare($attribute, $params, $validator)
+    {
+        $link = $this->$attribute;
+
+        $link = trim($link,' -_');
+        $link = preg_replace('/([^a-zA-Z\d\s_-])+/iu', '', $link);
+        $link = preg_replace('/([\s_])+/', '-', $link);
+        $link = preg_replace('/(-)\\1+/', '-', $link);
+        $link = strtolower($link);
+
+
+        $this->$attribute = $link;
+
+        return true;
     }
 }
