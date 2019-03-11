@@ -4,7 +4,6 @@ namespace sommerce\modules\admin\models\forms;
 
 use common\models\sommerce\ActivityLog;
 use common\models\sommerce\Pages;
-use common\models\sommerce\Products;
 use common\models\sommerces\StoreAdminAuth;
 use sommerce\modules\admin\components\CustomUser;
 use sommerce\modules\admin\models\search\PagesSearch;
@@ -40,7 +39,8 @@ class EditPageForm extends Model
             [['visibility'], 'integer'],
             [['url', 'title'], 'string', 'max' => 70],
             [['description'], 'string', 'max' => 160],
-            ['url', 'match', 'pattern' => '/^[a-z0-9-_]+$/i'],
+            ['url', 'match', 'pattern' => '/^[a-z\d][a-z\d-]*[a-z\d]$/iu'],
+            ['url', 'linkValidator'],
             ['url', 'unique', 'targetClass' => Pages::class, 'targetAttribute' => ['url' => 'url'],
                 'when' => function ($model) {
                     if (empty($this->page->url)) {
@@ -235,5 +235,28 @@ class EditPageForm extends Model
         return $newPage->save(false);
 
 
+    }
+
+    /**
+     * Custom link validator
+     *
+     * @param $attribute
+     * @param $params
+     * @param $validator
+     * @return bool
+     */
+    public function linkValidator($attribute, $params, $validator)
+    {
+        $link = $this->$attribute;
+        Yii::debug($link);
+
+        $link = trim($link,' -');
+        $link = preg_replace('/([-])\\1+/', '$1', $link);
+
+
+        $this->addError($attribute, Yii::t('admin', 'pages.link_invalid'));
+
+
+        return false;
     }
 }
