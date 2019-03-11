@@ -3,6 +3,7 @@ namespace common\components\letsencrypt;
 
 use common\components\letsencrypt\exceptions\LetsencryptException;
 use common\components\letsencrypt\interfaces\SslCertLetsencryptInterface;
+use common\models\panels\Params;
 use my\helpers\ExpiryHelper;
 use yii\console\ExitCode;
 use yii\helpers\ArrayHelper;
@@ -13,8 +14,10 @@ use yii\helpers\ArrayHelper;
  */
 class Letsencrypt extends Acme
 {
-    const OPTION_ACCOUNT_THUMBPRINT = 'account_thumbprint';
-    const OPTION_ACCOUNT_KEY = 'account_key';
+    public $paramsClass = Params::class;
+
+    public const OPTION_ACCOUNT_THUMBPRINT = 'account_thumbprint';
+    public const OPTION_ACCOUNT_KEY = 'account_key';
 
     /**
      * Current Letsencrypt SSL model
@@ -78,15 +81,15 @@ class Letsencrypt extends Acme
      */
     public function registerAccount(bool $force = false)
     {
-        $accountParams = Params::findOne([
-            'category' => Params::CATEGORY_SERVICE,
-            'code' => Params::CODE_LETSENCRYPT
+        $accountParams = $this->paramsClass::findOne([
+            'category' => $this->paramsClass::CATEGORY_SERVICE,
+            'code' => $this->paramsClass::CODE_LETSENCRYPT
         ]);
 
         if (!$accountParams) {
-            $accountParams = new Params();
-            $accountParams->category = Params::CATEGORY_SERVICE;
-            $accountParams->code = Params::CODE_LETSENCRYPT;
+            $accountParams = new $this->paramsClass();
+            $accountParams->category = $this->paramsClass::CATEGORY_SERVICE;
+            $accountParams->code = $this->paramsClass::CODE_LETSENCRYPT;
         }
 
         if (!$force && $accountParams->getOption(static::OPTION_ACCOUNT_KEY)) {
@@ -107,8 +110,8 @@ class Letsencrypt extends Acme
         }
 
         $options = [
-            self::OPTION_ACCOUNT_KEY => $accountPrivateKey,
-            self::OPTION_ACCOUNT_THUMBPRINT => $accountThumbprint,
+            static::OPTION_ACCOUNT_KEY => $accountPrivateKey,
+            static::OPTION_ACCOUNT_THUMBPRINT => $accountThumbprint,
         ];
 
         $accountParams->setOptions($options);
@@ -127,9 +130,9 @@ class Letsencrypt extends Acme
      */
     public function restoreAccountFromDb()
     {
-        $accountParams = Params::findOne([
-            'category' => Params::CATEGORY_SERVICE,
-            'code' => Params::CODE_LETSENCRYPT
+        $accountParams = $this->paramsClass::findOne([
+            'category' => $this->paramsClass::CATEGORY_SERVICE,
+            'code' => $this->paramsClass::CODE_LETSENCRYPT
         ]);
 
         $backupAccountKey = $accountParams->getOption(static::OPTION_ACCOUNT_KEY);
