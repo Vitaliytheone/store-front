@@ -39,8 +39,8 @@ class EditPageForm extends Model
             [['visibility'], 'integer'],
             [['url', 'title'], 'string', 'max' => 70],
             [['description'], 'string', 'max' => 160],
+            ['url', 'linkPrepare'],
             ['url', 'match', 'pattern' => '/^[a-z\d][a-z\d-]*[a-z\d]$/iu'],
-            ['url', 'linkValidator'],
             ['url', 'unique', 'targetClass' => Pages::class, 'targetAttribute' => ['url' => 'url'],
                 'when' => function ($model) {
                     if (empty($this->page->url)) {
@@ -103,7 +103,11 @@ class EditPageForm extends Model
     }
 
     /**
+     * Edit page
+     *
      * @return bool|int
+     * @throws \Throwable
+     * @throws \yii\db\Exception
      */
     public function edit()
     {
@@ -188,7 +192,11 @@ class EditPageForm extends Model
     }
 
     /**
+     * Delete current page
+     *
      * @return bool|false|int
+     * @throws \Throwable
+     * @throws \yii\db\Exception
      */
     public function delete()
     {
@@ -238,25 +246,26 @@ class EditPageForm extends Model
     }
 
     /**
-     * Custom link validator
+     * Custom link prepare with rules
      *
      * @param $attribute
      * @param $params
      * @param $validator
      * @return bool
      */
-    public function linkValidator($attribute, $params, $validator)
+    public function linkPrepare($attribute, $params, $validator)
     {
         $link = $this->$attribute;
-        Yii::debug($link);
 
-        $link = trim($link,' -');
-        $link = preg_replace('/([-])\\1+/', '$1', $link);
+        $link = trim($link,' -_');
+        $link = preg_replace('/([^a-zA-Z\d\s_-])+/iu', '', $link);
+        $link = preg_replace('/([\s_])+/', '-', $link);
+        $link = preg_replace('/(-)\\1+/', '-', $link);
+        $link = strtolower($link);
 
 
-        $this->addError($attribute, Yii::t('admin', 'pages.link_invalid'));
+        $this->$attribute = $link;
 
-
-        return false;
+        return true;
     }
 }
