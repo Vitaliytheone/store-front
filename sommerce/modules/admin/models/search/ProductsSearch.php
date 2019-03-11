@@ -99,15 +99,14 @@ class ProductsSearch extends Model
         foreach ($productIds as $productId) {
 
             // Make product`s packages
-            $productPackages = array_filter($productsRows, function($productRow) use ($productId){
+            $productPackages = array_filter($productsRows, function ($productRow) use ($productId) {
                 return $productId == $productRow['pk_pr_id'];
             });
             array_walk($productPackages, function (&$package, $key) use ($providers) {
-
-                // fixme если не указан провайдер_ид или он не существует то выдавать первый из списка провайдеров
-                Yii::debug($providers); //todo del
-                Yii::debug($package['provider_id'] . '.site'); //todo del
                 $provider = ArrayHelper::getValue($providers, $package['provider_id'] . '.site', '');
+                if (empty($provider)) {
+                    $package['provider_id'] = ArrayHelper::getValue(reset($providers), 'id');
+                }
 
 
                 $package = [
