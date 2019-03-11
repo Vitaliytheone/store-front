@@ -1,11 +1,11 @@
 <?php
 
-namespace common\components\letsencrypt;
+namespace control_panel\components\letsencrypt;
 
-use common\models\panels\SslCertLetsencrypt;
-use common\models\panels\Customers;
-use common\models\panels\Project;
-use common\models\panels\SslCertItem;
+use common\models\sommerces\SslCertLetsencrypt;
+use common\models\sommerces\Customers;
+use common\models\sommerces\Stores;
+use common\models\sommerces\SslCertItem;
 use yii\base\Component;
 use Yii;
 use yii\base\Exception;
@@ -14,12 +14,12 @@ use yii\console\ExitCode;
 
 /**
  * Class AcmeInstaller
- * @package common\components\letsencrypt
+ * @package control_panel\components\letsencrypt
  */
 class AcmeInstaller extends Component
 {
     public $customersClass = Customers::class;
-    public $projectClass = Project::class;
+    public $projectClass = Stores::class;
     public $sslCertItemClass = SslCertItem::class;
     public $sslCertLetsencryptClass = SslCertLetsencrypt::class;
     public $letsencryptClass = Letsencrypt::class;
