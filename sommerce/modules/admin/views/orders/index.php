@@ -1,18 +1,15 @@
 <?php
 
-use yii\helpers\Html;
-use sommerce\modules\admin\components\Url;
-use yii\helpers\ArrayHelper;
+use common\models\sommerce\Suborders;
 use sommerce\helpers\UiHelper;
+use sommerce\modules\admin\components\Url;
 use sommerce\modules\admin\widgets\CustomLinkPager;
-use sommerce\assets\OrdersAsset;
-use common\models\store\Suborders;
+use yii\helpers\ArrayHelper;
+use yii\helpers\Html;
 
 /* @var $this yii\web\View */
 /* @var $ordersDataProvider yii\data\ActiveDataProvider */
 /* @var $ordersSearchModel sommerce\modules\admin\models\search\OrdersSearch */
-
-OrdersAsset::register($this);
 
 $statusFilterButtons = $ordersSearchModel->getStatusFilterButtons([
     Suborders::STATUS_AWAITING => [
@@ -78,8 +75,7 @@ $statusFilterButtons = $ordersSearchModel->getStatusFilterButtons([
                 </div>
 
                 <div class="tab-content">
-                    <div class="tab-pane fade show active" id="all-orders" role="tabpanel"
-                         aria-labelledby="all-orders-tab">
+                    <div class="tab-pane fade show active" id="all-orders" role="tabpanel" aria-labelledby="all-orders-tab">
 
                         <div class="m_datatable m-datatable m-datatable--default">
 

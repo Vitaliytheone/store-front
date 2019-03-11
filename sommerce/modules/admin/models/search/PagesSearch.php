@@ -2,12 +2,16 @@
 
 namespace sommerce\modules\admin\models\search;
 
-use common\models\stores\Stores;
+use common\models\sommerces\Stores;
+use common\models\sommerce\Pages;
 use Yii;
-use common\models\store\Pages;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
 
+/**
+ * Class PagesSearch
+ * @package sommerce\modules\admin\models\search
+ */
 class PagesSearch extends Pages
 {
     private $_db;
@@ -21,7 +25,7 @@ class PagesSearch extends Pages
         $this->_db = $store->db_name;
         $this->_pagesTable = $this->_db . "." . Pages::tableName();
     }
-
+    
     /**
      * Return array of Pages data
      * @return array
@@ -29,11 +33,10 @@ class PagesSearch extends Pages
     public function searchPages()
     {
         $pages = (new Query())
-            ->select(['id', 'title', 'visibility', 'content', 'seo_title', 'seo_description', 'url', 'created_at', 'updated_at', 'is_default'])
+            ->select(['id', 'visibility', 'name', 'is_draft', 'seo_title', 'seo_description', 'seo_keywords', 'url', 'created_at', 'updated_at'])
             ->from($this->_pagesTable)
-            ->where(['deleted' => self::DELETED_NO])
             ->indexBy('id')
-            ->orderBy(['id' => SORT_DESC])
+            ->orderBy(['id' => SORT_ASC])
             ->all();
 
 
@@ -41,12 +44,24 @@ class PagesSearch extends Pages
         array_walk($pages, function(&$page){
 
             $dtUpdated = ArrayHelper::getValue($page, 'updated_at', null);
-
-
-            $page['visibility_title'] = $page['visibility']|0 ? Yii::t('admin', 'settings.pages_visibility_visible') : Yii::t('admin', 'settings.pages_visibility_hidden');
+            $page['can_delete'] = static::canDelete($page);
+            $page['is_draft'] ?  $page['status'] = Yii::t('admin', 'pages.status.draft') : $page['status'] = '';
             $page['updated_at_formatted'] = $dtUpdated ? Yii::$app->formatter->asDatetime($dtUpdated, 'yyyy-MM-dd HH:mm:ss') : Yii::t('admin', 'settings.pages_update_never');
         });
 
         return $pages;
+    }
+
+    /**
+     * @param array|Pages $page
+     * @return bool
+     */
+    public static function canDelete($page) {
+
+        $except = [
+            'home'
+        ];
+
+        return !ArrayHelper::isIn($page['url'], $except);
     }
 }

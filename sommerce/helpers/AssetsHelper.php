@@ -1,15 +1,15 @@
 <?php
+
 namespace sommerce\helpers;
 
-use common\models\stores\Stores;
 use Yii;
-use yii\helpers\ArrayHelper;
 
 /**
  * Class AssetsHelper
  * @package sommerce\helpers
  */
-class AssetsHelper {
+class AssetsHelper
+{
 
     static $customScriptFiles = [];
 
@@ -35,28 +35,26 @@ class AssetsHelper {
     }
 
     /**
-     * Get store assets path
+     * Get assets from pages_files
+     * @pararm string $value
+     * @param string $value
      * @return string
      */
-    public static function getAssetPath()
+    public static function getAssets($value)
     {
-        /**
-         * @var $store Stores
-         */
-        $store = Yii::$app->store->getInstance();
-
-        return '/assets/' . $store->getFolder();
+        return PageFilesHelper::generateFileVersionLink($value);
     }
 
     /**
      * Get store script files list
      * @return array
      */
-    public static function getStoreScripts() {
+    public static function getStoreScripts()
+    {
 
         $nodePath = Yii::getAlias('@node_modules');
 
-        $scripts= [];
+        $scripts = [];
 
         $asset = Yii::$app->assetManager->publish($nodePath . '/underscore/underscore-min.js');
         if (!empty($asset[1])) {
@@ -64,10 +62,13 @@ class AssetsHelper {
         }
 
         foreach (static::$customScriptFiles as $scriptFile) {
-            $scripts[] =  $scriptFile;
+            $scripts[] = $scriptFile;
         }
 
-        $scripts[] = AssetsHelper::getFileUrl('/js/frontend.js');
+        $scripts[] = static::getFileUrl('/js/libs/popper.js');
+        $scripts[] = static::getFileUrl('/js/libs/bootstrap.js');
+        $scripts[] = static::getFileUrl('/js/frontend.js');
+        $scripts[] = 'https://www.google.com/recaptcha/api.js?hl=en';
 
         return $scripts;
     }

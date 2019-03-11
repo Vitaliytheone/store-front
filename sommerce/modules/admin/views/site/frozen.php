@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Store temporarily unavailable</title>
+    <title><?= Yii::t('admin', 'frozen.title') ?></title>
 </head>
 <style>
     html,body{
@@ -43,7 +43,7 @@
 <div class="page-row">
     <div class="page-content">
         <div class="page-title">
-            <p>Store temporarily unavailable</p>
+            <p><?= Yii::t('admin', 'frozen.text') ?></p>
         </div>
     </div>
 </div>

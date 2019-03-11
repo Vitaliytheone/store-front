@@ -4,10 +4,10 @@ namespace sommerce\modules\admin\widgets;
 
 use yii\base\Widget;
 use sommerce\modules\admin\models\forms\EditPaymentMethodForm;
-use common\models\stores\PaymentMethodsCurrency;
+use common\models\sommerces\PaymentMethodsCurrency;
 use Yii;
 use yii\helpers\Html;
-use common\models\stores\PaymentMethods;
+use common\models\sommerces\PaymentMethods;
 
 /**
  * Class PaymentSettingsForm

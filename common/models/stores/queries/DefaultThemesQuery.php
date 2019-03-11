@@ -2,8 +2,8 @@
 
 namespace common\models\stores\queries;
 
-use yii\db\ActiveQuery;
 use common\models\stores\DefaultThemes;
+use yii\db\ActiveQuery;
 
 /**
  * This is the ActiveQuery class for [[DefaultThemes]].

@@ -26,6 +26,8 @@ return [
     'contact.button.submit' => 'Send message',
     'contact.form.message.success' => 'Thank you! Your message has been sent',
     'contact.form.message.error' => 'Internal error. Try again later!',
+    'contact.form.recaptcha.error' => 'reCAPTCHA validation error! Try some times latter!',
+    'contact.form.recaptcha.required' => 'Please solve captcha',
 
     'order.title' => 'Add to cart',
     'order.package' => 'Package',
@@ -45,6 +47,13 @@ return [
     'payment_result.failed.description' => 'Your payment failed! Please try again later',
     'payment_result.awaiting.title' => 'Awaiting',
     'payment_result.awaiting.description' => 'Your payment awaiting!',
+
+
+    'payments.status.completed' => 'Completed',
+    'payments.status.refunded' => 'Refunded',
+    'payment.status.awaiting' => 'Awaiting',
+    'payment.status.failed' => 'Failed',
+
 
     'footer.terms' => 'Terms of Service',
     'footer.policy' => 'Privacy Policy',

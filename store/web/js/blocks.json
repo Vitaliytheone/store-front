@@ -1,0 +1,167 @@
+{
+  "features": {
+    "settings": {
+      "icon_size": "75",
+      "picture_type": "icon",
+      "align": "center",
+      "column": "3",
+      "bootstrap_column": "col-md-4"
+    },
+    "header":{
+      "title": "Features",
+      "description": "Description of the main features of service"
+    },
+    "data":[
+      {
+        "id": "1",
+        "title": "Feature #1",
+        "description": "Description feature #1",
+        "icon_class": "fas fa-image",
+        "icon_name": "image",
+        "image": "/img/no_image.png"
+      },
+      {
+        "id": "2",
+        "title": "Feature #2",
+        "description": "Description feature #2",
+        "icon_class": "fas fa-image",
+        "icon_name": "image",
+        "image": "/img/no_image.png"
+      },
+      {
+        "id": "3",
+        "title": "Feature #3",
+        "description": "Description feature #3",
+        "icon_class": "fas fa-image",
+        "icon_name": "image",
+        "image": "/img/no_image.png"
+      },
+      {
+        "id": "4",
+        "title": "Feature #4",
+        "description": "Description feature #4",
+        "icon_class": "fas fa-image",
+        "icon_name": "image",
+        "image": "/img/no_image.png"
+      },
+      {
+        "id": "5",
+        "title": "Feature #5",
+        "description": "Description feature #5",
+        "icon_class": "fas fa-image",
+        "icon_name": "image",
+        "image": "/img/no_image.png"
+      },
+      {
+        "id": "6",
+        "title": "Feature #6",
+        "description": "Description feature #6",
+        "icon_class": "fas fa-image",
+        "icon_name": "image",
+        "image": "/img/no_image.png"
+      }
+    ]
+  },
+  "process": {
+    "settings": {
+      "icon_size": 75,
+      "picture_type": "icon",
+      "description": 1,
+      "column": "2",
+      "bootstrap_column": "col-md-6"
+    },
+    "header":{
+      "title": "Process",
+      "description": "Description process block"
+    },
+    "data": [
+      {
+        "id": "1",
+        "title": "Process #1",
+        "description": "Description process #1",
+        "icon_class": "fas fa-image",
+        "icon_name": "image",
+        "image": "/img/no_image.png"
+      },
+      {
+        "id": "2",
+        "title": "Process #2",
+        "description": "Description process #2",
+        "icon_class": "fas fa-image",
+        "icon_name": "image",
+        "image": "/img/no_image.png"
+      },
+      {
+        "id": "3",
+        "title": "Process #3",
+        "description": "Description process #3",
+        "icon_class": "fas fa-image",
+        "icon_name": "image",
+        "image": "/img/no_image.png"
+      },
+      {
+        "id": "4",
+        "title": "Process #4",
+        "description": "Description process #4",
+        "icon_class": "fas fa-image",
+        "icon_name": "image",
+        "image": "/img/no_image.png"
+      }
+    ]
+  },
+  "reviews": {
+    "settings": {
+      "column": "1"
+    },
+    "header":{
+      "title": "Reviews",
+      "description": "Description block reviews"
+    },
+    "data":[
+      {
+        "id": "1",
+        "image": "/img/no_avatar.gif",
+        "name": "John",
+        "rating": "5",
+        "description": "Great service!"
+      },
+      {
+        "id": "2",
+        "image": "/img/no_avatar.gif",
+        "name": "Bob",
+        "rating": "3",
+        "description": "Great service!"
+      }
+    ]
+  },
+  "slider": {
+    "settings": {
+      "effect": "slide",
+      "interval": "5000"
+    },
+    "data": [
+      {
+        "id": "1",
+        "title": "Title slide #1",
+        "description": "Description slide #1",
+        "button": {
+          "title": "Edit link",
+          "link": "/terms-of-service",
+          "type": "page"
+        },
+        "image": "/img/no_image.png"
+      },
+      {
+        "id": "2",
+        "title": "Title slide #2",
+        "description": "Description slide #2",
+        "button": {
+          "title": "Edit link",
+          "link": "/",
+          "type": "none"
+        },
+        "image": "/img/no_image.png"
+      }
+    ]
+  }
+}

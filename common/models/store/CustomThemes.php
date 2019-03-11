@@ -109,7 +109,7 @@ class CustomThemes extends ActiveRecord implements ThemesInterface
      */
     public static function getThemesPath()
     {
-        return Yii::getAlias('@sommerce') .  '/views/themes/custom/' . Yii::$app->store->getInstance()->id;
+        return Yii::getAlias('@store') .  '/views/themes/custom/' . Yii::$app->store->getInstance()->id;
     }
 
     /** @inheritdoc */

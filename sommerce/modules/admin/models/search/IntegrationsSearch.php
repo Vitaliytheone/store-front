@@ -2,9 +2,9 @@
 
 namespace sommerce\modules\admin\models\search;
 
-use common\models\stores\Integrations;
-use common\models\stores\StoreIntegrations;
-use common\models\stores\Stores;
+use common\models\sommerces\Integrations;
+use common\models\sommerces\StoreIntegrations;
+use common\models\sommerces\Stores;
 use yii\base\Model;
 use yii\db\ActiveQuery;
 

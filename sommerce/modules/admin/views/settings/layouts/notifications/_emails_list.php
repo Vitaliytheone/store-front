@@ -4,7 +4,7 @@
 
     use yii\bootstrap\Html;
     use sommerce\modules\admin\components\Url;
-    use common\models\store\NotificationAdminEmails;
+    use common\models\sommerce\NotificationAdminEmails;
 ?>
 <div class="row">
     <div class="col-md-3">

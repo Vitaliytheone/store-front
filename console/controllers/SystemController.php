@@ -23,6 +23,8 @@ class SystemController extends Controller
             Yii::$app->params['sommerce.twig.cachePath'],
             Yii::$app->params['sommerce.assets.cachePath'],
             Yii::$app->params['my.assets.cachePath'],
+            Yii::$app->params['store.twig.cachePath'],
+            Yii::$app->params['store.assets.cachePath'],
         ] as $path) {
             $path = Yii::getAlias($path);
             if (is_dir($path)) {

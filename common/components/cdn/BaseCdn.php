@@ -43,6 +43,22 @@ abstract class BaseCdn
     abstract public function delete($cdnId);
 
     /**
+     * Return CND Object additional info
+     * @param $cdnId
+     * @return array|object|string
+     */
+    abstract public function getInfo($cdnId);
+
+    /**
+     * Return uploaded image preview
+     * @param $cdnId
+     * @param $width
+     * @param $height
+     * @return array
+     */
+    abstract public function makePreview($cdnId, int $width, int $height);
+
+    /**
      * Delete CDN object by CDN object `url`
      * @param $cdnUrl
      * @return mixed

@@ -1,7 +1,7 @@
 <?php
 namespace sommerce\modules\admin\models\forms;
 
-use common\models\store\NotificationTemplates;
+use common\models\sommerce\NotificationTemplates;
 use Yii;
 use yii\base\Model;
 

@@ -3,14 +3,14 @@
 namespace sommerce\modules\admin\models\forms;
 
 
-use common\models\store\ActivityLog;
-use common\models\store\Files;
-use common\models\stores\PaymentMethodsCurrency;
-use common\models\stores\StoreAdminAuth;
-use common\models\stores\StorePaymentMethods;
+use common\models\sommerce\ActivityLog;
+use common\models\sommerce\Files;
+use common\models\sommerces\PaymentMethodsCurrency;
+use common\models\sommerces\StoreAdminAuth;
+use common\models\sommerces\StorePaymentMethods;
 use sommerce\helpers\ConfigHelper;
 use Yii;
-use common\models\stores\Stores;
+use common\models\sommerces\Stores;
 use yii\helpers\ArrayHelper;
 use yii\validators\FileValidator;
 use yii\web\UploadedFile;
@@ -134,7 +134,7 @@ class EditStoreSettingsForm extends Stores
      * Return current user
      * @return StoreAdminAuth
      */
-    public function getuser()
+    public function getUser()
     {
        return $this->_user;
     }
@@ -236,7 +236,7 @@ class EditStoreSettingsForm extends Stores
     private function _changeLog($changedAttributes)
     {
         /** @var StoreAdminAuth $identity */
-        $identity = $this->getuser();
+        $identity = $this->getUser();
 
         if (isset($changedAttributes['name'])) {
             ActivityLog::log($identity, ActivityLog::E_SETTINGS_GENERAL_STORE_NAME_CHANGED);

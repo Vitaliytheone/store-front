@@ -5,7 +5,7 @@ use yii\helpers\Html;
 use sommerce\modules\admin\components\Url;
 use sommerce\helpers\UiHelper;
 use sommerce\modules\admin\widgets\CustomLinkPager;
-use common\models\store\Payments;
+use common\models\sommerce\Payments;
 
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -81,6 +81,7 @@ $statusFilterButtons = $searchModel->getStatusFilterButtons([
                                 <thead>
                                 <tr>
                                     <th><?= Yii::t('admin', 'payments.t_id') ?></th>
+                                    <th><?= Yii::t('admin', 'payments.t_order_id') ?></th>
                                     <th><?= Yii::t('admin', 'payments.t_customer') ?></th>
                                     <th><?= Yii::t('admin', 'payments.t_amount') ?></th>
                                     <th class="sommerce-th__action">

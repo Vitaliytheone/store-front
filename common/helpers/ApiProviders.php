@@ -3,6 +3,7 @@
 namespace common\helpers;
 
 use common\models\stores\StoreProviders;
+use common\models\stores\StoreProviders as SommerceProviders;
 use function GuzzleHttp\Psr7\build_query;
 use Yii;
 use yii\base\Exception;
@@ -14,7 +15,6 @@ use yii\helpers\ArrayHelper;
  */
 class ApiProviders
 {
-
     const COMMON_API_URL_TPL = '{{api_host}}/api/v2';
     const API_RESPONSE_ERROR_FIELD = 'error';
 
@@ -25,12 +25,12 @@ class ApiProviders
 
     /**
      * ApiProviders constructor.
-     * @param StoreProviders $storeProvider
+     * @param StoreProviders|SommerceProviders $storeProvider
      */
-    public function __construct(StoreProviders $storeProvider)
+    public function __construct($storeProvider)
     {
         $provider = $storeProvider->provider;
-        $this->api_url = str_replace('{{api_host}}', $provider->getSite(), self::COMMON_API_URL_TPL);
+        $this->api_url = str_replace('{{api_host}}', 'http://' . $provider->getName(), self::COMMON_API_URL_TPL);
         $this->api_key = $storeProvider->apikey;
     }
 
@@ -38,6 +38,7 @@ class ApiProviders
      * Add new order
      * @param $data
      * @return mixed
+     * @throws Exception
      */
     public function order($data) {
         $post = array_merge(array('key' => $this->api_key, 'action' => 'add'), $data);
@@ -48,6 +49,7 @@ class ApiProviders
      * Get order status
      * @param $order_id
      * @return mixed
+     * @throws Exception
      */
     public function status($order_id) {
         return $this->connect(array(
@@ -95,6 +97,7 @@ class ApiProviders
     /**
      * Get balance
      * @return mixed
+     * @throws Exception
      */
     public function balance() {
         return $this->connect(array(

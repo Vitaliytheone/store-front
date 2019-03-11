@@ -26,9 +26,19 @@ class SiteHelper {
     /**
      * Get host url
      * @param int|bool $ssl
+     * @return string
      */
     public static function hostUrl($ssl = false)
     {
         return ($ssl ? 'https' : 'http') . '://' . static::host();
+    }
+
+    /**
+     * @param $url
+     * @param bool $ssl
+     * @return string
+     */
+    public static function pageUrl($url, $ssl = false) {
+        return static::hostUrl($ssl) . '/' . trim($url, '/');
     }
 }

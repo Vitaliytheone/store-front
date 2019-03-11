@@ -2,15 +2,14 @@
 
 namespace sommerce\modules\admin\models\search;
 
-use common\models\stores\StoreProviders;
-use common\models\stores\Stores;
+use common\models\panels\AdditionalServices;
+use common\models\sommerces\StoreProviders;
+use common\models\sommerces\Stores;
 use yii;
 use yii\db\Query;
-use common\helpers\DbHelper;
 use yii\base\Model;
-use common\models\store\Products;
-use common\models\store\Packages;
-use common\models\stores\Providers;
+use common\models\sommerce\Products;
+use common\models\sommerce\Packages;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -19,11 +18,15 @@ use yii\helpers\ArrayHelper;
  */
 class ProductsSearch extends Model
 {
+    /**
+     * @var Stores
+     */
+    private $_store;
+
     private $_db;
     private $_productsTable;
     private $_packagesTable;
     private $_providersTable;
-
 
     /**
      * Cached Store providers
@@ -37,10 +40,11 @@ class ProductsSearch extends Model
      */
     public function setStore(Stores $store)
     {
+        $this->_store = $store;
         $this->_db = $store->db_name;
         $this->_productsTable = $this->_db . "." . Products::tableName();
         $this->_packagesTable = $this->_db . "." . Packages::tableName();
-        $this->_providersTable = Providers::tableName();
+        $this->_providersTable = AdditionalServices::tableName();
     }
 
     /**
@@ -55,12 +59,12 @@ class ProductsSearch extends Model
 
             $this->_store_providers = (new Query())
                 ->select([
-                    'pr.id', 'pr.site',
+                    'pr.provider_id as id', 'pr.name as site',
                     'sp.store_id'
                 ])
                 ->from(['sp' => StoreProviders::tableName()])
                 ->where(['sp.store_id' => $store->id])
-                ->leftJoin(['pr' => Providers::tableName()], 'pr.id = sp.provider_id')
+                ->leftJoin(['pr' => AdditionalServices::tableName()], 'pr.provider_id = sp.provider_id')
                 ->indexBy('id')
                 ->all();
         }
@@ -79,7 +83,7 @@ class ProductsSearch extends Model
             ->select([
                 'pr.id pr_id', 'pr.name pr_name', 'pr.position pr_position', 'pr.visibility pr_visibility',
                 'pk.id pk_id', 'pk.product_id pk_pr_id', 'pk.name pk_name', 'pk.position pk_position', 'pk.visibility pk_visibility', 'pk.mode pk_mode', 'pk.price pk_price', 'pk.quantity pk_quantity', 'pk.deleted pk_deleted',
-                'pk.provider_id'
+                'pk.provider_id', 'pk.provider_service',
             ])
             ->from("$this->_productsTable pr")
             ->leftJoin("$this->_packagesTable pk", 'pk.product_id = pr.id AND pk.deleted = :deleted', [':deleted' => Packages::DELETED_NO])
@@ -113,6 +117,8 @@ class ProductsSearch extends Model
                     'quantity' => $package['pk_quantity'],
                     'provider' => $provider,
                     'deleted' => $package['pk_deleted'],
+                    'provider_id' => $package['provider_id'],
+                    'provider_service' => $package['provider_service'],
                 ];
             });
 
@@ -132,24 +138,12 @@ class ProductsSearch extends Model
     }
 
     /**
-     * Return products-properties list
      * @return array
      */
-    public function getProductsProperties()
+    public function getExistingUrls()
     {
-        $products = (new Query())
-            ->select(['id', 'name', 'properties'])
-            ->from($this->_productsTable)
-            ->where([
-                'not',
-                ['properties' => null]
-            ])
-            ->all();
-
-        array_walk($products, function(&$product) {
-            $product['properties'] = json_decode($product['properties'], true);
-        });
-
-        return $products;
+        $urlsModel = new UrlsSearch();
+        $urlsModel->setStore($this->_store);
+        return $urlsModel->searchUrls();
     }
 }

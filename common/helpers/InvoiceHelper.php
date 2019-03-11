@@ -1,4 +1,5 @@
 <?php
+
 namespace common\helpers;
 
 use common\models\common\ProjectInterface;
@@ -13,6 +14,7 @@ use common\models\panels\Tariff;
 use common\models\panels\Orders;
 use common\models\panels\ThirdPartyLog;
 use common\models\stores\Stores;
+use common\models\sommerces\Stores as Sommerce;
 use console\components\crons\exceptions\CronException;
 use my\helpers\ExpiryHelper;
 use my\helpers\order\OrderSslHelper;

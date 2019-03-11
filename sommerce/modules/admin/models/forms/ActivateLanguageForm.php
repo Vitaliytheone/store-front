@@ -2,7 +2,7 @@
 
 namespace sommerce\modules\admin\models\forms;
 
-use common\models\stores\Stores;
+use common\models\sommerces\Stores;
 use sommerce\modules\admin\helpers\LanguagesHelper;
 use yii\base\Exception;
 use yii\base\Model;

@@ -7,7 +7,7 @@ use sommerce\modules\admin\components\Url;
 use sommerce\modules\admin\models\forms\EditIntegrationForm;
 use sommerce\modules\admin\models\search\IntegrationsSearch;
 use Yii;
-use common\models\stores\Stores;
+use common\models\sommerces\Stores;
 use yii\web\BadRequestHttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;

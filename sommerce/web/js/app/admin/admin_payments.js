@@ -92,7 +92,7 @@ customModule.adminPayments = {
                 return false;
             }
 
-            var inputTemplate = templates['admin/payments'];
+            var inputTemplate = templates['payments/description'];
             container.append(inputTemplate({
                 "elementId":elementId,
                 "label":label,

@@ -2,13 +2,13 @@
 
 namespace sommerce\components\payments\methods;
 
-use common\models\store\PaymentsLog;
-use common\models\store\Payments;
+use common\models\sommerce\PaymentsLog;
+use common\models\sommerce\Payments;
 use Yii;
 use common\helpers\SiteHelper;
-use common\models\store\Checkouts;
-use common\models\stores\PaymentMethods;
-use common\models\stores\Stores;
+use common\models\sommerce\Checkouts;
+use common\models\sommerces\PaymentMethods;
+use common\models\sommerces\Stores;
 use sommerce\components\payments\BasePayment;
 use yii\helpers\ArrayHelper;
 use PagSeguroPaymentRequest;
@@ -19,7 +19,7 @@ use PagSeguroNotificationService;
 use PagSeguroNotificationType;
 use Exception;
 use PagSeguroLibrary;
-use common\models\stores\StorePaymentMethods;
+use common\models\sommerces\StorePaymentMethods;
 
 /**
  * Class Pagseguro

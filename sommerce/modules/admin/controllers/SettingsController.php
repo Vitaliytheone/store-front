@@ -2,43 +2,33 @@
 
 namespace sommerce\modules\admin\controllers;
 
-use common\models\store\Files;
+use common\components\response\CustomResponse;
+use common\models\sommerce\Files;
 use sommerce\helpers\ConfigHelper;
 use sommerce\helpers\UiHelper;
 use sommerce\modules\admin\components\Url;
-use sommerce\modules\admin\controllers\traits\settings\BlocksTrait;
 use sommerce\modules\admin\controllers\traits\settings\IntegrationsTrait;
-use sommerce\modules\admin\controllers\traits\settings\NavigationTrait;
+use sommerce\modules\admin\controllers\traits\settings\LanguageTrait;
 use sommerce\modules\admin\controllers\traits\settings\NotificationsTrait;
-use sommerce\modules\admin\controllers\traits\settings\PagesTrait;
 use sommerce\modules\admin\controllers\traits\settings\PaymentsTrait;
 use sommerce\modules\admin\controllers\traits\settings\ProvidersTrait;
-use sommerce\modules\admin\controllers\traits\settings\ThemesTrait;
-use sommerce\modules\admin\controllers\traits\settings\ThemesCustomizerTrait;
-use sommerce\modules\admin\controllers\traits\settings\LanguageTrait;
 use sommerce\modules\admin\models\forms\EditStoreSettingsForm;
-use sommerce\modules\admin\models\search\LinksSearch;
 use Yii;
-use yii\web\NotFoundHttpException;
-use yii\web\Response;
-use yii\filters\ContentNegotiator;
 use yii\filters\AjaxFilter;
+use yii\filters\ContentNegotiator;
 use yii\filters\VerbFilter;
+use yii\web\Response;
 
 /**
  * Settings controller for the `admin` module
  */
 class SettingsController extends CustomController
 {
-    use BlocksTrait;
     use ProvidersTrait;
-    use NavigationTrait;
-    use ThemesTrait;
     use PaymentsTrait;
-    use PagesTrait;
     use LanguageTrait;
     use NotificationsTrait;
-    use ThemesCustomizerTrait;
+    use IntegrationsTrait;
 
     public function behaviors()
     {
@@ -71,7 +61,7 @@ class SettingsController extends CustomController
                     'integrations-toggle-active' => ['POST'],
                 ],
             ],
-            'content' => [
+            'jqueryApi' => [
                 'class' => ContentNegotiator::class,
                 'only' => [
                     'theme-update-style',
@@ -81,29 +71,10 @@ class SettingsController extends CustomController
                     'integrations-toggle-active',
                 ],
                 'formats' => [
-                    'application/json' => Response::FORMAT_JSON,
+                    'application/json' => CustomResponse::FORMAT_JSON,
                 ],
             ],
         ];
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function beforeAction($action)
-    {
-        // Disabled csrf validation for some ajax actions
-        if (in_array($action->id, [
-            'update-blocks',
-            'block-upload',
-            'update-theme',
-            'theme-update-style'
-        ])) {
-            $this->enableCsrfValidation = false;
-        }
-        // Add custom JS modules
-        // $this->addModule('settings');
-        return parent::beforeAction($action);
     }
 
     /**
@@ -111,7 +82,6 @@ class SettingsController extends CustomController
      * @return string|Response
      * @throws \Throwable
      * @throws \yii\base\Exception
-     * @throws NotFoundHttpException
      */
     public function actionIndex()
     {
@@ -122,9 +92,8 @@ class SettingsController extends CustomController
 
         $storeForm = EditStoreSettingsForm::findOne($this->store->id);
 
-        /** @var \common\models\stores\StoreAdminAuth $identity */
+        /** @var \common\models\sommerces\StoreAdminAuth $identity */
         $identity = Yii::$app->user->getIdentity(false);
-
         $storeForm->setUser($identity);
 
         if ($storeForm->updateSettings($request->post())) {
@@ -157,28 +126,6 @@ class SettingsController extends CustomController
         }
 
         return $this->redirect(Url::toRoute('/settings'));
-    }
-
-    /**
-     * Return links list by link type AJAX action
-     * @param $link_type
-     * @return array
-     * @throws \yii\base\Exception
-     */
-    public function actionGetLinks($link_type)
-    {
-        $request = Yii::$app->getRequest();
-        $response = Yii::$app->getResponse();
-        $response->format = Response::FORMAT_JSON;
-
-        if (!$request->isAjax) {
-            exit;
-        }
-
-        $searchModel = new LinksSearch();
-        $searchModel->setStore($this->store);
-
-        return ['links' => $searchModel->searchLinksByType($link_type|0)];
     }
 
     /**

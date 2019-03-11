@@ -2,18 +2,18 @@
 
 namespace sommerce\components\payments;
 
-use common\events\Events;
+use sommerce\events\Events;
 use common\helpers\SiteHelper;
-use common\models\store\Carts;
-use common\models\store\Checkouts;
-use common\models\store\Orders;
-use common\models\store\Packages;
-use common\models\store\Payments;
-use common\models\store\Suborders;
-use common\models\stores\PaymentMethodsCurrency;
-use common\models\stores\StorePaymentMethods;
-use common\models\stores\Stores;
-use common\models\stores\StoresSendOrders;
+use common\models\sommerce\Carts;
+use common\models\sommerce\Checkouts;
+use common\models\sommerce\Orders;
+use common\models\sommerce\Packages;
+use common\models\sommerce\Payments;
+use common\models\sommerce\Suborders;
+use common\models\sommerces\PaymentMethodsCurrency;
+use common\models\sommerces\StorePaymentMethods;
+use common\models\sommerces\Stores;
+use common\models\sommerces\StoresSendOrders;
 use Yii;
 use yii\base\Component;
 use yii\db\Exception;
@@ -238,13 +238,11 @@ abstract class BasePayment extends Component
                 $sendOrder->suborder_id = $orderItem->id;
                 $sendOrder->save(false);
             }
-
-            // Remove paid items from cart
-            Carts::removeItemByKey($item['cart_key']);
         }
 
         $payment->refresh();
         $payment->checkout_id = $checkout->id;
+        $payment->order_id = $order->id;
         $payment->amount = $checkout->price;
         $payment->customer = $checkout->customer;
         $payment->status = Payments::STATUS_COMPLETED;
@@ -261,7 +259,7 @@ abstract class BasePayment extends Component
         $payment->save(false);
 
         // Event confirm
-        Events::add(Events::EVENT_STORE_ORDER_CONFIRM, [
+        Events::add(Events::EVENT_SOMMERCE_ORDER_CONFIRM, [
             'order' => $order,
             'store' => $store
         ]);

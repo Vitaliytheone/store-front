@@ -2,8 +2,8 @@
 
 namespace sommerce\modules\admin\models\search;
 
-use common\models\stores\Stores;
-use common\models\stores\StorePaymentMethods;
+use common\models\sommerces\Stores;
+use common\models\sommerces\StorePaymentMethods;
 
 /**
  * Class PaymentsSettingsSearch
@@ -24,7 +24,7 @@ class PaymentsSettingsSearch
     }
 
     /**
-     * @return \common\models\stores\queries\StorePaymentMethodsQuery
+     * @return \common\models\sommerces\queries\StorePaymentMethodsQuery
      */
     public function search()
     {
