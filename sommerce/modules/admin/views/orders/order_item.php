@@ -68,7 +68,7 @@ $checkRowSpan = function($suborder) use ($suborders) {
 
                                 <?php if(ArrayHelper::getValue($suborder,'action_menu.details')): ?>
                                 <li class="m-nav__item">
-                                    <a href="#" data-toggle="modal" data-target=".order-detail" data-backdrop="static" class="m-nav__link" data-suborder-id="<?= $suborder['suborder_id'] ?>" data-modal_title="<?= Yii::t('admin', 'orders.details_title', ['suborder_id' => $suborder['suborder_id']]) ?>">
+                                    <a href="#" data-toggle="modal" data-target=".order-detail" data-backdrop="static" class="m-nav__link" data-suborder-id="<?= $suborder['suborder_id'] ?>" data-modal_title="<?= Yii::t('admin', 'orders.details_title', ['suborder_id' => $order['id']]) ?>">
                                         <span class="m-nav__link-text">
                                             <?= Yii::t('admin', 'orders.action_details') ?>
                                         </span>
