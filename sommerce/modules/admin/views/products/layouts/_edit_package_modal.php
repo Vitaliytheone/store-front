@@ -43,6 +43,7 @@ $model->setStore($store);
                 <?= $form->field($model, 'price')->textInput([
                     'type' => 'number',
                     'min' => '0.01',
+                    'max' => MAX_MYSQL_INT,
                     'step' => '0.01',
                 ]) ?>
 

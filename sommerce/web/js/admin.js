@@ -1542,6 +1542,10 @@ customModule.adminProducts = {
             urlInput.val(generatedUrl);
         });
 
+        $("input[type=number]").on('change',function(){
+            this.value = parseFloat(this.value).toFixed(2);
+        });
+
         $(document).on('click', '#createProduct', function(e) {
             e.preventDefault();
 
