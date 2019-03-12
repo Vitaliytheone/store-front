@@ -3,6 +3,7 @@
 namespace common\models\sommerce;
 
 use common\models\sommerce\queries\ProductsQuery;
+use sommerce\components\validators\product\UrlValidator;
 use Yii;
 use yii\behaviors\AttributeBehavior;
 use yii\db\ActiveRecord;
@@ -27,10 +28,10 @@ use yii\helpers\ArrayHelper;
  */
 class Products extends ActiveRecord
 {
-    const VISIBILITY_YES = 1;
-    const VISIBILITY_NO = 0;
+    public const VISIBILITY_YES = 1;
+    public const VISIBILITY_NO = 0;
 
-    const NEW_PRODUCT_URL_PREFIX = 'product-';
+    public const NEW_PRODUCT_URL_PREFIX = 'product-';
 
     public static function getDb()
     {
@@ -70,6 +71,7 @@ class Products extends ActiveRecord
             [['seo_title',], 'string', 'max' => 300],
             [['seo_description'], 'string', 'max' => 1000],
             [['seo_keywords'], 'string', 'max' => 2000],
+            [['url'], UrlValidator::class],
         ];
     }
 

@@ -5,6 +5,7 @@ namespace sommerce\modules\admin\models\forms;
 use common\models\sommerce\ActivityLog;
 use common\models\sommerce\Pages;
 use common\models\sommerces\StoreAdminAuth;
+use sommerce\components\validators\product\UrlValidator;
 use sommerce\modules\admin\components\CustomUser;
 use sommerce\modules\admin\models\search\PagesSearch;
 use Yii;
@@ -29,6 +30,11 @@ class EditPageForm extends Model
     protected $user;
 
     /**
+     * @var $_page Pages
+     */
+    protected $_page;
+
+    /**
      * @inheritdoc
      */
     public function rules()
@@ -39,16 +45,21 @@ class EditPageForm extends Model
             [['visibility'], 'integer'],
             [['url', 'title'], 'string', 'max' => 70],
             [['description'], 'string', 'max' => 160],
-            ['url', 'linkPrepare'],
-            ['url', 'match', 'pattern' => '/^[a-z\d][a-z\d-]*[a-z\d]$/iu'],
-            ['url', 'unique', 'targetClass' => Pages::class, 'targetAttribute' => ['url' => 'url'],
-                'when' => function ($model) {
-                    if (empty($this->page->url)) {
-                        return true;
-                    }
-                    return $model->url !== $this->page->url;
+            [['url'], UrlValidator::class, 'when' => function ($model) {
+                if (empty($this->_page->url)) {
+                    return true;
                 }
-            ]
+                return $model->url !== $this->_page->url;
+            }],
+//            ['url', 'match', 'pattern' => '/^[a-z\d][a-z\d-]*[a-z\d]$/iu'],
+//            ['url', 'unique', 'targetClass' => Pages::class, 'targetAttribute' => ['url' => 'url'],
+//                'when' => function ($model) {
+//                    if (empty($this->_page->url)) {
+//                        return true;
+//                    }
+//                    return $model->url !== $this->_page->url;
+//                }
+//            ]
         ];
     }
 
@@ -81,17 +92,13 @@ class EditPageForm extends Model
     {
         $this->user = $user;
     }
-    /**
-     * @var $page Pages
-     */
-    protected $page;
 
     /**
      * @return Pages
      */
     public function getPage()
     {
-        return $this->page;
+        return $this->_page;
     }
 
     /**
@@ -99,7 +106,7 @@ class EditPageForm extends Model
      */
     public function setPage($page)
     {
-        $this->page = $page;
+        $this->_page = $page;
     }
 
     /**
@@ -243,29 +250,5 @@ class EditPageForm extends Model
         return $newPage->save(false);
 
 
-    }
-
-    /**
-     * Custom link prepare with rules
-     *
-     * @param $attribute
-     * @param $params
-     * @param $validator
-     * @return bool
-     */
-    public function linkPrepare($attribute, $params, $validator)
-    {
-        $link = $this->$attribute;
-
-        $link = trim($link,' -_');
-        $link = preg_replace('/([^a-zA-Z\d\s_-])+/iu', '', $link);
-        $link = preg_replace('/([\s_])+/', '-', $link);
-        $link = preg_replace('/(-)\\1+/', '-', $link);
-        $link = strtolower($link);
-
-
-        $this->$attribute = $link;
-
-        return true;
     }
 }
