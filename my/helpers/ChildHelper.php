@@ -54,39 +54,47 @@ class ChildHelper
     public static function setChildLanguages(Project $child): bool
     {
         $providerModel = AdditionalServices::findOne(['provider_id' => $child->provider_id]);
-        $parent = Project::findOne(['site' => $providerModel->name]);
-        $languages = $parent->getChildPanelLanguages();
+        if (!isset($providerModel)) {
+            return false;
+        }
 
+        $parent = Project::findOne(['site' => $providerModel->name]);
+        if (!isset($parent)) {
+            return false;
+        }
+
+        $languages = $parent->getChildPanelLanguages();
         if (!empty($languages)) {
+            $panelLanguages = PanelLanguages::find()
+                ->asArray()
+                ->indexBy('code')
+                ->all();
+
+            $position = 0;
+            $data = [];
+
             foreach ($languages as $lang) {
-                $language = PanelLanguages::findOne($lang);
+                $language = isset($panelLanguages[$lang]) ? $panelLanguages[$lang] : false;
                 if (!$language) {
                     continue;
                 }
 
-                $exist = (new Query())
-                    ->select('code')
-                    ->from($child->db . '.languages')
-                    ->where(['code' => $lang])
-                    ->exists();
-                if ($exist) {
-                    continue;
-                }
+                $position++;
+                $data[] = [
+                    $language['code'],
+                    $language['name'],
+                    $language['rtl'],
+                    $language['default'],
+                    $position,
+                ];
+            }
 
-                $position = (new Query())
-                    ->select('MAX(position) + 1')
-                    ->from($child->db . '.languages')
-                    ->scalar();
-                $position = isset($position) ? $position : 1;
-
-                $rows = Yii::$app->db->createCommand()->insert($child->db . '.languages',
-                        array_merge($language->attributes, [
-                            'position' => $position,
-                        ])
-                    )->execute();
-                if (!$rows) {
-                    return false;
-                }
+            $rows = Yii::$app->db->createCommand()->batchInsert($child->db . '.languages',
+                ['code', 'name', 'rtl', 'default', 'position'],
+                $data
+            )->execute();
+            if (!$rows) {
+                return false;
             }
         }
 

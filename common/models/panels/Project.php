@@ -1067,7 +1067,7 @@ class Project extends ActiveRecord implements ProjectInterface
      */
     public function getChildPanelLanguages(): array
     {
-        return !empty($this->languages_for_child_panel) ? json_decode($this->languages_for_child_panel) : [];
+        return !empty($this->languages_for_child_panel) ? json_decode($this->languages_for_child_panel, true) : [];
     }
 
     /**
