@@ -13,6 +13,7 @@ return [
     'header.menu_settings_payments' => 'Payments',
     'header.menu_settings_providers' => 'Providers',
     'header.menu_settings_integrations' => 'Integrations',
+    'header.menu_settings_notifications' => 'Notifications',
     'header.menu_settings_languages' => 'Languages',
     'header.menu_pages' => 'Pages',
 
