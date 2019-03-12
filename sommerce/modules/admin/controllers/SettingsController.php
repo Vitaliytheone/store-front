@@ -37,25 +37,14 @@ class SettingsController extends CustomController
             'ajax' => [
                 'class' => AjaxFilter::class,
                 'only' => [
-                    'theme-get-style',
-                    'theme-get-data',
-                    'theme-update-style',
                     'add-payment-method',
-                    'update-payment-positions',
-                    'delete-invalid-currency',
                     'integrations-toggle-active',
                 ],
             ],
             'verbs' => [
                 'class' => VerbFilter::class,
                 'actions' => [
-                    'customize-theme' => ['GET'],
-                    'theme-get-style' => ['GET'],
-                    'theme-get-data' => ['GET'],
-                    'theme-update-style' => ['POST'],
                     'add-payment-method' => ['POST'],
-                    'update-payment-positions' => ['POST'],
-                    'delete-invalid-currency' => ['POST'],
                     'edit-integration' => ['GET', 'POST'],
                     'integrations' => ['GET'],
                     'integrations-toggle-active' => ['POST'],
@@ -64,10 +53,7 @@ class SettingsController extends CustomController
             'jqueryApi' => [
                 'class' => ContentNegotiator::class,
                 'only' => [
-                    'theme-update-style',
                     'add-payment-method',
-                    'update-payment-positions',
-                    'delete-invalid-currency',
                     'integrations-toggle-active',
                 ],
                 'formats' => [
