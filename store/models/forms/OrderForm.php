@@ -224,9 +224,19 @@ class OrderForm extends Model
     {
         $methods = [];
         foreach ($this->getPaymentMethods() as $method) {
+            $name = $method['name'];
+            if ($this->_store->id === 259) {
+                if (strtolower($name) === 'paypal') {
+                    $name = 'Paypal=بيبال';
+                }
+                if (strtolower($name) === 'stripe') {
+                    $name = 'Stripe=بطاقة بنكية';
+                }
+            }
+            
             $methods[] = [
                 'id' => $method['id'],
-                'method' => $method['name']
+                'method' => $name
             ];
         }
 
