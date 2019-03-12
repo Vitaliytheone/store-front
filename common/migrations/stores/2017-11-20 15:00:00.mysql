@@ -1,0 +1,5 @@
+# Default values for payments methods of default store1
+USE `stores`;
+INSERT INTO `payment_methods` (`id`, `store_id`, `method`, `details`, `active`) VALUES ('1', '1', 'paypal', NULL, NULL);
+INSERT INTO `payment_methods` (`id`, `store_id`, `method`, `details`, `active`) VALUES ('2', '1', '2checkout', NULL, NULL);
+INSERT INTO `payment_methods` (`id`, `store_id`, `method`, `details`, `active`) VALUES ('3', '1', 'bitcoin', NULL, NULL);

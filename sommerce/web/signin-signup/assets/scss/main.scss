@@ -1,0 +1,53 @@
+@import "settings";
+
+// .input {
+//     @extend %normal-input;
+// }
+
+.card-body {
+    border: 0px;
+}
+
+.card {
+    @extend %card;
+}
+
+label {
+    @extend %label;
+}
+
+.error-text {
+    @extend %error-text;
+}
+
+.alert {
+   padding: 7px;
+}
+
+Input::placeholder {
+    @extend %placeholder-input-normal;
+    padding: 8px 12px 8px 12px;
+}
+Input {
+    @extend %normal-input;
+    height: 40px;
+}
+
+.text-under {
+    @extend %text-under;
+}
+
+h3 {
+    @extend %h3;
+}
+
+.text-center a {
+    @extend %a-under;
+}
+
+.forgot {
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 20px;
+    color: #7765d6;
+}

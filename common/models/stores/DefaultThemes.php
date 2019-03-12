@@ -4,11 +4,11 @@ namespace common\models\stores;
 
 use common\models\common\ThemesInterface;
 use common\models\store\CustomThemes;
+use common\models\stores\queries\DefaultThemesQuery;
 use console\helpers\ConsoleHelper;
 use Yii;
 use yii\base\Exception;
 use yii\db\ActiveRecord;
-use common\models\stores\queries\DefaultThemesQuery;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -91,7 +91,7 @@ class DefaultThemes extends ActiveRecord implements ThemesInterface
      */
     public static function getThemesPath()
     {
-        return Yii::getAlias('@sommerce') .  '/views/themes/default';
+        return Yii::getAlias('@store') .  '/views/themes/default';
     }
 
     /**

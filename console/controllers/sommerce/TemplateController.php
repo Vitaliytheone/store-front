@@ -1,7 +1,9 @@
 <?php
+
 namespace console\controllers\sommerce;
 
 use Yii;
+use yii\base\Exception;
 use yii\helpers\FileHelper;
 
 /**
@@ -11,29 +13,54 @@ use yii\helpers\FileHelper;
  */
 class TemplateController extends CustomController
 {
+    const PATH_FRONTEND = 'frontend';
+    const PATH_GLOBAL = 'global';
+    const PATH_ADMIN = 'admin';
+
+    /**
+     * Generate underscore JS templates for admin and frontend path
+     */
     public function actionIndex()
     {
         $webRoot = Yii::getAlias('@sommerce') . '/web';
-        $basePath = $webRoot . '/js/templates';
-        $jstUrl = '/js/app/templates.js';
 
-        $files = FileHelper::findFiles($basePath, array('fileTypes' => array('html')));
+        foreach ([self::PATH_FRONTEND, self::PATH_ADMIN, self::PATH_GLOBAL] as $path) {
+            $sourcePath = $webRoot . '/js/templates/' . $path;
+            $destinationFile = $webRoot . '/js/app/' . $path . '/templates.js';
+
+            $this->_generateTemplates($path, $sourcePath, $destinationFile);
+        }
+    }
+
+    /**
+     * Generate underscore JS templates
+     * @param $sourcePath
+     * @param $destinationFile
+     */
+    protected function _generateTemplates($pathName, $sourcePath, $destinationFile)
+    {
+        $files = FileHelper::findFiles($sourcePath, array('fileTypes' => array('html')));
         $js = '';
         foreach ($files as $file) {
-            $templateName = str_replace($basePath . DIRECTORY_SEPARATOR, '', $file);
+            $templateName = str_replace($sourcePath . DIRECTORY_SEPARATOR, '', $file);
             $templateName = str_replace('\\', '/', $templateName);
             $templateName = str_replace('.html', '', $templateName);
+
+            if ($pathName === self::PATH_GLOBAL) {
+                $templateName = $pathName . '/' . $templateName;
+            }
+
             $html = trim(file_get_contents($file));
             $html = strtr($html, array("\t"=>'\t',"\n"=>'\n',"\r"=>'\r','"'=>'\"','\''=>'\\\'','\\'=>'\\\\','</'=>'<\/'));
             $js .= "\n\ntemplates['{$templateName}'] = _.template(\""
                 . $html . "\");";
         }
         $js = <<<JS
-                var templates = {};
+                var templates = templates || {};
                 {$js}
 JS;
 
-        $path = $webRoot . $jstUrl;
+        $path = $destinationFile;
 
         @unlink($path);
         file_put_contents($path, $js);

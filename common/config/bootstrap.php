@@ -3,11 +3,14 @@ Yii::setAlias('@common', dirname(__DIR__));
 Yii::setAlias('@my', dirname(dirname(__DIR__)) . '/my');
 Yii::setAlias('@superadmin', dirname(dirname(__DIR__)) . '/my/modules/superadmin');
 Yii::setAlias('@sommerce', dirname(dirname(__DIR__)) . '/sommerce');
+Yii::setAlias('@store', dirname(dirname(__DIR__)) . '/store');
 Yii::setAlias('@gateway', dirname(dirname(__DIR__)) . '/gateway');
 Yii::setAlias('@console', dirname(dirname(__DIR__)) . '/console');
 Yii::setAlias('@project_root', dirname(dirname(__DIR__)));
 Yii::setAlias('@node_modules', dirname(dirname(__DIR__)) . '/node_modules');
 Yii::setAlias('@libs', dirname(dirname(__DIR__)) . '/libs');
+Yii::setAlias('@control_panel', dirname(dirname(__DIR__)) . '/control_panel');
+
 
 $configPath = __DIR__ . '/config.json';
 $configPath = file_exists($configPath) ? $configPath : '/var/www/cfg/config.json';
@@ -41,6 +44,9 @@ defined('PROXY_CONFIG') or define('PROXY_CONFIG', (function() use ($configParams
 })());
 
 defined('DB_STORES') or define('DB_STORES', 'stores');
+defined('DB_SOMMERCES') or define('DB_SOMMERCES', 'sommerces');
 defined('DB_PANELS') or define('DB_PANELS', 'panels');
 defined('DB_GATEWAYS') or define('DB_GATEWAYS', 'gateways');
 defined('DB_GATEWAY') or define('DB_GATEWAY', 'gateway');
+
+defined('MAX_MYSQL_INT') or define('MAX_MYSQL_INT', 2147483647);

@@ -1,4 +1,5 @@
 <?php
+
 namespace sommerce\modules\admin\helpers;
 
 use sommerce\modules\admin\components\Url;
@@ -28,6 +29,10 @@ class NavbarHelper {
                 'url' => '/admin/products',
                 'label' => Yii::t('admin', 'header.menu_products'),
             ],
+            'pages' => [
+                'url' => '/admin/pages',
+                'label' => Yii::t('admin', 'header.menu_pages'),
+            ],
             'settings' => [
                 'url' => '/admin/settings',
                 'label' => 'Settings',
@@ -53,25 +58,10 @@ class NavbarHelper {
                         'icon' => 'flaticon-app',
                         'label' => Yii::t('admin', 'header.menu_settings_integrations'),
                     ],
-                    'settings-navigation' => [
-                        'url' => '/admin/settings/navigation',
-                        'icon' => 'flaticon-list-1',
-                        'label' => Yii::t('admin', 'header.menu_settings_navigation'),
-                    ],
-                    'settings-pages' => [
-                        'url' => '/admin/settings/pages',
-                        'icon' => 'icon-docs',
-                        'label' => Yii::t('admin', 'header.menu_settings_pages'),
-                    ],
-                    'settings-themes' => [
-                        'url' => '/admin/settings/themes',
-                        'icon' => 'icon-puzzle',
-                        'label' => Yii::t('admin', 'header.menu_settings_themes'),
-                    ],
-                    'settings-blocks' => [
-                        'url' => '/admin/settings/blocks',
-                        'icon' => 'icon-layers',
-                        'label' => Yii::t('admin', 'header.menu_settings_blocks'),
+                    'settings-languages' => [
+                        'url' => '/admin/settings/integrations',
+                        'icon' => 'flaticon-speech-bubble',
+                        'label' => Yii::t('admin', 'header.menu_settings_languages'),
                     ],
                 ],
             ],
@@ -93,18 +83,24 @@ class NavbarHelper {
      * Return formatted top navigation menu items
      * @param $currentRoute
      * @return array
+     * @throws \Throwable
      */
     public static function getNavbarItems($currentRoute)
     {
         $navbarItems = static::_NavbarItems();
 
-        /** @var \common\models\stores\StoreAdmins $user */
+
+
+
+        /** @var \common\models\sommerces\StoreAdmins $user */
         $authUser = Yii::$app->user;
         $user = $authUser->getIdentity();
 
         // Show only allowed for current user items
         if (!$authUser->isGuest) {
             $allowedControllers = $user->getAllowedControllersNames();
+
+
             foreach ($navbarItems as $controller => $menuItem) {
 
                 if (false === array_search($controller, $allowedControllers)) {
@@ -112,6 +108,7 @@ class NavbarHelper {
                 }
             }
         }
+
 
         /**
          * Populate $navbarItems by url and active class is menu item is active
@@ -137,6 +134,7 @@ class NavbarHelper {
                 });
             }
         });
+
 
         return $navbarItems;
     }

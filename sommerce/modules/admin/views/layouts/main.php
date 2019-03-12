@@ -1,14 +1,11 @@
 <?php
-
     /* @var $this \yii\web\View */
     /* @var $content string */
 
     use yii\helpers\Html;
-    use sommerce\assets\AdminAsset;
-    use sommerce\assets\MetronicAsset;
+    use sommerce\assets\AdminCustomAsset;
 
-    AdminAsset::register($this);
-    MetronicAsset::register($this);
+    AdminCustomAsset::register($this);
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>

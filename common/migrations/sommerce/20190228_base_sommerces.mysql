@@ -1,0 +1,2052 @@
+-- phpMyAdmin SQL Dump
+-- version 4.7.9
+-- https://www.phpmyadmin.net/
+--
+-- Host: localhost
+-- Generation Time: Feb 28, 2019 at 03:48 PM
+-- Server version: 5.7.21-20
+-- PHP Version: 7.2.14-1+0~20190113100742.14+stretch~1.gbpd83c69
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Database: `sommerces`
+--
+
+CREATE TABLE `content` (
+  `id` int(11) UNSIGNED NOT NULL,
+  `name` varchar(300) NOT NULL,
+  `text` text NOT NULL,
+  `updated_at` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Дамп данных таблицы `content`
+--
+
+INSERT INTO `content` (`id`, `name`, `text`, `updated_at`) VALUES
+(1, 'paypal_note', 'контент\r\n\r\nЕще контент1', 1544708021),
+(2, '2checkout_note', '', 0),
+(3, 'bitcoin_note', '', 0),
+(4, 'paypal_hold', '', 0),
+(5, '2checkout_review', '', 0),
+(6, 'bitcoin_not_confirmed', '', 0),
+(7, 'support', 'текст', 1521730467),
+(8, 'nameservers', 'some text', 0),
+(9, 'forgot_email_sent', 'Good', 1521790513),
+(10, 'store_nameservers', '<p class=\"help-block\" style=\"margin-bottom: 5px\">Please visit your registrar\'s dashboard to change nameservers to:</p>\r\n <ul style=\"color: #737373; padding-left: 20px\">\r\n <li>ns1.sommerce.com\r\n </li>\r\n <li>ns2.sommerce.com\r\n </li>\r\n </ul>', 0),
+(11, 'paypal_verify_note', 'Please check your email <strong>`email`</strong> and follow payment approve link', 0),
+(15, 'subdomain_nameservers', '<p class=\"help-block\" style=\"margin-bottom: 5px\">Please visit your domain\'s DNS zone editor and set CNAME-record:</p>\r\n subdomain.yourdomain.com CNAME perfectpanel.com', 0);
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `customers`
+--
+
+CREATE TABLE `customers` (
+  `id` int(11) NOT NULL,
+  `email` varchar(300) CHARACTER SET utf8 NOT NULL,
+  `password` varchar(64) CHARACTER SET utf8 NOT NULL,
+  `first_name` varchar(300) CHARACTER SET utf8 NOT NULL,
+  `last_name` varchar(300) CHARACTER SET utf8 NOT NULL,
+  `access_token` varchar(64) CHARACTER SET utf8 NOT NULL,
+  `token` varchar(32) CHARACTER SET utf8 NOT NULL,
+  `status` int(11) NOT NULL,
+  `buy_domain` tinyint(1) DEFAULT '0',
+  `date_create` int(11) NOT NULL,
+  `auth_date` int(11) NOT NULL,
+  `auth_ip` varchar(100) CHARACTER SET utf8 NOT NULL,
+  `timezone` int(11) NOT NULL,
+  `auth_token` varchar(64) NOT NULL,
+  `unpaid_earnings` decimal(20,5) NOT NULL DEFAULT '0.00000',
+  `referrer_id` int(11) UNSIGNED DEFAULT NULL,
+  `referral_status` tinyint(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '0 - not active, 1 - active, 2 - blocked',
+  `paid` tinyint(1) UNSIGNED NOT NULL DEFAULT '0' COMMENT '0 - not paid, 1 - paid',
+  `referral_link` varchar(5) DEFAULT NULL,
+  `referral_expired_at` int(11) UNSIGNED DEFAULT NULL,
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `customers_counters`
+--
+
+CREATE TABLE `customers_counters` (
+  `id` int(11) NOT NULL,
+  `customer_id` int(11) NOT NULL,
+  `stores` int(11) NOT NULL DEFAULT '0',
+  `domains` int(11) NOT NULL DEFAULT '0',
+  `ssl_certs` int(11) NOT NULL DEFAULT '0',
+  `created_at` int(11) DEFAULT NULL,
+  `updated_at` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `customers_note`
+--
+
+CREATE TABLE `customers_note` (
+  `id` int(11) NOT NULL,
+  `customer_id` int(11) NOT NULL,
+  `note` varchar(1000) NOT NULL,
+  `created_at` int(11) DEFAULT NULL,
+  `updated_at` int(11) DEFAULT NULL,
+  `created_by` int(11) DEFAULT NULL,
+  `updated_by` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `domains`
+--
+
+CREATE TABLE `domains` (
+  `id` int(11) NOT NULL,
+  `customer_id` int(11) NOT NULL,
+  `zone_id` int(11) NOT NULL,
+  `contact_id` varchar(250) NOT NULL,
+  `status` tinyint(1) NOT NULL COMMENT '1 – ok, 2 - expired',
+  `domain` varchar(250) NOT NULL,
+  `password` varchar(250) NOT NULL,
+  `created_at` int(11) NOT NULL,
+  `expiry` int(11) NOT NULL,
+  `privacy_protection` tinyint(1) NOT NULL,
+  `transfer_protection` tinyint(1) NOT NULL,
+  `details` text NOT NULL,
+  `registrar` varchar(250) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `domain_zones`
+--
+
+CREATE TABLE `domain_zones` (
+  `id` int(11) NOT NULL,
+  `zone` varchar(250) NOT NULL,
+  `price_register` decimal(10,2) NOT NULL,
+  `price_renewal` decimal(10,2) NOT NULL,
+  `price_transfer` decimal(10,2) NOT NULL,
+  `registrar` varchar(250) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Дамп данных таблицы `domain_zones`
+--
+
+INSERT INTO `domain_zones` (`id`, `zone`, `price_register`, `price_renewal`, `price_transfer`, `registrar`) VALUES
+(1, '.COM', '7.00', '7.00', '7.00', 'ahnames'),
+(2, '.NET', '7.00', '7.00', '7.00', 'ahnames'),
+(3, '.ORG', '7.00', '7.00', '7.00', 'ahnames'),
+(4, '.XYZ', '2.00', '2.00', '2.00', 'namesilo');
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `expired_log`
+--
+
+CREATE TABLE `expired_log` (
+  `id` int(11) NOT NULL,
+  `pid` int(11) NOT NULL,
+  `expired_last` int(11) NOT NULL,
+  `expired` int(11) NOT NULL,
+  `created_at` int(11) NOT NULL,
+  `type` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `invoices`
+--
+
+CREATE TABLE `invoices` (
+  `id` int(11) NOT NULL,
+  `cid` int(11) NOT NULL,
+  `pid` int(11) NOT NULL,
+  `code` varchar(64) NOT NULL,
+  `type` int(11) NOT NULL,
+  `date` int(11) NOT NULL,
+  `date_update` int(11) NOT NULL,
+  `expired` int(11) NOT NULL,
+  `total` decimal(10,2) NOT NULL,
+  `credit` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `status` int(11) NOT NULL COMMENT '0 - unpaid; 1 - paid; 2 - canceled'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `invoice_details`
+--
+
+CREATE TABLE `invoice_details` (
+  `id` int(11) NOT NULL,
+  `invoice_id` int(11) NOT NULL,
+  `item_id` int(11) NOT NULL,
+  `description` text,
+  `amount` decimal(10,2) NOT NULL,
+  `item` tinyint(2) NOT NULL COMMENT '1 - buy store; 2 - buy domain; 3 - prolongation domain; 4 - buy sll; 5 - prolongation ssl; 6 - custom customer; 7 - buy trial store; 8 - prolongation store;',
+  `created_at` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `logs`
+--
+
+CREATE TABLE `logs` (
+  `id` int(11) NOT NULL,
+  `project_type` tinyint(1) DEFAULT NULL COMMENT '1-Panel, 2-Store',
+  `panel_id` int(11) NOT NULL COMMENT 'panel_id, store_id',
+  `data` varchar(1000) NOT NULL,
+  `type` int(11) NOT NULL,
+  `created_at` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `my_activity_log`
+--
+
+CREATE TABLE `my_activity_log` (
+  `id` int(11) NOT NULL,
+  `customer_id` int(11) NOT NULL,
+  `super_user` tinyint(1) NOT NULL COMMENT '0 - customer, 1 - super user',
+  `created_at` int(11) NOT NULL,
+  `ip` varchar(300) NOT NULL,
+  `controller` varchar(300) NOT NULL,
+  `action` varchar(300) NOT NULL,
+  `request_data` text NOT NULL,
+  `details` varchar(1000) NOT NULL,
+  `details_id` varchar(1000) NOT NULL,
+  `event` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `my_customers_hash`
+--
+
+CREATE TABLE `my_customers_hash` (
+  `id` int(11) UNSIGNED NOT NULL,
+  `customer_id` int(11) NOT NULL,
+  `hash` varchar(64) NOT NULL,
+  `ip` varchar(255) NOT NULL,
+  `remember` varchar(255) NOT NULL COMMENT '0 - not remember; 1 - remember',
+  `super_user` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0 - user, 1 - super user',
+  `updated_at` int(11) NOT NULL,
+  `created_at` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `my_verified_paypal`
+--
+
+CREATE TABLE `my_verified_paypal` (
+  `id` int(11) UNSIGNED NOT NULL,
+  `payment_id` int(11) UNSIGNED NOT NULL,
+  `paypal_payer_id` varchar(100) DEFAULT NULL COMMENT 'Payer id from GetTransactionDetails.PAYERID',
+  `paypal_payer_email` varchar(300) DEFAULT NULL COMMENT 'Payer email from GetTransactionDetails.EMAIL',
+  `verified` tinyint(1) NOT NULL DEFAULT '0',
+  `updated_at` int(11) DEFAULT NULL,
+  `created_at` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `notifications`
+--
+
+CREATE TABLE `notifications` (
+  `id` int(11) NOT NULL,
+  `item_id` int(11) NOT NULL,
+  `item` tinyint(2) NOT NULL COMMENT '2 - ssl; 3 - domain; 4 - customer; 5 - payments; 6 - ticket; 7 - store;',
+  `type` varchar(250) NOT NULL,
+  `response` text NOT NULL,
+  `date` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `notification_email`
+--
+
+CREATE TABLE `notification_email` (
+  `id` int(11) NOT NULL,
+  `subject` text NOT NULL,
+  `message` longtext NOT NULL,
+  `code` varchar(300) NOT NULL,
+  `enabled` tinyint(1) NOT NULL DEFAULT '1'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `orders`
+--
+
+CREATE TABLE `orders` (
+  `id` int(11) NOT NULL,
+  `cid` int(11) NOT NULL,
+  `status` int(11) NOT NULL COMMENT '0 - pending; 1 - paid;2 - added; 3 - error; 4 - canceled',
+  `hide` tinyint(1) DEFAULT '0',
+  `processing` int(11) NOT NULL,
+  `date` int(11) NOT NULL,
+  `ip` varchar(300) NOT NULL,
+  `domain` varchar(300) DEFAULT NULL,
+  `details` text NOT NULL,
+  `item` tinyint(2) NOT NULL DEFAULT '1' COMMENT '1 - buy store; 2 - buy domain; 3 - buy ssl; 4 - prolongation ssl; 5 - prolongation domain; 6 - buy trial store; 7 - free ssl; 8 - prolongation free ssl;',
+  `item_id` int(11) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `order_logs`
+--
+
+CREATE TABLE `order_logs` (
+  `id` int(11) NOT NULL,
+  `cid` int(11) NOT NULL,
+  `domain` varchar(300) NOT NULL,
+  `date` int(11) NOT NULL,
+  `log` varchar(1000) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `params`
+--
+
+CREATE TABLE `params` (
+  `id` int(11) NOT NULL,
+  `category` varchar(64) DEFAULT NULL,
+  `code` varchar(64) NOT NULL,
+  `options` text NOT NULL,
+  `updated_at` int(11) NOT NULL,
+  `position` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Дамп данных таблицы `params`
+--
+
+INSERT INTO `params` (`id`, `category`, `code`, `options`, `updated_at`, `position`) VALUES
+(1, 'service', 'whoisxml', '{\"apiKey\":\"at_29qGYvNzpRjONBzQhtHUpafTaKtud\",\"whoisxml.url\":\"\r\nhttps://www.whoisxmlapi.com/whoisserver/WhoisService\",\"dnsLogin\":\"\",\"dnsPasswd\":\"\"}', 1530199492, NULL),
+(2, 'service', 'dnslytics', '{\"dnslytics.apiKey\":\"\",\"dnslytics.url\":\"\"}', 1530199492, NULL),
+(3, 'service', 'gogetssl', '{\"goGetSSLUsername\":\"\",\"goGetSSLPassword\":\"\",\"testSSL\":false}', 1530199492, NULL),
+(4, 'service', 'ahnames', '{\"ahnames.url\":\"https://demo-api.ahnames.com\",\"ahnames.login\":\"demo\",\"ahnames.password\":\"demo\"}', 1530199492, NULL),
+(5, 'service', 'opensrs', '{\"openSRS.ip\":\"\"}', 1530199492, NULL),
+(6, 'payment', 'paypal', '{\"code\":\"paypal\",\"name\":\"PayPal\",\"visibility\":\"1\",\"credentials\":{\"email\":\"paypal-facilitator@13.uz\",\"username\":\"paypal-facilitator_api1.13.uz\",\"password\":\"6LQ5TMP6C4HFF6NG\",\"signature\":\"AFcWxV21C7fd0v3bYYYRCpSSRl31AZufRwNv23nT1BBBXjdpsAqzSSqv\"}}', 1539353360, 2),
+(7, 'payment', 'perfect_money', '{\"code\":\"perfect_money\",\"name\":\"Perfect Money\",\"visibility\":\"1\",\"credentials\":{\"account\":\"\",\"passphrase\":\"\"}}', 1539353360, 3),
+(8, 'payment', 'webmoney', '{\"credentials\":{\"purse\":\"\",\"secret_key\":\"\"},\"name\":\"WebMoney\",\"minimal\":\"0.00\",\"maximal\":\"0.00\",\"visibility\":1,\"fee\":0,\"type\":0,\"dev_options\":\"\"}', 1539353360, 4),
+(9, 'payment', 'bitcoin', '{\"code\":\"bitcoin\",\"name\":\"Bitcoin\",\"visibility\":\"1\",\"credentials\":{\"id\":\"\",\"secret\":\"\"}}', 1539353360, 5),
+(10, 'payment', '2checkout', '{\"code\":\"2checkout\",\"name\":\"2Checkout\",\"visibility\":\"1\",\"credentials\":{\"account_number\":\"901402179\",\"secret_word\":\"ZGVkMDI1YTgtZDg4OC00ZjUyLTg5MGQtMjhiMjlhYzljYTRk\"}}', 1539353360, 1),
+(11, 'payment', 'coinpayments', '{\"credentials\":{\"merchant_id\":\"c1de6e0408c209e599bad925ad8396f2\",\"secret\":\"EKNc0ylbRa3IJbjb\"},\"name\":\"CoinPayments\",\"minimal\":\"0.00\",\"maximal\":\"0.00\",\"visibility\":1,\"fee\":0,\"type\":0,\"dev_options\":\"\"}', 1539353360, 6),
+(12, 'service', 'whoisxmlapi', '{\"new_order_form\": \"\", \"ssl\": \"\", \"active_panel\": \"\"}', 0, NULL),
+(13, 'service', 'letsencrypt', '{\"account_key\":\"-----BEGIN RSA PRIVATE KEY-----\\nMIIEpAIBAAKCAQEAzUTYOc1gqVzDDcMgwpgc5D24Lnsgm+oURxkj1Z\\/XXxYqOwE1\\nd4H7wWMmF9zzwRsSEMeoZqUkixGc5lEJpg6LRH89dqAaW7bQwJE3w2Xax8xxkemO\\nWDerPGzkccaMTWZEcWKPWv+89c\\/jhEr\\/Gk9eWp4aBlIGlmP5jS+lFg+Q673B\\/fsr\\n98fpTbtNbfJ+jevmeJC761HCwVgC0Nr285qha3bhZhBxjjq\\/i2\\/1gDG2vlimvsnd\\n0mEK7zgDc4Zb5Vf94nBfdvr0wkbs4kNo6d3r2tuxm0PLDdBP58hGEtfYuLETH6tQ\\n\\/AnccaaY04\\/u+b0g79hWaa9qDc31FPwuGkFpUwIDAQABAoIBAQC+sF\\/2gpZzf1ss\\nY8MBQ3JDjhqWA4gtj207B13EzHK1QNAGdH8JAFWyN7thm79N+ynzMKd+g5fJIZmS\\nVGIUQ5qZDWM52k3iOZj\\/62fUO8Dcr04p8MBtr3mB7t7h20LnfEPE2Xy3WrBd4rxH\\nX6xQ8r6CjDE9AeJgv4tK36ILNna4p6suuXQZgGsQNHgtm8rfvFSRN\\/ESyxMpii47\\nliPf9Aquk7mVOkW+70xzXJfm9k4QrctKAhmf6UU1TtjkF7Y\\/My7VHigIBFRaJbV\\/\\ndfRiKDFiITeWxGQXaZY9qKJ1jSBpOAl\\/LHwVROb2zRTpjbdsHujpFgcvbDXwS6hS\\nsuFuKwkhAoGBAPCrzwZ52eAlCRnXe3p4\\/4bWMsMJ3JNOIIkK+isSrDGppEx5KI3L\\nPY0yCV+pegjd1UDqTVWD6VLT1KBYgf5p2ZQPnNg4a3XBD\\/Dmd1jqC1n+Y14wFp0B\\nYAk3BFkZpfgp9si77opgSQE068yXdTnRKcC9RMuBzjhZfbHZ6xuQT4YbAoGBANpX\\ny74S3RZ8WXXsWFGHW4x1vA8N06bdiPd7d6kUMF2y6RO5GB2DtcI+uIHkjPQcW3xE\\nmU\\/gl00kNbRqQlwxHud2njkEOrDn7TDKqVbmrvkwocL9h9\\/\\/t05WjPnj09cHItQk\\n26r1VFYlegTc9EeSfp3D28oOfb5c8DZ0cxH6ub0pAoGAXskbsQ4+e+O6MN5H+FU9\\nNgqYVW5F3BISCEc1fc9N2AVa+u9gxG9+H2TMgkuKD4HmojllGb\\/pHcDl5fzVvbBM\\ni96WRCX8VJUjxRnPeUo8DEZ\\/NjI0RcOr4hUz9i9+yT0lv6scaI1BU2NXVu1zssCo\\n9ArW1FucL183fNs5mFJ+r28CgYAGqqGU5xyLADb3C8VSj\\/BypHGegAyTTrZM4B8y\\nMWScp8bIDGG5HPliuemGRcUr+uWsMKgBsVjNSSq+nHP0Pqez54JDOWbVWe97CuUK\\nuzZic2KtAnKwmy0sniXlx1gDe7tLgOiYGq99hd1o4pouyUFGbeF7FOAv\\/MR01S9i\\nQCaFqQKBgQDDXvHO6pH9+VytiVhKc8DGmSmWoaMUCZaPdKAboeutGrPiGboLDt3N\\nSOJ3D0AIx6hSh6myoUIoBuwVDoLaPeNlP3ikwvVm28nALM8IvvKVyFIJ6xgU7hNn\\nWDIQQE2Gi7IeqWfKvE1qT6gi6NVxHWXUCqGOXKo9CH0+NjHP1\\/JbGg==\\n-----END RSA PRIVATE KEY-----\",\"account_thumbprint\":\"UDTlmgtoemHP9VZUWmXZnXcnQIBpruncJBWJnsIkoMI\"}', 1541058384, NULL),
+(14, 'service', 'socialsapi', '{\"apikey\":\"\"}', 1540386666, NULL),
+(15, 'service', 'namesilo', '{\"namesilo.url\":\"https://www.namesilo.com/api\",\"namesilo.key\":\"6f3bb35a23962b15be15c3c\",\"namesilo.payment_id\":\"485\",\"namesilo.version\":\"1\",\"namesilo.type\":\"xml\",\"namesilo.testmode\":\"0\",\"namesilo.contact_id\":\"\"}', 1548833103, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `payments`
+--
+
+CREATE TABLE `payments` (
+  `id` int(11) NOT NULL,
+  `pid` int(11) NOT NULL,
+  `iid` int(11) NOT NULL,
+  `comment` varchar(1000) NOT NULL,
+  `transaction_id` varchar(300) NOT NULL DEFAULT '',
+  `date` int(11) NOT NULL,
+  `date_update` int(11) NOT NULL,
+  `type` int(11) NOT NULL,
+  `currency_id` int(11) DEFAULT NULL,
+  `payment_method` varchar(64) DEFAULT NULL,
+  `amount` decimal(10,5) NOT NULL,
+  `fee` decimal(10,5) DEFAULT NULL,
+  `status` int(11) NOT NULL,
+  `ip` varchar(300) NOT NULL,
+  `response` int(11) NOT NULL,
+  `mode` tinyint(4) NOT NULL,
+  `options` text NOT NULL,
+  `verification_code` varchar(64) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `payments_log`
+--
+
+CREATE TABLE `payments_log` (
+  `id` int(11) NOT NULL,
+  `pid` int(11) NOT NULL,
+  `response` varchar(10000) NOT NULL,
+  `logs` varchar(10000) NOT NULL,
+  `date` int(11) NOT NULL,
+  `ip` varchar(300) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `payment_hash`
+--
+
+CREATE TABLE `payment_hash` (
+  `id` int(11) NOT NULL,
+  `hash` varchar(10000) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `reports`
+--
+
+CREATE TABLE `reports` (
+  `id` int(11) UNSIGNED NOT NULL,
+  `service_id` int(11) UNSIGNED NOT NULL,
+  `timezone` mediumint(5) NOT NULL COMMENT 'таймзона для которой рассчитан день',
+  `date` varchar(10) NOT NULL DEFAULT '' COMMENT 'Y-m-d дня статистики',
+  `start` int(11) UNSIGNED NOT NULL COMMENT 'Timestamp of begin statistic calculation',
+  `stop` int(11) UNSIGNED NOT NULL COMMENT 'Timestamp of finish statistic calculation',
+  `charge` decimal(10,5) DEFAULT NULL COMMENT 'сумма charge',
+  `cost` decimal(10,5) DEFAULT NULL COMMENT 'сумма cost',
+  `orders` int(11) DEFAULT NULL COMMENT 'количество заказов',
+  `quantity` int(11) DEFAULT NULL COMMENT 'сумма quantity',
+  `sources` text COMMENT 'json массив, разбивка по orders.api с количеством заказов'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `ssl_cert`
+--
+
+CREATE TABLE `ssl_cert` (
+  `id` int(11) NOT NULL,
+  `cid` int(11) NOT NULL,
+  `project_type` tinyint(1) DEFAULT NULL COMMENT '1 - Panel, 2 - Store',
+  `pid` int(11) NOT NULL,
+  `item_id` int(11) NOT NULL,
+  `status` tinyint(2) NOT NULL COMMENT '0 - Pending; 4 - Cancel; 1 - Active; 2 - Processing; 3 - Processing(payment needed); 5 - Incomplete; 6 - Expiry; 7 - ddos guard error',
+  `checked` tinyint(1) NOT NULL COMMENT '0 - unchecked; 1 - checked',
+  `domain` varchar(255) NOT NULL,
+  `csr_code` text,
+  `csr_key` text,
+  `csr_files` text COMMENT 'All genered csr files content',
+  `details` text NOT NULL,
+  `expiry` varchar(10) DEFAULT NULL,
+  `expiry_at_timestamp` int(11) UNSIGNED DEFAULT NULL COMMENT 'Expiry date in timestamp format',
+  `created_at` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `ssl_cert_item`
+--
+
+CREATE TABLE `ssl_cert_item` (
+  `id` int(11) NOT NULL,
+  `name` varchar(250) NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `price` decimal(10,2) NOT NULL,
+  `allow` text COMMENT 'List of ids of allowed users for this cert. Allowed for all if NULL',
+  `generator` tinyint(1) DEFAULT NULL,
+  `provider` tinyint(1) DEFAULT NULL COMMENT '1 - gogetssl, 2 - letsencrypt'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Дамп данных таблицы `ssl_cert_item`
+--
+
+INSERT INTO `ssl_cert_item` (`id`, `name`, `product_id`, `price`, `allow`, `generator`, `provider`) VALUES
+(0, 'Letsencrypt', 1, '0.00', NULL, NULL, 2),
+(1, 'Comodo Positive SSL', 45, '9.95', NULL, 1, 2),
+(2, 'Comodo Essential SSL', 75, '19.95', NULL, 1, 2);
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `ssl_validation`
+--
+
+CREATE TABLE `ssl_validation` (
+  `id` int(11) NOT NULL,
+  `pid` int(11) NOT NULL,
+  `file_name` varchar(250) NOT NULL,
+  `content` varchar(1000) NOT NULL,
+  `created_at` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `super_admin`
+--
+
+CREATE TABLE `super_admin` (
+  `id` int(11) NOT NULL,
+  `username` varchar(250) NOT NULL,
+  `password` varchar(250) NOT NULL,
+  `created_at` int(11) NOT NULL,
+  `first_name` varchar(250) NOT NULL,
+  `last_name` varchar(250) NOT NULL,
+  `last_login` varchar(250) DEFAULT NULL,
+  `last_ip` varchar(250) DEFAULT NULL,
+  `auth_key` varchar(250) NOT NULL,
+  `rules` varchar(1000) DEFAULT NULL,
+  `status` tinyint(4) NOT NULL COMMENT '0 – suspended; 1 - active'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Структура таблицы `super_admin_token`
+--
+
+CREATE TABLE `super_admin_token` (
+  `id` int(11) NOT NULL,
+  `super_admin_id` int(11) NOT NULL,
+  `item_id` int(11) NOT NULL,
+  `item` tinyint(4) NOT NULL DEFAULT '0' COMMENT '0 - panels, 1 - my, 2 - sommerce admin',
+  `token` varchar(64) NOT NULL,
+  `expiry_at` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `super_credits_log`
+--
+
+CREATE TABLE `super_credits_log` (
+  `id` int(11) NOT NULL,
+  `super_admin_id` int(11) NOT NULL,
+  `invoice_id` int(11) NOT NULL,
+  `credit` decimal(10,2) NOT NULL,
+  `memo` varchar(300) NOT NULL,
+  `created_at` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `super_log`
+--
+
+CREATE TABLE `super_log` (
+  `id` int(11) NOT NULL,
+  `admin_id` int(11) NOT NULL,
+  `action` varchar(250) NOT NULL,
+  `params` varchar(1000) NOT NULL,
+  `ip` varchar(250) NOT NULL,
+  `user_agent` varchar(1000) NOT NULL,
+  `created_at` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `super_tasks`
+--
+
+CREATE TABLE `super_tasks` (
+  `id` int(11) NOT NULL,
+  `task` tinyint(1) NOT NULL DEFAULT '0' COMMENT '1 - restart nginx, 2 - create nginx config',
+  `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0 - pending, 1 - completed',
+  `item_id` int(11) DEFAULT NULL,
+  `comment` varchar(3000) DEFAULT NULL,
+  `created_at` int(11) DEFAULT NULL,
+  `done_at` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `third_party_log`
+--
+
+CREATE TABLE `third_party_log` (
+  `id` int(11) NOT NULL,
+  `item` tinyint(4) NOT NULL COMMENT '3 - buy domain; 4 - prolongation domain; 5 - buy ssl; 5 - prolongation ssl; 7 - order; 8 - buy store; 9 - prolongation store; 10 - refund paypal paymetn; 11 - obtain letsencrypt ssl; 12 - renew letsencrypt ssl; 13 - revoke letsencrypt ssl;',
+  `item_id` int(11) NOT NULL,
+  `code` varchar(32) DEFAULT NULL,
+  `details` text NOT NULL,
+  `created_at` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `tickets`
+--
+
+CREATE TABLE `tickets` (
+  `id` int(11) NOT NULL,
+  `customer_id` int(11) NOT NULL,
+  `admin_id` int(11) NOT NULL,
+  `assigned_admin_id` int(11) DEFAULT NULL,
+  `pid` int(11) NOT NULL,
+  `subject` varchar(300) NOT NULL,
+  `is_admin` tinyint(1) NOT NULL,
+  `is_user` tinyint(1) NOT NULL,
+  `user_agent` varchar(300) DEFAULT NULL,
+  `status` int(11) NOT NULL COMMENT '0 - pending; 1 - respinded; 2 - closed; 3 - in progress; 4 - Solved;',
+  `created_at` int(11) NOT NULL,
+  `updated_at` int(11) NOT NULL,
+  `ip` varchar(300) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `ticket_files`
+--
+
+CREATE TABLE `ticket_files` (
+  `id` int(11) NOT NULL,
+  `customer_id` int(11) NOT NULL,
+  `ticket_id` int(11) NOT NULL,
+  `admin_id` int(11) NOT NULL,
+  `message_id` int(11) NOT NULL,
+  `link` varchar(255) NOT NULL,
+  `cdn_id` varchar(255) NOT NULL,
+  `mime` varchar(255) NOT NULL,
+  `details` varchar(10000) NOT NULL,
+  `created_at` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `ticket_messages`
+--
+
+CREATE TABLE `ticket_messages` (
+  `id` int(11) NOT NULL,
+  `customer_id` int(11) NOT NULL,
+  `ticket_id` int(11) NOT NULL,
+  `admin_id` int(11) NOT NULL,
+  `user_agent` varchar(300) DEFAULT NULL,
+  `is_system` tinyint(1) DEFAULT '0',
+  `message` varchar(10000) NOT NULL,
+  `created_at` int(11) NOT NULL,
+  `ip` varchar(300) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `background_tasks`
+--
+
+CREATE TABLE `background_tasks` (
+  `id` int(11) UNSIGNED NOT NULL,
+  `key` varchar(300) NOT NULL,
+  `type` tinyint(1) NOT NULL COMMENT '1 - panels; 2 - stores',
+  `code` varchar(300) NOT NULL,
+  `data` text NOT NULL,
+  `status` tinyint(1) NOT NULL COMMENT '0 - pending; 1 - in progress; 2 - completed; 3 - error',
+  `response` text,
+  `updated_at` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `integrations`
+--
+
+CREATE TABLE `integrations` (
+  `id` int(11) NOT NULL,
+  `category` varchar(255) NOT NULL,
+  `code` varchar(255) NOT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `widget_class` varchar(255) DEFAULT NULL,
+  `settings_form` text,
+  `settings_description` text,
+  `visibility` tinyint(1) NOT NULL DEFAULT '0' COMMENT '1 - visible to all, 0 - invisible to all',
+  `position` int(11) DEFAULT NULL,
+  `created_at` int(11) DEFAULT NULL,
+  `updated_at` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `integrations`
+--
+
+INSERT INTO `integrations` (`id`, `category`, `code`, `name`, `widget_class`, `settings_form`, `settings_description`, `visibility`, `position`, `created_at`, `updated_at`) VALUES
+  (1, 'chats', 'zendesk', 'Zendesk', 'ChatsWidget', '{\"snippet\":{\"type\":\"textarea\",\"label\":\"settings.integrations_edit.code_label\",\"name\":\"snippet\"}}', 'Enabling this integration allows you to add Online Chat widget to your store website. Copy and paste a code snippet from your  <a href=\"https://www.zendesk.com/chat/live-chat-widget/\" target=\"_blank\">Zendesk</a> account to the form below.', 1, 2, 2147483647, 2147483647),
+  (2, 'chats', 'jivochat', 'Jivochat', 'ChatsWidget', '{\"snippet\":{\"type\":\"textarea\",\"label\":\"settings.integrations_edit.code_label\",\"name\":\"snippet\"}}', 'Enabling this integration allows you to add Online Chat widget to your store website. Copy and paste a code snippet from your  <a href=\"https://www.jivochat.com/\" target=\"_blank\">Jivochat</a> account to the form below.', 1, 1, 2147483647, 2147483647),
+  (3, 'chats', 'smartsupp', 'Smartsupp', 'ChatsWidget', '{\"snippet\":{\"type\":\"textarea\",\"label\":\"settings.integrations_edit.code_label\",\"name\":\"snippet\"}}', 'Enabling this integration allows you to add Online Chat widget to your store website. Copy and paste a code snippet from your  <a href=\"https://www.smartsupp.com/\" target=\"_blank\">Smartsupp</a> account to the form below.', 1, 3, 2147483647, 2147483647),
+  (4, 'analytics', 'google_analytics', 'Google Analytics', 'AnalyticsWidget', '{\"snippet\":{\"type\":\"textarea\",\"label\":\"settings.integrations_edit.code_label\",\"name\":\"snippet\"}}', 'Enabling this integration allows you to add Google Analytics to your store website. Copy and paste a Global Site Tag (gtag.js) from your <a href=\"https://analytics.google.com\" target=\"_blank\">Google Analytics</a> account and paste it to the form below', 1, 1, 2147483647, 2147483647);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `link_validations`
+--
+
+CREATE TABLE `link_validations` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `link` varchar(1000) NOT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0 - invalid; 1 - valid',
+  `link_type` int(11) UNSIGNED NOT NULL,
+  `store_id` int(11) NOT NULL,
+  `created_at` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `notification_default_templates`
+--
+
+CREATE TABLE `notification_default_templates` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `code` varchar(255) NOT NULL,
+  `subject` varchar(255) DEFAULT NULL,
+  `body` text,
+  `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '0 - disabled, 1 - enabled',
+  `position` int(11) NOT NULL,
+  `recipient` tinyint(1) NOT NULL DEFAULT '1' COMMENT '1 - admin, 2 - customer',
+  `created_at` int(11) NOT NULL,
+  `updated_at` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `notification_default_templates`
+--
+
+INSERT INTO `notification_default_templates` (`id`, `code`, `subject`, `body`, `status`, `position`, `recipient`, `created_at`, `updated_at`) VALUES
+  (1, 'order_confirmation', 'Order #{{ order.id }} confirmation', '<!doctype html>\r\n<html lang=\"en\">\r\n<head>\r\n    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\r\n    <meta name=\"viewport\" content=\"width=device-width\">\r\n</head>\r\n<body>\r\n\r\n<table class=\"mail-block\">\r\n    <tbody>\r\n        <tr>\r\n            <td class=\"mail-block__body\">\r\n                <table class=\"mail-header\">\r\n                    <tbody>\r\n                    <tr>\r\n                        <td>\r\n                            <table class=\"mail-container mail-header__top\">\r\n                                <tbody>\r\n                                <tr>\r\n                                    <td>\r\n                                        {% if site.logo %}\r\n                                            <img src=\"{{ site.logo }}\" alt=\"\" class=\"img-responsive\">\r\n                                        {% else %}\r\n                                            <h2 class=\"mail-header__title\">{{ site.store_name }}</h2>\r\n                                        {% endif %}\r\n                                    </td>\r\n                                    <td class=\"text-right mail-header__top-order\">\r\n                                        Order #{{ order.id }}\r\n                                    </td>\r\n                                </tr>\r\n                                </tbody>\r\n                            </table>\r\n                        </td>\r\n                    </tr>\r\n                    </tbody>\r\n                </table>\r\n                <table class=\"mail-container mail-body\">\r\n                    <tbody>\r\n                    <tr>\r\n                        <td>\r\n                            <table class=\"mail-body__header text-center\">\r\n                                <tbody>\r\n                                <tr>\r\n                                    <td>\r\n                                        <span class=\"mail-body__header-title\">\r\n                                            Order #{{ order.id }} confirmation\r\n                                        </span>\r\n                                    </td>\r\n                                </tr>\r\n                                <tr>\r\n                                    <td>\r\n                                        <span class=\"mail-body__header-description\">\r\n                                            <!-- Description Start -->\r\n\r\n                                            <!-- Description End -->\r\n                                        </span>\r\n                                    </td>\r\n                                </tr>\r\n                                </tbody>\r\n                            </table>\r\n                            <table class=\"mail-body__caption\">\r\n                                <thead>\r\n                                <tr>\r\n                                    <td>\r\n                                        <span class=\"mail-body__caption-title\">Order summary</span>\r\n                                    </td>\r\n                                </tr>\r\n                                </thead>\r\n                            </table>\r\n                            <table class=\"mail-body__content\">\r\n                                <tbody>\r\n                                {% for order in order.data %}\r\n                                    <tr>\r\n                                        <td>\r\n                                    <span class=\"order-title\">\r\n                                        {{ order.quantity }} {{ order.title }}\r\n                                    </span>\r\n                                        </td>\r\n                                        <td>\r\n                                    <span class=\"order-price\">\r\n                                        {{ order.price | money }}\r\n                                    </span>\r\n                                        </td>\r\n                                    </tr>\r\n                                {% endfor %}\r\n\r\n                                <tr>\r\n                                    <td class=\"order-total__title\">\r\n                                <span class=\"order-total\">\r\n                                    Subtotal\r\n                                </span>\r\n                                    </td>\r\n                                    <td>\r\n                                <span class=\"order-price\">\r\n                                   {{ order.sub_total | money }}\r\n                                </span>\r\n                                    </td>\r\n                                </tr>\r\n                                <tr>\r\n                                    <td class=\"order-total__title\">\r\n                                <span class=\"order-total-all\">\r\n                                    Total\r\n                                </span>\r\n                                    </td>\r\n                                    <td>\r\n                                <span class=\"order-total__price\">\r\n                                    {{ order.total | money }}\r\n                                </span>\r\n                                    </td>\r\n                                </tr>\r\n                                </tbody>\r\n                            </table>\r\n                            <table class=\"mail-body__payment\">\r\n                                <tbody>\r\n                                <tr>\r\n                                    <td>\r\n                                        <span class=\"mail-body__payment-name\">Payment method:</span>\r\n                                        <span class=\"mail-body__payment-title\">{{ order.payment_method }}</span>\r\n                                    </td>\r\n                                </tr>\r\n                                </tbody>\r\n                            </table>\r\n                            <table class=\"mail-body__link\">\r\n                                <tbody>\r\n                                <tr>\r\n                                    <td>\r\n                                        <a href=\"{{ order.url }}\" class=\"mail-visit-button\">View your order</a>\r\n                                    </td>\r\n                                </tr>\r\n                                <tr>\r\n                                    <td>\r\n                                        or\r\n                                    </td>\r\n                                </tr>\r\n                                <tr>\r\n                                    <td>\r\n                                        <a href=\"{{ site.url }}\" class=\"mail-visit-button-store\">Visit our store</a>\r\n                                    </td>\r\n                                </tr>\r\n                                </tbody>\r\n                            </table>\r\n                        </td>\r\n                    </tr>\r\n                    </tbody>\r\n                </table>\r\n                <table class=\"mail-footer\">\r\n                    <tbody>\r\n                    <tr>\r\n                        <td>\r\n                            <table class=\"mail-container mail-footer__body\">\r\n                                <tbody>\r\n                                <tr>\r\n                                    <td class=\"text-center\">\r\n                                        If you have any questions contact us at <a href=\"mailto:{{ site.admin_email }}\">{{ site.admin_email }}</a>\r\n                                    </td>\r\n                                </tr>\r\n                                </tbody>\r\n                            </table>\r\n                        </td>\r\n                    </tr>\r\n                    </tbody>\r\n                </table>\r\n            </td>\r\n        </tr>\r\n    </tbody>\r\n</table>\r\n<style>\r\n    .html, body{\r\n        padding: 15px;\r\n        margin: 0px;\r\n        font-family: Arial, Helvetica, sans-serif;\r\n        font-size: 14px;\r\n        color: #4e4848;\r\n        background: #f7f7f7;\r\n    }\r\n    table{\r\n        border-spacing: 0;\r\n        border-collapse: collapse;\r\n    }\r\n    .mail-block{\r\n        background: #fff;\r\n        margin: 30px auto;\r\n        max-width: 700px;\r\n        box-shadow: 0px 1px 4px 0px #e6e6e6;\r\n        -webkit-box-shadow: 0px 1px 4px 0px #e6e6e6;\r\n        -moz-box-shadow: 0px 1px 4px 0px #e6e6e6;\r\n    }\r\n    .mail-block__body{\r\n        padding: 0px 30px;\r\n    }\r\n    .mail-container{\r\n        max-width: 768px;\r\n        min-width: 650px;\r\n        width: 100%;\r\n        margin: 0 auto;\r\n        padding: 0px 15px;\r\n    }\r\n    .text-right{\r\n        text-align: right;\r\n    }\r\n    .text-center{\r\n        text-align: center;\r\n    }\r\n    .mail-header{\r\n        height: 120px;\r\n        width: 100%;\r\n    }\r\n    .mail-footer{\r\n        height: 75px;\r\n        width: 100%;\r\n        font-size: 14px;\r\n        margin-top: 70px;\r\n    }\r\n    .mail-footer a{\r\n        color: #333;\r\n    }\r\n    .mail-body{\r\n        width: 100%;\r\n        margin-top: 30px;\r\n        margin-bottom: 30px;\r\n    }\r\n    .mail-footer__body{\r\n        max-width: 768px;\r\n        width: 100%;\r\n        margin: 0 auto;\r\n    }\r\n    .img-responsive{\r\n        display: block;\r\n        width: auto;\r\n        height: auto;\r\n    }\r\n    .mail-header__top{\r\n\r\n    }\r\n    .mail-header__top-order{\r\n        font-size: 18px;\r\n        color: #a9a9a9;\r\n    }\r\n    .mail-header__top img{\r\n        max-width: 250px;\r\n        display: inline-block;\r\n    }\r\n    .mail-body__content{\r\n        width: 100%;\r\n        border: 1px solid #ddd;\r\n        border-radius: 5px;\r\n    }\r\n    .mail-body__content td{\r\n        padding: 10px 10px;\r\n        border-bottom: 1px solid #ddd;\r\n        border-right: 1px solid #ddd;\r\n    }\r\n    .order-total{\r\n        font-weight: bold;\r\n    }\r\n    .order-total__title{\r\n        text-align: right;\r\n    }\r\n    .order-total__price{\r\n        font-size: 20px;\r\n        font-weight: bold;\r\n    }\r\n    .order-total-all{\r\n        font-size: 20px;\r\n        font-weight: bold;\r\n    }\r\n    .mail-body__caption{\r\n        font-size: 22px;\r\n        width: 100%;\r\n    }\r\n    .mail-body__caption{\r\n        border-top: 1px solid #ddd;\r\n        border-left: 1px solid #ddd;\r\n        border-right: 1px solid #ddd;\r\n    }\r\n    .mail-body__caption td{\r\n        padding: 10px;\r\n    }\r\n    .mail-body__header{\r\n        margin: 15px auto;\r\n        width: 100%;\r\n    }\r\n    .mail-body__header-title{\r\n        font-size: 28px;\r\n        font-weight: 600;\r\n    }\r\n    .mail-body__header-description{\r\n        display: block;\r\n        width: 100%;\r\n        color: #867979;\r\n        line-height: 1.5;\r\n    }\r\n    .mail-body__payment{\r\n        margin-top: 15px;\r\n        font-size: 18px;\r\n    }\r\n    .mail-body__payment-title{\r\n        font-weight: bold;\r\n    }\r\n    .mail-visit-button{\r\n        display: inline-block;\r\n        max-width: 350px;\r\n        width: 100%;\r\n        font-size: 18px;\r\n        background: #00A3E3;\r\n        color: #fff;\r\n        padding: 17px 30px;\r\n        text-align: center;\r\n        text-decoration: none;\r\n        border-radius: 5px;\r\n        -webkit-border-radius: 5px;\r\n        -moz-border-radius: 5px;\r\n    }\r\n    .mail-visit-button-store{\r\n        color: #4e4848;\r\n    }\r\n    .mail-body__link{\r\n        margin-top: 30px;\r\n        width: 100%;\r\n    }\r\n    .mail-body__link td{\r\n        text-align: center;\r\n        padding-bottom: 5px;\r\n    }\r\n    .mail-body__link tr:last-child td{\r\n        padding-bottom: 0px;\r\n    }\r\n\r\n    @media only screen and (max-width: 768px) {\r\n        .mail-container{\r\n            min-width: 100%;\r\n        }\r\n        .mail-visit-button{\r\n            width: auto;\r\n            display: block;\r\n            margin: 0 auto;\r\n        }\r\n        .mail-header__top{\r\n            text-align: center;\r\n        }\r\n        .mail-body{\r\n            margin-top: 5px;\r\n        }\r\n        .mail-body__caption{\r\n            font-size: 20px;\r\n        }\r\n        .mail-block{\r\n            margin: 0px auto;\r\n        }\r\n        .mail-header__top img{\r\n            max-width: 200px;\r\n        }\r\n    }\r\n</style>\r\n</body>\r\n</html>', 1, 1, 2, 0, 0),
+  (2, 'order_in_progress', 'Order #{{ order.id }} in progress', '<!doctype html>\r\n<html lang=\"en\">\r\n<head>\r\n    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\r\n    <meta name=\"viewport\" content=\"width=device-width\">\r\n</head>\r\n<body>\r\n\r\n<table class=\"mail-block\">\r\n    <tbody>\r\n        <tr>\r\n            <td class=\"mail-block__body\">\r\n                <table class=\"mail-header\">\r\n                    <tbody>\r\n                    <tr>\r\n                        <td>\r\n                            <table class=\"mail-container mail-header__top\">\r\n                                <tbody>\r\n                                <tr>\r\n                                    <td>\r\n                                        {% if site.logo %}\r\n                                            <img src=\"{{ site.logo }}\" alt=\"\" class=\"img-responsive\">\r\n                                        {% else %}\r\n                                            <h2 class=\"mail-header__title\">{{ site.store_name }}</h2>\r\n                                        {% endif %}\r\n                                    </td>\r\n                                    <td class=\"text-right mail-header__top-order\">\r\n                                        Order #{{ order.id }}\r\n                                    </td>\r\n                                </tr>\r\n                                </tbody>\r\n                            </table>\r\n                        </td>\r\n                    </tr>\r\n                    </tbody>\r\n                </table>\r\n                <table class=\"mail-container mail-body\">\r\n                    <tbody>\r\n                    <tr>\r\n                        <td>\r\n                            <table class=\"mail-body__header text-center\">\r\n                                <tbody>\r\n                                <tr>\r\n                                    <td>\r\n                                        <span class=\"mail-body__header-title\">\r\n                                            Order #{{ order.id }} in progress\r\n                                        </span>\r\n                                    </td>\r\n                                </tr>\r\n                                <tr>\r\n                                    <td>\r\n                                        <span class=\"mail-body__header-description\">\r\n\r\n                                        </span>\r\n                                    </td>\r\n                                </tr>\r\n                                </tbody>\r\n                            </table>\r\n                            <table class=\"mail-body__link\">\r\n                                <tbody>\r\n                                <tr>\r\n                                    <td>\r\n                                        <a href=\"{{ order.url }}\" class=\"mail-visit-button\">View your order</a>\r\n                                    </td>\r\n                                </tr>\r\n                                <tr>\r\n                                    <td>\r\n                                        or\r\n                                    </td>\r\n                                </tr>\r\n                                <tr>\r\n                                    <td>\r\n                                        <a href=\"{{ site.url }}\" class=\"mail-visit-button-store\">Visit our store</a>\r\n                                    </td>\r\n                                </tr>\r\n                                </tbody>\r\n                            </table>\r\n                        </td>\r\n                    </tr>\r\n                    </tbody>\r\n                </table>\r\n                <table class=\"mail-footer\">\r\n                    <tbody>\r\n                    <tr>\r\n                        <td>\r\n                            <table class=\"mail-container mail-footer__body\">\r\n                                <tbody>\r\n                                <tr>\r\n                                    <td class=\"text-center\">\r\n                                        If you have any questions contact us at <a href=\"mailto:{{ site.admin_email }}\">{{ site.admin_email }}</a>\r\n                                    </td>\r\n                                </tr>\r\n                                </tbody>\r\n                            </table>\r\n                        </td>\r\n                    </tr>\r\n                    </tbody>\r\n                </table>\r\n            </td>\r\n        </tr>\r\n    </tbody>\r\n</table>\r\n<style>\r\n    .html, body{\r\n        padding: 15px;\r\n        margin: 0px;\r\n        font-family: Arial, Helvetica, sans-serif;\r\n        font-size: 14px;\r\n        color: #4e4848;\r\n        background: #f7f7f7;\r\n    }\r\n    table{\r\n        border-spacing: 0;\r\n        border-collapse: collapse;\r\n    }\r\n    .mail-block{\r\n        background: #fff;\r\n        margin: 30px auto;\r\n        max-width: 700px;\r\n        box-shadow: 0px 1px 4px 0px #e6e6e6;\r\n        -webkit-box-shadow: 0px 1px 4px 0px #e6e6e6;\r\n        -moz-box-shadow: 0px 1px 4px 0px #e6e6e6;\r\n    }\r\n    .mail-block__body{\r\n        padding: 0px 30px;\r\n    }\r\n    .mail-container{\r\n        max-width: 768px;\r\n        min-width: 650px;\r\n        width: 100%;\r\n        margin: 0 auto;\r\n        padding: 0px 15px;\r\n    }\r\n    .text-right{\r\n        text-align: right;\r\n    }\r\n    .text-center{\r\n        text-align: center;\r\n    }\r\n    .mail-header{\r\n        height: 120px;\r\n        width: 100%;\r\n    }\r\n    .mail-footer{\r\n        height: 75px;\r\n        width: 100%;\r\n        font-size: 14px;\r\n        margin-top: 70px;\r\n    }\r\n    .mail-footer a{\r\n        color: #333;\r\n    }\r\n    .mail-body{\r\n        width: 100%;\r\n        margin-top: 30px;\r\n        margin-bottom: 30px;\r\n    }\r\n    .mail-footer__body{\r\n        max-width: 768px;\r\n        width: 100%;\r\n        margin: 0 auto;\r\n    }\r\n    .img-responsive{\r\n        display: block;\r\n        width: auto;\r\n        height: auto;\r\n    }\r\n    .mail-header__top{\r\n\r\n    }\r\n    .mail-header__top-order{\r\n        font-size: 18px;\r\n        color: #a9a9a9;\r\n    }\r\n    .mail-header__top img{\r\n        max-width: 250px;\r\n        display: inline-block;\r\n    }\r\n    .mail-body__content{\r\n        width: 100%;\r\n        border: 1px solid #ddd;\r\n        border-radius: 5px;\r\n    }\r\n    .mail-body__content td{\r\n        padding: 10px 10px;\r\n        border-bottom: 1px solid #ddd;\r\n        border-right: 1px solid #ddd;\r\n    }\r\n    .order-total{\r\n        font-weight: bold;\r\n    }\r\n    .order-total__title{\r\n        text-align: right;\r\n    }\r\n    .order-total__price{\r\n        font-size: 20px;\r\n        font-weight: bold;\r\n    }\r\n    .order-total-all{\r\n        font-size: 20px;\r\n        font-weight: bold;\r\n    }\r\n    .mail-body__caption{\r\n        font-size: 22px;\r\n        width: 100%;\r\n    }\r\n    .mail-body__caption{\r\n        border-top: 1px solid #ddd;\r\n        border-left: 1px solid #ddd;\r\n        border-right: 1px solid #ddd;\r\n    }\r\n    .mail-body__caption td{\r\n        padding: 10px;\r\n    }\r\n    .mail-body__header{\r\n        margin: 15px auto;\r\n        width: 100%;\r\n    }\r\n    .mail-body__header-title{\r\n        font-size: 28px;\r\n        font-weight: 600;\r\n    }\r\n    .mail-body__header-description{\r\n        display: block;\r\n        width: 100%;\r\n        color: #867979;\r\n        line-height: 1.5;\r\n    }\r\n    .mail-body__payment{\r\n        margin-top: 15px;\r\n        font-size: 18px;\r\n    }\r\n    .mail-body__payment-title{\r\n        font-weight: bold;\r\n    }\r\n    .mail-visit-button{\r\n        display: inline-block;\r\n        max-width: 350px;\r\n        width: 100%;\r\n        font-size: 18px;\r\n        background: #00A3E3;\r\n        color: #fff;\r\n        padding: 17px 30px;\r\n        text-align: center;\r\n        text-decoration: none;\r\n        border-radius: 5px;\r\n        -webkit-border-radius: 5px;\r\n        -moz-border-radius: 5px;\r\n    }\r\n    .mail-visit-button-store{\r\n        color: #4e4848;\r\n    }\r\n    .mail-body__link{\r\n        margin-top: 30px;\r\n        width: 100%;\r\n    }\r\n    .mail-body__link td{\r\n        text-align: center;\r\n        padding-bottom: 5px;\r\n    }\r\n    .mail-body__link tr:last-child td{\r\n        padding-bottom: 0px;\r\n    }\r\n\r\n    @media only screen and (max-width: 768px) {\r\n        .mail-container{\r\n            min-width: 100%;\r\n        }\r\n        .mail-visit-button{\r\n            width: auto;\r\n            display: block;\r\n            margin: 0 auto;\r\n        }\r\n        .mail-header__top{\r\n            text-align: center;\r\n        }\r\n        .mail-body{\r\n            margin-top: 5px;\r\n        }\r\n        .mail-body__caption{\r\n            font-size: 20px;\r\n        }\r\n        .mail-block{\r\n            margin: 0px auto;\r\n        }\r\n        .mail-header__top img{\r\n            max-width: 200px;\r\n        }\r\n    }\r\n</style>\r\n</body>\r\n</html>', 1, 2, 2, 0, 0),
+  (3, 'order_completed', 'Order #{{ order.id }} completed', '<!doctype html>\r\n<html lang=\"en\">\r\n<head>\r\n    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\r\n    <meta name=\"viewport\" content=\"width=device-width\">\r\n</head>\r\n<body>\r\n\r\n<table class=\"mail-block\">\r\n    <tbody>\r\n        <tr>\r\n            <td class=\"mail-block__body\">\r\n                <table class=\"mail-header\">\r\n                    <tbody>\r\n                    <tr>\r\n                        <td>\r\n                            <table class=\"mail-container mail-header__top\">\r\n                                <tbody>\r\n                                <tr>\r\n                                    <td>\r\n                                        {% if site.logo %}\r\n                                            <img src=\"{{ site.logo }}\" alt=\"\" class=\"img-responsive\">\r\n                                        {% else %}\r\n                                            <h2 class=\"mail-header__title\">{{ site.store_name }}</h2>\r\n                                        {% endif %}\r\n                                    </td>\r\n                                    <td class=\"text-right mail-header__top-order\">\r\n                                        Order #{{ order.id }}\r\n                                    </td>\r\n                                </tr>\r\n                                </tbody>\r\n                            </table>\r\n                        </td>\r\n                    </tr>\r\n                    </tbody>\r\n                </table>\r\n                <table class=\"mail-container mail-body\">\r\n                    <tbody>\r\n                    <tr>\r\n                        <td>\r\n                            <table class=\"mail-body__header text-center\">\r\n                                <tbody>\r\n                                <tr>\r\n                                    <td>\r\n                                        <span class=\"mail-body__header-title\">\r\n                                            Order #{{ order.id }} completed\r\n                                        </span>\r\n                                    </td>\r\n                                </tr>\r\n                                <tr>\r\n                                    <td>\r\n                                        <span class=\"mail-body__header-description\">\r\n                                            <!-- Description Start-->\r\n\r\n                                            <!-- Description End-->\r\n                                        </span>\r\n                                    </td>\r\n                                </tr>\r\n                                </tbody>\r\n                            </table>\r\n                            <table class=\"mail-body__link\">\r\n                                <tbody>\r\n                                <tr>\r\n                                    <td>\r\n                                        <a href=\"{{ order.url }}\" class=\"mail-visit-button\">View your order</a>\r\n                                    </td>\r\n                                </tr>\r\n                                <tr>\r\n                                    <td>\r\n                                        or\r\n                                    </td>\r\n                                </tr>\r\n                                <tr>\r\n                                    <td>\r\n                                        <a href=\"{{ site.url }}\" class=\"mail-visit-button-store\">Visit our store</a>\r\n                                    </td>\r\n                                </tr>\r\n                                </tbody>\r\n                            </table>\r\n                        </td>\r\n                    </tr>\r\n                    </tbody>\r\n                </table>\r\n                <table class=\"mail-footer\">\r\n                    <tbody>\r\n                    <tr>\r\n                        <td>\r\n                            <table class=\"mail-container mail-footer__body\">\r\n                                <tbody>\r\n                                <tr>\r\n                                    <td class=\"text-center\">\r\n                                        If you have any questions contact us at <a href=\"mailto:{{ site.admin_email }}\">{{ site.admin_email }}</a>\r\n                                    </td>\r\n                                </tr>\r\n                                </tbody>\r\n                            </table>\r\n                        </td>\r\n                    </tr>\r\n                    </tbody>\r\n                </table>\r\n            </td>\r\n        </tr>\r\n    </tbody>\r\n</table>\r\n<style>\r\n    .html, body{\r\n        padding: 15px;\r\n        margin: 0px;\r\n        font-family: Arial, Helvetica, sans-serif;\r\n        font-size: 14px;\r\n        color: #4e4848;\r\n        background: #f7f7f7;\r\n    }\r\n    table{\r\n        border-spacing: 0;\r\n        border-collapse: collapse;\r\n    }\r\n    .mail-block{\r\n        background: #fff;\r\n        margin: 30px auto;\r\n        max-width: 700px;\r\n        box-shadow: 0px 1px 4px 0px #e6e6e6;\r\n        -webkit-box-shadow: 0px 1px 4px 0px #e6e6e6;\r\n        -moz-box-shadow: 0px 1px 4px 0px #e6e6e6;\r\n    }\r\n    .mail-block__body{\r\n        padding: 0px 30px;\r\n    }\r\n    .mail-container{\r\n        max-width: 768px;\r\n        min-width: 650px;\r\n        width: 100%;\r\n        margin: 0 auto;\r\n        padding: 0px 15px;\r\n    }\r\n    .text-right{\r\n        text-align: right;\r\n    }\r\n    .text-center{\r\n        text-align: center;\r\n    }\r\n    .mail-header{\r\n        height: 120px;\r\n        width: 100%;\r\n    }\r\n    .mail-footer{\r\n        height: 75px;\r\n        width: 100%;\r\n        font-size: 14px;\r\n        margin-top: 70px;\r\n    }\r\n    .mail-footer a{\r\n        color: #333;\r\n    }\r\n    .mail-body{\r\n        width: 100%;\r\n        margin-top: 30px;\r\n        margin-bottom: 30px;\r\n    }\r\n    .mail-footer__body{\r\n        max-width: 768px;\r\n        width: 100%;\r\n        margin: 0 auto;\r\n    }\r\n    .img-responsive{\r\n        display: block;\r\n        width: auto;\r\n        height: auto;\r\n    }\r\n    .mail-header__top{\r\n\r\n    }\r\n    .mail-header__top-order{\r\n        font-size: 18px;\r\n        color: #a9a9a9;\r\n    }\r\n    .mail-header__top img{\r\n        max-width: 250px;\r\n        display: inline-block;\r\n    }\r\n    .mail-body__content{\r\n        width: 100%;\r\n        border: 1px solid #ddd;\r\n        border-radius: 5px;\r\n    }\r\n    .mail-body__content td{\r\n        padding: 10px 10px;\r\n        border-bottom: 1px solid #ddd;\r\n        border-right: 1px solid #ddd;\r\n    }\r\n    .order-total{\r\n        font-weight: bold;\r\n    }\r\n    .order-total__title{\r\n        text-align: right;\r\n    }\r\n    .order-total__price{\r\n        font-size: 20px;\r\n        font-weight: bold;\r\n    }\r\n    .order-total-all{\r\n        font-size: 20px;\r\n        font-weight: bold;\r\n    }\r\n    .mail-body__caption{\r\n        font-size: 22px;\r\n        width: 100%;\r\n    }\r\n    .mail-body__caption{\r\n        border-top: 1px solid #ddd;\r\n        border-left: 1px solid #ddd;\r\n        border-right: 1px solid #ddd;\r\n    }\r\n    .mail-body__caption td{\r\n        padding: 10px;\r\n    }\r\n    .mail-body__header{\r\n        margin: 15px auto;\r\n        width: 100%;\r\n    }\r\n    .mail-body__header-title{\r\n        font-size: 28px;\r\n        font-weight: 600;\r\n    }\r\n    .mail-body__header-description{\r\n        display: block;\r\n        width: 100%;\r\n        color: #867979;\r\n        line-height: 1.5;\r\n    }\r\n    .mail-body__payment{\r\n        margin-top: 15px;\r\n        font-size: 18px;\r\n    }\r\n    .mail-body__payment-title{\r\n        font-weight: bold;\r\n    }\r\n    .mail-visit-button{\r\n        display: inline-block;\r\n        max-width: 350px;\r\n        width: 100%;\r\n        font-size: 18px;\r\n        background: #00A3E3;\r\n        color: #fff;\r\n        padding: 17px 30px;\r\n        text-align: center;\r\n        text-decoration: none;\r\n        border-radius: 5px;\r\n        -webkit-border-radius: 5px;\r\n        -moz-border-radius: 5px;\r\n    }\r\n    .mail-visit-button-store{\r\n        color: #4e4848;\r\n    }\r\n    .mail-body__link{\r\n        margin-top: 30px;\r\n        width: 100%;\r\n    }\r\n    .mail-body__link td{\r\n        text-align: center;\r\n        padding-bottom: 5px;\r\n    }\r\n    .mail-body__link tr:last-child td{\r\n        padding-bottom: 0px;\r\n    }\r\n\r\n    @media only screen and (max-width: 768px) {\r\n        .mail-container{\r\n            min-width: 100%;\r\n        }\r\n        .mail-visit-button{\r\n            width: auto;\r\n            display: block;\r\n            margin: 0 auto;\r\n        }\r\n        .mail-header__top{\r\n            text-align: center;\r\n        }\r\n        .mail-body{\r\n            margin-top: 5px;\r\n        }\r\n        .mail-body__caption{\r\n            font-size: 20px;\r\n        }\r\n        .mail-block{\r\n            margin: 0px auto;\r\n        }\r\n        .mail-header__top img{\r\n            max-width: 200px;\r\n        }\r\n    }\r\n</style>\r\n</body>\r\n</html>', 1, 3, 2, 0, 0),
+  (4, 'abandoned_checkout', 'Abandoned checkout', '<!doctype html>\r\n<html lang=\"en\">\r\n<head>\r\n    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\r\n    <meta name=\"viewport\" content=\"width=device-width\">\r\n</head>\r\n<body>\r\n\r\n<table class=\"mail-block\">\r\n    <tbody>\r\n    <tr>\r\n        <td class=\"mail-block__body\">\r\n            <table class=\"mail-header\">\r\n                <tbody>\r\n                <tr>\r\n                    <td>\r\n                        <table class=\"mail-container mail-header__top\">\r\n                            <tbody>\r\n                            <tr>\r\n                                <td>\r\n                                    {% if site.logo %}\r\n                                        <img src=\"{{ site.logo }}\" alt=\"\" class=\"img-responsive\">\r\n                                    {% else %}\r\n                                        <h2 class=\"mail-header__title\">{{ site.store_name }}</h2>\r\n                                    {% endif %}\r\n                                </td>\r\n                            </tr>\r\n                            </tbody>\r\n                        </table>\r\n                    </td>\r\n                </tr>\r\n                </tbody>\r\n            </table>\r\n            <table class=\"mail-container mail-body\">\r\n                <tbody>\r\n                <tr>\r\n                    <td>\r\n                        <table class=\"mail-body__header\">\r\n                            <tbody>\r\n                            <tr>\r\n                                <td class=\"text-center\">\r\n                                    <span class=\"mail-body__header-title\">\r\n                                        You left items in your cart\r\n                                    </span>\r\n                                </td>\r\n                            </tr>\r\n                            <tr>\r\n                                <td>\r\n                                    <span class=\"mail-body__header-description text-center\">Hi! You added items to your shopping cart and haven\'t completed your purchase. You can complete it now while they\'re still available.</span>\r\n                                </td>\r\n                            </tr>\r\n                            </tbody>\r\n                        </table>\r\n                        <table class=\"mail-body__caption\">\r\n                            <thead>\r\n                            <tr>\r\n                                <td>\r\n                                    <span class=\"mail-body__caption-title\">Order summary</span>\r\n                                </td>\r\n                            </tr>\r\n                            </thead>\r\n                        </table>\r\n                        <table class=\"mail-body__content\">\r\n                            <tbody>\r\n                            {% for order in order.data %}\r\n                                <tr>\r\n                                    <td>\r\n                                    <span class=\"order-title\">\r\n                                        {{ order.quantity }} {{ order.title }}\r\n                                    </span>\r\n                                    </td>\r\n                                    <td>\r\n                                    <span class=\"order-price\">\r\n                                        {{ order.price | money }}\r\n                                    </span>\r\n                                    </td>\r\n                                </tr>\r\n                            {% endfor %}\r\n\r\n                            <tr>\r\n                                <td class=\"order-total__title\">\r\n                                <span class=\"order-total\">\r\n                                    Subtotal\r\n                                </span>\r\n                                </td>\r\n                                <td>\r\n                                <span class=\"order-price\">\r\n                                   {{ order.sub_total | money }}\r\n                                </span>\r\n                                </td>\r\n                            </tr>\r\n                            <tr>\r\n                                <td class=\"order-total__title\">\r\n                                <span class=\"order-total-all\">\r\n                                    Total\r\n                                </span>\r\n                                </td>\r\n                                <td>\r\n                                <span class=\"order-total__price\">\r\n                                    {{ order.total | money }}\r\n                                </span>\r\n                                </td>\r\n                            </tr>\r\n                            </tbody>\r\n                        </table>\r\n                        <table class=\"mail-body__link\">\r\n                            <tbody>\r\n                                <tr>\r\n                                    <td>\r\n                                        <a href=\"{{ site.cart_url }}\" class=\"mail-visit-button\">Items in your cart</a>\r\n                                    </td>\r\n                                </tr>\r\n                                <tr>\r\n                                    <td>\r\n                                        or\r\n                                    </td>\r\n                                </tr>\r\n                                <tr>\r\n                                    <td>\r\n                                        <a href=\"{{ site.url }}\" class=\"mail-visit-button-store\">Visit our store</a>\r\n                                    </td>\r\n                                </tr>\r\n                            </tbody>\r\n                        </table>\r\n                    </td>\r\n                </tr>\r\n                </tbody>\r\n            </table>\r\n            <table class=\"mail-footer\">\r\n                <tbody>\r\n                <tr>\r\n                    <td>\r\n                        <table class=\"mail-container mail-footer__body\">\r\n                            <tbody>\r\n                            <tr>\r\n                                <td class=\"text-center\">\r\n                                    If you have any questions contact us at <a href=\"mailto:{{ site.admin_email }}\">{{ site.admin_email }}</a>\r\n                                </td>\r\n                            </tr>\r\n                            </tbody>\r\n                        </table>\r\n                    </td>\r\n                </tr>\r\n                </tbody>\r\n            </table>\r\n        </td>\r\n    </tr>\r\n    </tbody>\r\n</table>\r\n<style>\r\n    .html, body{\r\n        padding: 15px;\r\n        margin: 0px;\r\n        font-family: Arial, Helvetica, sans-serif;\r\n        font-size: 14px;\r\n        color: #4e4848;\r\n        background: #f7f7f7;\r\n    }\r\n    table{\r\n        border-spacing: 0;\r\n        border-collapse: collapse;\r\n    }\r\n    .mail-block{\r\n        background: #fff;\r\n        margin: 30px auto;\r\n        max-width: 700px;\r\n        box-shadow: 0px 1px 4px 0px #e6e6e6;\r\n        -webkit-box-shadow: 0px 1px 4px 0px #e6e6e6;\r\n        -moz-box-shadow: 0px 1px 4px 0px #e6e6e6;\r\n    }\r\n    .mail-block__body{\r\n        padding: 0px 30px;\r\n    }\r\n    .mail-container{\r\n        max-width: 768px;\r\n        min-width: 650px;\r\n        width: 100%;\r\n        margin: 0 auto;\r\n        padding: 0px 15px;\r\n    }\r\n    .text-right{\r\n        text-align: right;\r\n    }\r\n    .text-center{\r\n        text-align: center;\r\n    }\r\n    .mail-header{\r\n        height: 120px;\r\n        width: 100%;\r\n    }\r\n    .mail-footer{\r\n        height: 75px;\r\n        width: 100%;\r\n        font-size: 14px;\r\n        margin-top: 70px;\r\n    }\r\n    .mail-footer a{\r\n        color: #333;\r\n    }\r\n    .mail-body{\r\n        width: 100%;\r\n        margin-top: 30px;\r\n        margin-bottom: 30px;\r\n    }\r\n    .mail-footer__body{\r\n        max-width: 768px;\r\n        width: 100%;\r\n        margin: 0 auto;\r\n    }\r\n    .img-responsive{\r\n        display: block;\r\n        width: auto;\r\n        height: auto;\r\n    }\r\n    .mail-header__top{\r\n\r\n    }\r\n    .mail-header__top-order{\r\n        font-size: 18px;\r\n        color: #a9a9a9;\r\n    }\r\n    .mail-header__top img{\r\n        max-width: 250px;\r\n        display: inline-block;\r\n    }\r\n    .mail-body__content{\r\n        width: 100%;\r\n        border: 1px solid #ddd;\r\n        border-radius: 5px;\r\n    }\r\n    .mail-body__content td{\r\n        padding: 10px 10px;\r\n        border-bottom: 1px solid #ddd;\r\n        border-right: 1px solid #ddd;\r\n    }\r\n    .order-total{\r\n        font-weight: bold;\r\n    }\r\n    .order-total__title{\r\n        text-align: right;\r\n    }\r\n    .order-total__price{\r\n        font-size: 20px;\r\n        font-weight: bold;\r\n    }\r\n    .order-total-all{\r\n        font-size: 20px;\r\n        font-weight: bold;\r\n    }\r\n    .mail-body__caption{\r\n        font-size: 22px;\r\n        width: 100%;\r\n    }\r\n    .mail-body__caption{\r\n        border-top: 1px solid #ddd;\r\n        border-left: 1px solid #ddd;\r\n        border-right: 1px solid #ddd;\r\n    }\r\n    .mail-body__caption td{\r\n        padding: 10px;\r\n    }\r\n    .mail-body__header{\r\n        margin: 15px auto;\r\n        width: 100%;\r\n    }\r\n    .mail-body__header-title{\r\n        font-size: 28px;\r\n        font-weight: 600;\r\n    }\r\n    .mail-body__header-description{\r\n        display: block;\r\n        width: 100%;\r\n        color: #867979;\r\n        line-height: 1.5;\r\n    }\r\n    .mail-body__payment{\r\n        margin-top: 15px;\r\n        font-size: 18px;\r\n    }\r\n    .mail-body__payment-title{\r\n        font-weight: bold;\r\n    }\r\n    .mail-visit-button{\r\n        display: inline-block;\r\n        max-width: 350px;\r\n        width: 100%;\r\n        font-size: 18px;\r\n        background: #00A3E3;\r\n        color: #fff;\r\n        padding: 17px 30px;\r\n        text-align: center;\r\n        text-decoration: none;\r\n        border-radius: 5px;\r\n        -webkit-border-radius: 5px;\r\n        -moz-border-radius: 5px;\r\n    }\r\n    .mail-visit-button-store{\r\n        color: #4e4848;\r\n    }\r\n    .mail-body__link{\r\n        margin-top: 30px;\r\n        width: 100%;\r\n    }\r\n    .mail-body__link td{\r\n        text-align: center;\r\n        padding-bottom: 5px;\r\n    }\r\n    .mail-body__link tr:last-child td{\r\n        padding-bottom: 0px;\r\n    }\r\n\r\n    @media only screen and (max-width: 768px) {\r\n        .mail-container{\r\n            min-width: 100%;\r\n        }\r\n        .mail-visit-button{\r\n            width: auto;\r\n            display: block;\r\n            margin: 0 auto;\r\n        }\r\n        .mail-header__top{\r\n            text-align: center;\r\n        }\r\n        .mail-body{\r\n            margin-top: 5px;\r\n        }\r\n        .mail-body__caption{\r\n            font-size: 20px;\r\n        }\r\n        .mail-block{\r\n            margin: 0px auto;\r\n        }\r\n        .mail-header__top img{\r\n            max-width: 200px;\r\n        }\r\n    }\r\n</style>\r\n</body>\r\n</html>', 1, 4, 2, 0, 0),
+  (5, 'new_auto_order', 'New auto order', '<!doctype html>\r\n<html lang=\"en\">\r\n<head>\r\n    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\r\n    <meta name=\"viewport\" content=\"width=device-width\">\r\n</head>\r\n<body>\r\n\r\n<table class=\"mail-block\">\r\n    <tbody>\r\n        <tr>\r\n            <td class=\"mail-block__admin-header text-center\">\r\n                <span class=\"mail-block__domain\">\r\n                    <a href=\"{{ site.admin_url }}\">{{ site.domain | upper }}</a>\r\n                </span>\r\n            </td>\r\n        </tr>\r\n        <tr>\r\n            <td class=\"mail-block__body\">\r\n                <table class=\"mail-container mail-body\">\r\n                    <tbody>\r\n                    <tr>\r\n                        <td>\r\n                            <table class=\"mail-body__header text-center\">\r\n                                <tbody>\r\n                                <tr>\r\n                                    <td class=\"text-center\">\r\n                                        <span class=\"mail-body__header-title\">\r\n                                            Order #{{ order.id }}\r\n                                        </span>\r\n                                    </td>\r\n                                </tr>\r\n                                <tr>\r\n                                    <td class=\"text-center\">\r\n                                        <span class=\"mail-body__header-description\">\r\n                                           You\'ve got a new auto order\r\n                                        </span>\r\n                                    </td>\r\n                                </tr>\r\n                                </tbody>\r\n                            </table>\r\n                            <table class=\"mail-body__link\">\r\n                                <thead>\r\n                                    <tr>\r\n                                        <td class=\"text-center\">\r\n                                            <a href=\"{{ order.url }}\" class=\"mail-admin__button\">View order in admin panel</a>\r\n                                        </td>\r\n                                    </tr>\r\n                                </thead>\r\n                            </table>\r\n                        </td>\r\n                    </tr>\r\n                    </tbody>\r\n                </table>\r\n            </td>\r\n        </tr>\r\n    </tbody>\r\n</table>\r\n<style>\r\n    .html, body{\r\n        padding: 0px;\r\n        margin: 15px;\r\n        font-family: Arial, Helvetica, sans-serif;\r\n        font-size: 14px;\r\n        color: #4e4848;\r\n        background: #f2f3f8;\r\n    }\r\n    table{\r\n        border-spacing: 0;\r\n        border-collapse: collapse;\r\n    }\r\n    .mail-block{\r\n        background: #fff;\r\n        margin: 30px auto;\r\n        max-width: 700px;\r\n        width: 100%;\r\n        box-shadow: 0 1px 15px 1px rgba(69,65,78,.08);\r\n        -webkit-box-shadow: 0 1px 15px 1px rgba(69,65,78,.08);\r\n        -moz-box-shadow: 0 1px 15px 1px rgba(69,65,78,.08);\r\n    }\r\n    .mail-block__body{\r\n        padding: 0px 30px;\r\n    }\r\n    .mail-container{\r\n        max-width: 768px;\r\n        width: 100%;\r\n        margin: 0 auto;\r\n        padding: 0px 15px;\r\n    }\r\n    .text-right{\r\n        text-align: right;\r\n    }\r\n    .text-center{\r\n        text-align: center;\r\n    }\r\n    .mail-footer a{\r\n        color: #333;\r\n    }\r\n    .mail-body{\r\n        width: 100%;\r\n        margin-top: 30px;\r\n        margin-bottom: 30px;\r\n    }\r\n    .mail-header__top img{\r\n        max-width: 250px;\r\n    }\r\n    .mail-body__content td{\r\n        padding: 10px 10px;\r\n        border-bottom: 1px solid #ddd;\r\n        border-right: 1px solid #ddd;\r\n    }\r\n    .mail-body__caption td{\r\n        padding: 10px;\r\n    }\r\n    .mail-body__header{\r\n        margin: 15px auto;\r\n        text-align: left;\r\n        width: 100%;\r\n    }\r\n    .mail-body__header-title{\r\n        font-size: 28px;\r\n        font-weight: 600;\r\n    }\r\n    .mail-body__header-description{\r\n        color: #4e4848;\r\n        font-size: 18px;\r\n    }\r\n    .mail-body__link{\r\n        margin-top: 30px;\r\n        width: 100%;\r\n    }\r\n    .mail-body__link td{\r\n        text-align: center;\r\n        padding-bottom: 5px;\r\n    }\r\n    .mail-body__link tr:last-child td{\r\n        padding-bottom: 0px;\r\n    }\r\n\r\n    .mail-admin__button{\r\n        display: inline-block;\r\n        max-width: 350px;\r\n        width: 100%;\r\n        font-size: 18px;\r\n        background: #5867dd;\r\n        box-shadow: 0 5px 10px 2px rgba(88,103,221,0.19);\r\n        -webkit-box-shadow: 0 5px 10px 2px rgba(88,103,221,0.19);\r\n        -moz-box-shadow: 0 5px 10px 2px rgba(88,103,221,0.19);\r\n        color: #fff;\r\n        padding: 17px 30px;\r\n        text-align: center;\r\n        text-decoration: none;\r\n        border-radius: 5px;\r\n        -webkit-border-radius: 5px;\r\n        -moz-border-radius: 5px;\r\n    }\r\n    .mail-block__admin-header{\r\n        height: 60px;\r\n        line-height: 60px;\r\n        background: #262734;\r\n        -webkit-box-shadow: 0 1px 15px 1px rgba(113,106,202,0.5);\r\n        -moz-box-shadow: 0 1px 15px 1px rgba(113,106,202,0.5);\r\n        box-shadow: 0 1px 15px 1px rgba(113,106,202,0.5);\r\n        padding: 0px 15px;\r\n        color: #fff;\r\n        font-size: 16px;\r\n    }\r\n    .mail-block__admin-header a{\r\n        color: #fff;\r\n        text-decoration: none;\r\n    }\r\n\r\n    /* Media */\r\n    @media only screen and (max-width: 768px) {\r\n        .mail-container{\r\n            min-width: 100%;\r\n        }\r\n        .mail-admin__button{\r\n            width: auto;\r\n            display: block;\r\n            margin: 0 auto;\r\n        }\r\n        .mail-body{\r\n            margin-top: 5px;\r\n        }\r\n        .mail-block{\r\n            margin: 0px auto;\r\n        }\r\n    }\r\n</style>\r\n</body>\r\n</html>', 1, 5, 1, 0, 0);
+INSERT INTO `notification_default_templates` (`id`, `code`, `subject`, `body`, `status`, `position`, `recipient`, `created_at`, `updated_at`) VALUES
+  (6, 'new_manual_order', 'New manual order', '<!doctype html>\r\n<html lang=\"en\">\r\n<head>\r\n    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\r\n    <meta name=\"viewport\" content=\"width=device-width\">\r\n</head>\r\n<body>\r\n\r\n<table class=\"mail-block\">\r\n    <tbody>\r\n        <tr>\r\n            <td class=\"mail-block__admin-header text-center\">\r\n                <span class=\"mail-block__domain\">\r\n                    <a href=\"{{ site.admin_url }}/admin\">{{ site.domain | upper }}</a>\r\n                </span>\r\n            </td>\r\n        </tr>\r\n        <tr>\r\n            <td class=\"mail-block__body\">\r\n                <table class=\"mail-container mail-body\">\r\n                    <tbody>\r\n                    <tr>\r\n                        <td>\r\n                            <table class=\"mail-body__header text-center\">\r\n                                <tbody>\r\n                                <tr>\r\n                                    <td class=\"text-center\">\r\n                                        <span class=\"mail-body__header-title\">\r\n                                            Order #{{ order.id }}\r\n                                        </span>\r\n                                    </td>\r\n                                </tr>\r\n                                <tr>\r\n                                    <td class=\"text-center\">\r\n                                        <span class=\"mail-body__header-description\">\r\n                                           You\'ve got a new manual order\r\n                                        </span>\r\n                                    </td>\r\n                                </tr>\r\n                                </tbody>\r\n                            </table>\r\n                            <table class=\"mail-body__link\">\r\n                                <thead>\r\n                                    <tr>\r\n                                        <td class=\"text-center\">\r\n                                            <a href=\"{{ order.url }}\" class=\"mail-admin__button\">View order in admin panel</a>\r\n                                        </td>\r\n                                    </tr>\r\n                                </thead>\r\n                            </table>\r\n                        </td>\r\n                    </tr>\r\n                    </tbody>\r\n                </table>\r\n            </td>\r\n        </tr>\r\n    </tbody>\r\n</table>\r\n<style>\r\n    .html, body{\r\n        padding: 0px;\r\n        margin: 15px;\r\n        font-family: Arial, Helvetica, sans-serif;\r\n        font-size: 14px;\r\n        color: #4e4848;\r\n        background: #f2f3f8;\r\n    }\r\n    table{\r\n        border-spacing: 0;\r\n        border-collapse: collapse;\r\n    }\r\n    .mail-block{\r\n        background: #fff;\r\n        margin: 30px auto;\r\n        max-width: 700px;\r\n        width: 100%;\r\n        box-shadow: 0 1px 15px 1px rgba(69,65,78,.08);\r\n        -webkit-box-shadow: 0 1px 15px 1px rgba(69,65,78,.08);\r\n        -moz-box-shadow: 0 1px 15px 1px rgba(69,65,78,.08);\r\n    }\r\n    .mail-block__body{\r\n        padding: 0px 30px;\r\n    }\r\n    .mail-container{\r\n        max-width: 768px;\r\n        width: 100%;\r\n        margin: 0 auto;\r\n        padding: 0px 15px;\r\n    }\r\n    .text-right{\r\n        text-align: right;\r\n    }\r\n    .text-center{\r\n        text-align: center;\r\n    }\r\n    .mail-footer a{\r\n        color: #333;\r\n    }\r\n    .mail-body{\r\n        width: 100%;\r\n        margin-top: 30px;\r\n        margin-bottom: 30px;\r\n    }\r\n    .mail-header__top img{\r\n        max-width: 250px;\r\n    }\r\n    .mail-body__content td{\r\n        padding: 10px 10px;\r\n        border-bottom: 1px solid #ddd;\r\n        border-right: 1px solid #ddd;\r\n    }\r\n    .mail-body__caption td{\r\n        padding: 10px;\r\n    }\r\n    .mail-body__header{\r\n        margin: 15px auto;\r\n        text-align: left;\r\n        width: 100%;\r\n    }\r\n    .mail-body__header-title{\r\n        font-size: 28px;\r\n        font-weight: 600;\r\n    }\r\n    .mail-body__header-description{\r\n        color: #4e4848;\r\n        font-size: 18px;\r\n    }\r\n    .mail-body__link{\r\n        margin-top: 30px;\r\n        width: 100%;\r\n    }\r\n    .mail-body__link td{\r\n        text-align: center;\r\n        padding-bottom: 5px;\r\n    }\r\n    .mail-body__link tr:last-child td{\r\n        padding-bottom: 0px;\r\n    }\r\n\r\n    .mail-admin__button{\r\n        display: inline-block;\r\n        max-width: 350px;\r\n        width: 100%;\r\n        font-size: 18px;\r\n        background: #5867dd;\r\n        box-shadow: 0 5px 10px 2px rgba(88,103,221,0.19);\r\n        -webkit-box-shadow: 0 5px 10px 2px rgba(88,103,221,0.19);\r\n        -moz-box-shadow: 0 5px 10px 2px rgba(88,103,221,0.19);\r\n        color: #fff;\r\n        padding: 17px 30px;\r\n        text-align: center;\r\n        text-decoration: none;\r\n        border-radius: 5px;\r\n        -webkit-border-radius: 5px;\r\n        -moz-border-radius: 5px;\r\n    }\r\n    .mail-block__admin-header{\r\n        height: 60px;\r\n        line-height: 60px;\r\n        background: #262734;\r\n        -webkit-box-shadow: 0 1px 15px 1px rgba(113,106,202,0.5);\r\n        -moz-box-shadow: 0 1px 15px 1px rgba(113,106,202,0.5);\r\n        box-shadow: 0 1px 15px 1px rgba(113,106,202,0.5);\r\n        padding: 0px 15px;\r\n        color: #fff;\r\n        font-size: 16px;\r\n    }\r\n    .mail-block__admin-header a{\r\n        color: #fff;\r\n        text-decoration: none;\r\n    }\r\n\r\n    /* Media */\r\n    @media only screen and (max-width: 768px) {\r\n        .mail-container{\r\n            min-width: 100%;\r\n        }\r\n        .mail-admin__button{\r\n            width: auto;\r\n            display: block;\r\n            margin: 0 auto;\r\n        }\r\n        .mail-body{\r\n            margin-top: 5px;\r\n        }\r\n        .mail-block{\r\n            margin: 0px auto;\r\n        }\r\n    }\r\n</style>\r\n</body>\r\n</html>', 1, 6, 1, 0, 0),
+  (7, 'order_fail', 'Order fail', '<!doctype html>\r\n<html lang=\"en\">\r\n<head>\r\n    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\r\n    <meta name=\"viewport\" content=\"width=device-width\">\r\n</head>\r\n<body>\r\n\r\n<table class=\"mail-block\">\r\n    <tbody>\r\n    <tr>\r\n        <td class=\"mail-block__admin-header text-center\">\r\n                <span class=\"mail-block__domain\">\r\n                    <a href=\"{{ site.admin_url }}\">{{ site.domain | upper }}</a>\r\n                </span>\r\n        </td>\r\n    </tr>\r\n    <tr>\r\n        <td class=\"mail-block__body\">\r\n            <table class=\"mail-container mail-body\">\r\n                <tbody>\r\n                <tr>\r\n                    <td>\r\n                        <table class=\"mail-body__header text-center\">\r\n                            <tbody>\r\n                            <tr>\r\n                                <td class=\"text-center\">\r\n                                        <span class=\"mail-body__header-title\">\r\n                                            Order #{{ order.id }}\r\n                                        </span>\r\n                                </td>\r\n                            </tr>\r\n                            <tr>\r\n                                <td class=\"text-center\">\r\n                                        <span class=\"mail-body__header-description\">\r\n                                           Order status: Fail\r\n                                        </span>\r\n                                </td>\r\n                            </tr>\r\n                            </tbody>\r\n                        </table>\r\n                        <table class=\"mail-body__link\">\r\n                            <thead>\r\n                            <tr>\r\n                                <td class=\"text-center\">\r\n                                    <a href=\"{{ order.url }}\" class=\"mail-admin__button\">View order in admin panel</a>\r\n                                </td>\r\n                            </tr>\r\n                            </thead>\r\n                        </table>\r\n                    </td>\r\n                </tr>\r\n                </tbody>\r\n            </table>\r\n        </td>\r\n    </tr>\r\n    </tbody>\r\n</table>\r\n<style>\r\n    .html, body{\r\n        padding: 15px;\r\n        margin: 0px;\r\n        font-family: Arial, Helvetica, sans-serif;\r\n        font-size: 14px;\r\n        color: #4e4848;\r\n        background: #f2f3f8;\r\n    }\r\n    table{\r\n        border-spacing: 0;\r\n        border-collapse: collapse;\r\n    }\r\n    .mail-block{\r\n        background: #fff;\r\n        margin: 30px auto;\r\n        max-width: 700px;\r\n        width: 100%;\r\n        box-shadow: 0 1px 15px 1px rgba(69,65,78,.08);\r\n        -webkit-box-shadow: 0 1px 15px 1px rgba(69,65,78,.08);\r\n        -moz-box-shadow: 0 1px 15px 1px rgba(69,65,78,.08);\r\n    }\r\n    .mail-block__body{\r\n        padding: 0px 30px;\r\n    }\r\n    .mail-container{\r\n        max-width: 768px;\r\n        width: 100%;\r\n        margin: 0 auto;\r\n        padding: 0px 15px;\r\n    }\r\n    .text-right{\r\n        text-align: right;\r\n    }\r\n    .text-center{\r\n        text-align: center;\r\n    }\r\n    .mail-footer a{\r\n        color: #333;\r\n    }\r\n    .mail-body{\r\n        width: 100%;\r\n        margin-top: 30px;\r\n        margin-bottom: 30px;\r\n    }\r\n    .mail-header__top img{\r\n        max-width: 250px;\r\n    }\r\n    .mail-body__content td{\r\n        padding: 10px 10px;\r\n        border-bottom: 1px solid #ddd;\r\n        border-right: 1px solid #ddd;\r\n    }\r\n    .mail-body__caption td{\r\n        padding: 10px;\r\n    }\r\n    .mail-body__header{\r\n        margin: 15px auto;\r\n        text-align: left;\r\n        width: 100%;\r\n    }\r\n    .mail-body__header-title{\r\n        font-size: 28px;\r\n        font-weight: 600;\r\n    }\r\n    .mail-body__header-description{\r\n        color: #969696;\r\n        font-size: 16px;\r\n    }\r\n    .mail-body__link{\r\n        margin-top: 30px;\r\n        width: 100%;\r\n    }\r\n    .mail-body__link td{\r\n        text-align: center;\r\n        padding-bottom: 5px;\r\n    }\r\n    .mail-body__link tr:last-child td{\r\n        padding-bottom: 0px;\r\n    }\r\n\r\n    .mail-admin__button{\r\n        display: inline-block;\r\n        max-width: 350px;\r\n        width: 100%;\r\n        font-size: 18px;\r\n        background: #5867dd;\r\n        box-shadow: 0 5px 10px 2px rgba(88,103,221,0.19);\r\n        -webkit-box-shadow: 0 5px 10px 2px rgba(88,103,221,0.19);\r\n        -moz-box-shadow: 0 5px 10px 2px rgba(88,103,221,0.19);\r\n        color: #fff;\r\n        padding: 17px 30px;\r\n        text-align: center;\r\n        text-decoration: none;\r\n        border-radius: 5px;\r\n        -webkit-border-radius: 5px;\r\n        -moz-border-radius: 5px;\r\n    }\r\n    .mail-block__admin-header{\r\n        height: 60px;\r\n        line-height: 60px;\r\n        background: #262734;\r\n        -webkit-box-shadow: 0 1px 15px 1px rgba(113,106,202,0.5);\r\n        -moz-box-shadow: 0 1px 15px 1px rgba(113,106,202,0.5);\r\n        box-shadow: 0 1px 15px 1px rgba(113,106,202,0.5);\r\n        padding: 0px 15px;\r\n        color: #fff;\r\n        font-size: 16px;\r\n    }\r\n    .mail-block__admin-header a{\r\n        color: #fff;\r\n        text-decoration: none;\r\n    }\r\n\r\n    /* Media */\r\n    @media only screen and (max-width: 768px) {\r\n        .mail-container{\r\n            min-width: 100%;\r\n        }\r\n        .mail-admin__button{\r\n            width: auto;\r\n            display: block;\r\n            margin: 0 auto;\r\n        }\r\n        .mail-body{\r\n            margin-top: 5px;\r\n        }\r\n        .mail-block{\r\n            margin: 0px auto;\r\n        }\r\n    }\r\n</style>\r\n</body>\r\n</html>', 1, 7, 1, 0, 0),
+  (8, 'order_error', 'Order error', '<!doctype html>\r\n<html lang=\"en\">\r\n<head>\r\n    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\r\n    <meta name=\"viewport\" content=\"width=device-width\">\r\n</head>\r\n<body>\r\n\r\n<table class=\"mail-block\">\r\n    <tbody>\r\n    <tr>\r\n        <td class=\"mail-block__admin-header text-center\">\r\n                <span class=\"mail-block__domain\">\r\n                    <a href=\"{{ site.admin_url }}\">{{ site.domain | upper }}</a>\r\n                </span>\r\n        </td>\r\n    </tr>\r\n    <tr>\r\n        <td class=\"mail-block__body\">\r\n            <table class=\"mail-container mail-body\">\r\n                <tbody>\r\n                <tr>\r\n                    <td>\r\n                        <table class=\"mail-body__header text-center\">\r\n                            <tbody>\r\n                            <tr>\r\n                                <td class=\"text-center\">\r\n                                        <span class=\"mail-body__header-title\">\r\n                                            Order #{{ order.id }}\r\n                                        </span>\r\n                                </td>\r\n                            </tr>\r\n                            <tr>\r\n                                <td class=\"text-center\">\r\n                                        <span class=\"mail-body__header-description\">\r\n                                           Order status: Error\r\n                                        </span>\r\n                                </td>\r\n                            </tr>\r\n                            </tbody>\r\n                        </table>\r\n                        <table class=\"mail-body__link\">\r\n                            <thead>\r\n                            <tr>\r\n                                <td class=\"text-center\">\r\n                                    <a href=\"{{ order.url }}\" class=\"mail-admin__button\">View order in admin panel</a>\r\n                                </td>\r\n                            </tr>\r\n                            </thead>\r\n                        </table>\r\n                    </td>\r\n                </tr>\r\n                </tbody>\r\n            </table>\r\n        </td>\r\n    </tr>\r\n    </tbody>\r\n</table>\r\n<style>\r\n    .html, body{\r\n        padding: 15px;\r\n        margin: 0px;\r\n        font-family: Arial, Helvetica, sans-serif;\r\n        font-size: 14px;\r\n        color: #4e4848;\r\n        background: #f2f3f8;\r\n    }\r\n    table{\r\n        border-spacing: 0;\r\n        border-collapse: collapse;\r\n    }\r\n    .mail-block{\r\n        background: #fff;\r\n        margin: 30px auto;\r\n        max-width: 700px;\r\n        width: 100%;\r\n        box-shadow: 0 1px 15px 1px rgba(69,65,78,.08);\r\n        -webkit-box-shadow: 0 1px 15px 1px rgba(69,65,78,.08);\r\n        -moz-box-shadow: 0 1px 15px 1px rgba(69,65,78,.08);\r\n    }\r\n    .mail-block__body{\r\n        padding: 0px 30px;\r\n    }\r\n    .mail-container{\r\n        max-width: 768px;\r\n        width: 100%;\r\n        margin: 0 auto;\r\n        padding: 0px 15px;\r\n    }\r\n    .text-right{\r\n        text-align: right;\r\n    }\r\n    .text-center{\r\n        text-align: center;\r\n    }\r\n    .mail-footer a{\r\n        color: #333;\r\n    }\r\n    .mail-body{\r\n        width: 100%;\r\n        margin-top: 30px;\r\n        margin-bottom: 30px;\r\n    }\r\n    .mail-header__top img{\r\n        max-width: 250px;\r\n    }\r\n    .mail-body__content td{\r\n        padding: 10px 10px;\r\n        border-bottom: 1px solid #ddd;\r\n        border-right: 1px solid #ddd;\r\n    }\r\n    .mail-body__caption td{\r\n        padding: 10px;\r\n    }\r\n    .mail-body__header{\r\n        margin: 15px auto;\r\n        text-align: left;\r\n        width: 100%;\r\n    }\r\n    .mail-body__header-title{\r\n        font-size: 28px;\r\n        font-weight: 600;\r\n    }\r\n    .mail-body__header-description{\r\n        color: #969696;\r\n        font-size: 16px;\r\n    }\r\n    .mail-body__link{\r\n        margin-top: 30px;\r\n        width: 100%;\r\n    }\r\n    .mail-body__link td{\r\n        text-align: center;\r\n        padding-bottom: 5px;\r\n    }\r\n    .mail-body__link tr:last-child td{\r\n        padding-bottom: 0px;\r\n    }\r\n\r\n    .mail-admin__button{\r\n        display: inline-block;\r\n        max-width: 350px;\r\n        width: 100%;\r\n        font-size: 18px;\r\n        background: #5867dd;\r\n        box-shadow: 0 5px 10px 2px rgba(88,103,221,0.19);\r\n        -webkit-box-shadow: 0 5px 10px 2px rgba(88,103,221,0.19);\r\n        -moz-box-shadow: 0 5px 10px 2px rgba(88,103,221,0.19);\r\n        color: #fff;\r\n        padding: 17px 30px;\r\n        text-align: center;\r\n        text-decoration: none;\r\n        border-radius: 5px;\r\n        -webkit-border-radius: 5px;\r\n        -moz-border-radius: 5px;\r\n    }\r\n    .mail-block__admin-header{\r\n        height: 60px;\r\n        line-height: 60px;\r\n        background: #262734;\r\n        -webkit-box-shadow: 0 1px 15px 1px rgba(113,106,202,0.5);\r\n        -moz-box-shadow: 0 1px 15px 1px rgba(113,106,202,0.5);\r\n        box-shadow: 0 1px 15px 1px rgba(113,106,202,0.5);\r\n        padding: 0px 15px;\r\n        color: #fff;\r\n        font-size: 16px;\r\n    }\r\n    .mail-block__admin-header a{\r\n        color: #fff;\r\n        text-decoration: none;\r\n    }\r\n\r\n    /* Media */\r\n    @media only screen and (max-width: 768px) {\r\n        .mail-container{\r\n            min-width: 100%;\r\n        }\r\n        .mail-admin__button{\r\n            width: auto;\r\n            display: block;\r\n            margin: 0 auto;\r\n        }\r\n        .mail-body{\r\n            margin-top: 5px;\r\n        }\r\n        .mail-block{\r\n            margin: 0px auto;\r\n        }\r\n    }\r\n</style>\r\n</body>\r\n</html>', 1, 8, 1, 0, 0);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `payment_methods`
+--
+
+CREATE TABLE `payment_methods` (
+  `id` int(11) UNSIGNED NOT NULL,
+  `method_name` varchar(255) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `class_name` varchar(255) NOT NULL,
+  `url` varchar(255) NOT NULL,
+  `settings_form` text,
+  `icon` varchar(64) DEFAULT NULL,
+  `addfunds_form` text,
+  `settings_form_description` text,
+  `manual_callback_url` smallint(1) NOT NULL DEFAULT '0',
+  `created_at` int(11) DEFAULT NULL,
+  `updated_at` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `payment_methods`
+--
+
+INSERT INTO `payment_methods` (`id`, `method_name`, `name`, `class_name`, `url`, `settings_form`, `icon`, `addfunds_form`, `settings_form_description`, `manual_callback_url`, `created_at`, `updated_at`) VALUES
+  (1, 'PayPal', 'PayPal', 'Paypal', 'paypalexpress', '{\"username\":{\"code\":\"username\",\"name\":\"username\",\"type\":\"input\",\"label\":\"settings.payments_paypal_username\"}, \"password\":{\"code\":\"password\",\"name\":\"password\",\"type\":\"input\",\"label\":\"settings.payments_paypal_password\"}, \"signature\":{\"code\":\"signature\",\"name\":\"signature\",\"type\":\"input\",\"label\":\"settings.payments_paypal_signature\"}, \"test_mode\":{\"code\":\"test_mode\",\"name\":\"test_mode\",\"type\":\"checkbox\",\"label\":\"settings.payments_test_mode\"}}', '/img/pg/paypal.png', NULL, '<ol>\r\n<li>Login to your PayPal account.</li>\r\n<li>Get your <a href=\"https://www.paypal.com/us/cgi-bin/webscr?cmd=_get-api-signature&generic-flow=true\" target=\"_blank\">API Credentials</a>.</li>\r\n<li>Enter your PayPal API details below.</li>\r\n</ol>', 0, NULL, NULL),
+  (2, '2Checkout', '2Checkout', 'Twocheckout', '2checkout', '{\"account_number\":{\"code\":\"account_number\",\"name\":\"account_number\",\"type\":\"input\",\"label\":\"settings.payments_2checkout_account_number\"}, \"secret_word\":{\"code\":\"secret_word\",\"name\":\"secret_word\",\"type\":\"input\",\"label\":\"settings.payments_2checkout_secret_word\"}, \"test_mode\":{\"code\":\"test_mode\",\"name\":\"test_mode\",\"type\":\"checkbox\",\"label\":\"settings.payments_test_mode\"}}', '/img/pg/2checkout.png', NULL, '<ol>\r\n<li>Login to your 2Checkout account</li>\r\n<li>Go to <a href=\"https://www.2checkout.com/va/notifications/\" target=\"_blank\">https://www.2checkout.com/va/notifications/</a>\r\n<ul>\r\n<li>Global URL:  <code>{site}/2checkout</code></li>\r\n<li><i>Enable</i> Order Created: <code>{site}/2checkout</code></li>\r\n<li><i>Enable</i> Fraud Status Changed: <code>{site}/2checkout</code></li>\r\n<li>Click Save Settings</li>\r\n</ul></li>\r\n<li>Go to <a href=\"https://www.2checkout.com/va/acct/detail_company_info\" target=\"_blank\">https://www.2checkout.com/va/acct/detail_company_info</a>\r\n<ul>\r\n<li>Demo Setting: <code>Off</code></li>\r\n<li>Pricing Currency: <code>US Dollars</code></li>\r\n<li>Direct Return: <code>Given links back to my website</code></li>\r\n<li>Approved URL: <code>{site}</code></li>\r\n<li>Secret Word: set strong password</li>\r\n<li>Click Save Settings</li>\r\n</ul></li>\r\n<li>Enter your 2Checkout details below.</li>\r\n</ol>', 0, NULL, NULL),
+  (3, 'CoinPayments', 'CoinPayments', 'Coinpayments', 'coinpayments', '{\"merchant_id\":{\"code\":\"merchant_id\",\"name\":\"merchant_id\",\"type\":\"input\",\"label\":\"settings.payments_coinpayments_merchant_id\"},\"ipn_secret\":{\"code\":\"ipn_secret\",\"name\":\"ipn_secret\",\"type\":\"input\",\"label\":\"settings.payments_coinpayments_ipn_secret\"}}', '/img/pg/coinpayments.png', NULL, '<ol>\r\n<li>Login to <a href=\"https://www.coinpayments.net/\" target=\"_blank\">CoinPayments</a></li>\r\n<li>Go to <b>Account → Account Settings → Merchant Settings</b></li>\r\n<ul>\r\n<li>Generate IPN Secret</li>\r\n<li>Apply Changes</li>\r\n</ul>\r\n<li>Enter your Merchant ID and IPN Secret below.</li>\r\n</ol>', 0, NULL, NULL),
+  (4, 'PagSeguro', 'PagSeguro', 'Pagseguro', 'pagseguro', '{\"email\":{\"code\":\"email\",\"name\":\"email\",\"type\":\"input\",\"label\":\"settings.payments_pagseguro_email\"},\"token\":{\"code\":\"token\",\"name\":\"token\",\"type\":\"input\",\"label\":\"settings.payments_pagseguro_token\"}}', '/img/pg/pagseguro.png', NULL, '<ol>\r\n<li>Enter your email and token below.</li>\r\n</ol>', 0, NULL, NULL),
+  (5, 'WebMoney', 'WebMoney', 'Webmoney', 'webmoney', '{\"purse\":{\"code\":\"purse\",\"name\":\"purse\",\"type\":\"input\",\"label\":\"settings.payments_webmoney_purse\"},\"secret_key\":{\"code\":\"secret_key\",\"name\":\"secret_key\",\"type\":\"input\",\"label\":\"settings.payments_webmoney_secret_key\"}}', '/img/pg/webmoney.png', NULL, '<ol>\r\n<li>To receive payments you must have minimum formal certificate with verified documents (or certificate of higher level).</li>\r\n<li>Go to <a href=\"https://merchant.wmtransfer.com/conf/purses.asp\" target=\"_blank\">https://merchant.wmtransfer.com/conf/purses.asp</a></li>\r\n<li>Enter login details.</li>\r\n<li>Click <i>change</i> for WMR purse\r\n<ul>\r\n<li>Test/Work modes: <code>work</code></li>\r\n<li>Merchant name: set your panel title</li>\r\n<li>Secret Key: set strong password</li>\r\n<li>\"Let to use URL sent in form\" must be enabled</li>\r\n<li>Control sign forming method: <code>SHA256</code></li>\r\n</ul>\r\n</li>\r\n<li>Enter your WebMoney details below.</li>\r\n</ol>', 0, NULL, NULL),
+  (6, 'Yandex.Money', 'Yandex.Money', 'Yandexmoney', 'yandexmoney', '{\"wallet_number\":{\"code\":\"wallet_number\",\"name\":\"wallet_number\",\"type\":\"input\",\"label\":\"settings.payments_yandex_money_wallet_number\"},\"secret_word\":{\"code\":\"secret_word\",\"name\":\"secret_word\",\"type\":\"input\",\"label\":\"settings.payments_yandex_money_secret_word\"}}', '/img/pg/yandex_money.png', NULL, '<ol>\r\n<li>Go to <a href=\"https://money.yandex.ru/myservices/online.xml\" target=\"_blank\">https://money.yandex.ru/myservices/online.xml</a></li>\r\n<li>Enter login details.</li>\r\n<ul>\r\n<li>Secret word: set strong password</li>\r\n<li>HTTP-notices URL: <code>{site}/yandexmoney</code></li>\r\n</ul>\r\n<li>Enter your Yandex money details below.\r\n</ol>', 0, NULL, NULL),
+  (7, 'Free-Kassa', 'Free-Kassa', 'Freekassa', 'freekassa', '{\"merchant_id\":{\"code\":\"merchant_id\",\"name\":\"merchant_id\",\"type\":\"input\",\"label\":\"settings.payments_free_kassa_merchant_id\"},\"secret_word\":{\"code\":\"secret_word\",\"name\":\"secret_word\",\"type\":\"input\",\"label\":\"settings.payments_free_kassa_secret_word\"},\"secret_word2\":{\"code\":\"secret_word2\",\"name\":\"secret_word2\",\"type\":\"input\",\"label\":\"settings.payments_free_kassa_secret_word2\"}}', '/img/pg/free_kassa.png', NULL, '<ul>\r\n<li> Go to the Free Kassa settings page </li>\r\n<li> Select the notification method <code>POST</code> </li>\r\n<li> Select the integration mode <code>NO</code></li>\r\n<li> Site URL: <code>{site}/</code> </li>\r\n<li> Notification URL: <code>{site}/freekassa</code></li>\r\n<li> Success URL: <code>{site}/cart</code></li>\r\n<li> Unsuccess URL: <code>{site}/cart</code></i>\r\n</ul>', 0, NULL, NULL),
+  (8, 'Paytr', 'Paytr', 'Paytr', 'paytr', '{\"merchant_id\":{\"code\":\"merchant_id\",\"name\":\"merchant_id\",\"type\":\"input\",\"label\":\"settings.payments_paytr_merchant_id\"},\"merchant_key\":{\"code\":\"merchant_key\",\"name\":\"merchant_key\",\"type\":\"input\",\"label\":\"settings.payments_paytr_merchant_key\"},\"merchant_salt\":{\"code\":\"merchant_salt\",\"name\":\"merchant_salt\",\"type\":\"input\",\"label\":\"settings.payments_paytr_merchant_salt\"},\"commission\":{\"code\":\"commission\",\"name\":\"commission\",\"type\":\"input\",\"label\":\"settings.payments_paytr_merchant_comission\"}}', '/img/pg/paytr.png', '{\"phone\":{\"label\":\"addfunds.phone\",\"type\":\"input\",\"rules\":[{\"0\":\"phone\",\"1\":\"required\",\"message\":\"addfunds.error.phone\"},{\"0\":\"phone\",\"1\":\"string\",\"message\":\"addfunds.error.phone\"}]}}', '<ul>\r\n<li>Go to Merchant Settings</li>\r\n<li>Set callback url: <code>{site}/paytr</code></li>\r\n</ul>', 0, NULL, NULL),
+  (9, 'Paywant', 'Paywant', 'Paywant', 'paywant', '{\"apiKey\":{\"code\":\"apiKey\",\"name\":\"apiKey\",\"type\":\"input\",\"label\":\"settings.payments_paywant_apiKey\"},\"apiSecret\":{\"code\":\"apiSecret\",\"name\":\"apiSecret\",\"type\":\"input\",\"label\":\"settings.payments_paywant_apiSecret\"},\"fee\":{\"code\":\"fee\",\"name\":\"fee\",\"type\":\"input\",\"label\":\"settings.payments_paywant_fee\"}}', '/img/pg/paywant.png', NULL, '<ul>\r\n<li>Go to Merchant Settings</li>\r\n<li>Store Site: <code>{site}</code></li>\r\n<li>IP address (Site): <code>54.36.105.233</code></li>\r\n<li>API IPN: <code>{site}/paywant</code></li>\r\n</ul>', 0, NULL, NULL),
+  (10, 'Billplz', 'Billplz', 'Billplz', 'billplz', '{\"collectionId\":{\"code\":\"collectionId\",\"name\":\"collectionId\",\"type\":\"input\",\"label\":\"settings.payments_billplz_collectionId\"},\"secret\":{\"code\":\"secret\",\"name\":\"secret\",\"type\":\"input\",\"label\":\"settings.payments_billplz_secret\"}}', '/img/pg/billplz.png', NULL, '<ul>\r\n<li>Go to Merchant Settings</li>\r\n<li>Status URL: <code>{site}/billplz</code></li>\r\n<li>Success URL: <code>{site}/addfunds</code></li>\r\n<li>Fail URL: <code>{site}/addfunds</code></li>\r\n</ul>', 0, NULL, 1548246383),
+  (11, 'Authorize', 'Authorize', 'Authorize', 'authorize', '{\"merchant_client_key\":{\"code\":\"merchant_client_key\",\"name\":\"merchant_client_key\",\"type\":\"input\",\"label\":\"settings.payments_authorize_merchant_client_key\"},\"merchant_login_id\":{\"code\":\"merchant_login_id\",\"name\":\"merchant_login_id\",\"type\":\"input\",\"label\":\"settings.payments_authorize_merchant_login_id\"},\"merchant_transaction_id\":{\"code\":\"merchant_transaction_id\",\"name\":\"merchant_transaction_id\",\"type\":\"input\",\"label\":\"settings.payments_authorize_merchant_transaction_id\"},\"test_mode\":{\"code\":\"test_mode\",\"name\":\"test_mode\",\"type\":\"checkbox\",\"label\":\"settings.payments_test_mode\"}}', '/img/pg/authorize.png', '{\"data_descriptor\":{\"name\":\"data_descriptor\",\"type\":\"hidden\"},\"data_value\":{\"name\":\"data_value\",\"type\":\"hidden\"}}', '<ol>\r\n<li>Enter your merchant client key, merchant login id and merchant transaction id below.</li>\r\n</ol>', 0, NULL, 1548246383),
+  (12, 'Yandex.Cards', 'Yandex.Cards', 'Yandexcards', 'yandexmoney', '{\"wallet_number\":{\"code\":\"wallet_number\",\"name\":\"wallet_number\",\"type\":\"input\",\"label\":\"settings.payments_yandex_cards_wallet_number\"},\"secret_word\":{\"code\":\"secret_word\",\"name\":\"secret_word\",\"type\":\"input\",\"label\":\"settings.payments_yandex_cards_secret_word\"}}', '/img/pg/yandex_money.png', NULL, '<ol>\r\n<li>Go to <a href=\"https://money.yandex.ru/myservices/online.xml\" target=\"_blank\">https://money.yandex.ru/myservices/online.xml</a></li>\r\n<li>Enter login details.</li>\r\n<ul>\r\n<li>Secret word: set strong password</li>\r\n<li>HTTP-notices URL: <code>{site}/yandexmoney</code></li>\r\n</ul>\r\n<li>Enter your Yandex money details below.</li>\r\n</ol>', 0, NULL, 1548246383),
+  (13, 'Stripe', 'Stripe', 'Stripe', 'stripe', '{\"public_key\":{\"code\":\"public_key\",\"name\":\"public_key\",\"type\":\"input\",\"label\":\"settings.payments_stripe_public_key\"},\"secret_key\":{\"code\":\"secret_key\",\"name\":\"secret_key\",\"type\":\"input\",\"label\":\"settings.payments_stripe_secret_key\"},\"webhook_secret\":{\"code\":\"webhook_secret\",\"name\":\"webhook_secret\",\"type\":\"input\",\"label\":\"settings.payments_stripe_webhook_secret\"}}', '/img/pg/stripe_logo.png', '{\"token\":{\"name\":\"token\",\"type\":\"hidden\"},\"email\":{\"name\":\"email\",\"type\":\"hidden\"}}', '<ol>\r\n<li>Publishable key and Secret key you may find on <a href=\"https://dashboard.stripe.com/account/apikeys\" target=\"_blank\">https://dashboard.stripe.com/account/apikeys</a></li>\r\n<li>Go to <a href=\"https://dashboard.stripe.com/account/webhooks\" target=\"_blank\">https://dashboard.stripe.com/account/webhooks</a> and add endpoint for <code>{site}/stripe</code></li>\r\n<li>Click on created webhook to get Signing secret</li>\r\n</ol>', 0, NULL, 1548246383),
+  (14, 'MercadoPago', 'MercadoPago', 'Mercadopago', 'mercadopago', '{\"client_id\":{\"code\":\"client_id\",\"name\":\"client_id\",\"type\":\"input\",\"label\":\"settings.payments_mercadopago_client_id\"},\"secret\":{\"code\":\"secret\",\"name\":\"secret\",\"type\":\"input\",\"label\":\"settings.payments_mercadopago_secret\"}, \"test_mode\":{\"code\":\"test_mode\",\"name\":\"test_mode\",\"type\":\"checkbox\",\"label\":\"settings.payments_mercadopago_test_mode\"}}', '/img/pg/mercado_pago.png', NULL, '<ol>\r\n<li>Enter your client_id and secret below.</li>\r\n</ol>', 0, NULL, 1548246383),
+  (15, 'PayPal Standard', 'PayPal Standard', 'Paypalstandard', 'paypalstandard', '{\"email\":{\"code\":\"email\",\"name\":\"email\",\"type\":\"input\",\"label\":\"settings.payments_paypal_email\"}, \"test_mode\":{\"code\":\"test_mode\",\"name\":\"test_mode\",\"type\":\"checkbox\",\"label\":\"settings.payments_test_mode\"}}', '/img/pg/paypal.png', NULL, '<ol>\r\n<li>Enter your PayPal Email address below.</li>\r\n</ol>', 0, NULL, 1548246383),
+  (16, 'Mollie', 'Mollie', 'Mollie', 'mollie', '{\"secret_key\":{\"code\":\"secret_key\",\"name\":\"secret_key\",\"type\":\"input\",\"label\":\"settings.payments_mollie_api\"}}', '/img/pg/mollie.png', NULL, '<ul>\r\n<li>Go to Mollie website → <a href=\"https://www.mollie.com/dashboard/developers/api-keys\" target=\"_blank\">Developer Dashboard</a> and get your <b>Live API key</b></li>\r\n<li>If you want to test payment system, use <b>Test API key</b> instead.</li>\r\n</ul>', 0, NULL, 1548246383),
+  (17, 'Stripe 3D Secure', 'Stripe 3D Secure', 'Stripe3dSecure', 'stripe_3d_secure', '{\"public_key\":{\"code\":\"public_key\",\"name\":\"public_key\",\"type\":\"input\",\"label\":\"settings.payments_stripe_public_key\"},\"secret_key\":{\"code\":\"secret_key\",\"name\":\"secret_key\",\"type\":\"input\",\"label\":\"settings.payments_stripe_secret_key\"},\"webhook_secret\":{\"code\":\"webhook_secret\",\"name\":\"webhook_secret\",\"type\":\"input\",\"label\":\"settings.payments_stripe_webhook_secret\"}}', '/img/pg/stripe_logo.png', '{\"token\":{\"name\":\"token\",\"type\":\"hidden\"},\"email\":{\"name\":\"email\",\"type\":\"hidden\"}}', '<ol>\r\n<li>Publishable key and Secret key you may find on <a href=\"https://dashboard.stripe.com/account/apikeys\" target=\"_blank\">https://dashboard.stripe.com/account/apikeys</a></li>\r\n<li>Go to <a href=\"https://dashboard.stripe.com/account/webhooks\" target=\"_blank\">https://dashboard.stripe.com/account/webhooks</a> and add endpoint for <code>{site}/stripe_3d_secure</code></li>\r\n<li>Click on created webhook to get Signing secret</li>\r\n</ol>', 0, NULL, 1548246383);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `payment_methods_currency`
+--
+
+CREATE TABLE `payment_methods_currency` (
+  `id` int(11) UNSIGNED NOT NULL,
+  `method_id` int(11) UNSIGNED DEFAULT NULL,
+  `currency` char(3) DEFAULT NULL,
+  `position` int(11) DEFAULT NULL,
+  `settings_form` text,
+  `settings_form_description` text,
+  `hidden` smallint(1) DEFAULT '0',
+  `created_at` int(11) DEFAULT NULL,
+  `updated_at` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `payment_methods_currency`
+--
+
+INSERT INTO `payment_methods_currency` (`id`, `method_id`, `currency`, `position`, `settings_form`, `settings_form_description`, `hidden`, `created_at`, `updated_at`) VALUES
+  (1, 1, 'USD', 1, NULL, NULL, 0, 1550747939, 1550747939),
+  (2, 1, 'AUD', 1, NULL, NULL, 0, 1550747939, 1550747939),
+  (3, 1, 'BRL', 1, NULL, NULL, 0, 1550747939, 1550747939),
+  (4, 1, 'CAD', 1, NULL, NULL, 0, 1550747939, 1550747939),
+  (5, 1, 'CZK', 1, NULL, NULL, 0, 1550747939, 1550747939),
+  (6, 1, 'DKK', 1, NULL, NULL, 0, 1550747939, 1550747939),
+  (7, 1, 'EUR', 1, NULL, NULL, 0, 1550747939, 1550747939),
+  (8, 1, 'HKD', 1, NULL, NULL, 0, 1550747939, 1550747939),
+  (9, 1, 'HUF', 1, NULL, NULL, 0, 1550747939, 1550747939),
+  (10, 1, 'ILS', 1, NULL, NULL, 0, 1550747939, 1550747939),
+  (11, 1, 'JPY', 1, NULL, NULL, 0, 1550747939, 1550747939),
+  (12, 1, 'MYR', 1, NULL, NULL, 0, 1550747939, 1550747939),
+  (13, 1, 'MXN', 1, NULL, NULL, 0, 1550747939, 1550747939),
+  (14, 1, 'NZD', 1, NULL, NULL, 0, 1550747939, 1550747939),
+  (15, 1, 'NOK', 1, NULL, NULL, 0, 1550747939, 1550747939),
+  (16, 1, 'PHP', 1, NULL, NULL, 0, 1550747939, 1550747939),
+  (17, 1, 'PLN', 1, NULL, NULL, 0, 1550747939, 1550747939),
+  (18, 1, 'GBP', 1, NULL, NULL, 0, 1550747939, 1550747939),
+  (19, 1, 'RUB', 1, NULL, NULL, 0, 1550747939, 1550747939),
+  (20, 1, 'SGD', 1, NULL, NULL, 0, 1550747939, 1550747939),
+  (21, 1, 'SEK', 1, NULL, NULL, 0, 1550747939, 1550747939),
+  (22, 1, 'CHF', 1, NULL, NULL, 0, 1550747939, 1550747939),
+  (23, 1, 'TWD', 1, NULL, NULL, 0, 1550747939, 1550747939),
+  (24, 1, 'THB', 1, NULL, NULL, 0, 1550747939, 1550747939),
+  (25, 1, 'INR', 1, NULL, NULL, 0, 1550747939, 1550747939),
+  (26, 1, 'IDR', 1, NULL, NULL, 0, 1550747939, 1550747939),
+  (27, 1, 'KRW', 1, NULL, NULL, 0, 1550747939, 1550747939),
+  (28, 2, 'USD', 2, NULL, NULL, 0, 1550747939, 1550747939),
+  (29, 2, 'AUD', 2, NULL, NULL, 0, 1550747939, 1550747939),
+  (30, 2, 'BRL', 2, NULL, NULL, 0, 1550747939, 1550747939),
+  (31, 2, 'CAD', 2, NULL, NULL, 0, 1550747939, 1550747939),
+  (32, 2, 'CZK', 2, NULL, NULL, 0, 1550747939, 1550747939),
+  (33, 2, 'DKK', 2, NULL, NULL, 0, 1550747939, 1550747939),
+  (34, 2, 'EUR', 2, NULL, NULL, 0, 1550747939, 1550747939),
+  (35, 2, 'HKD', 2, NULL, NULL, 0, 1550747939, 1550747939),
+  (36, 2, 'HUF', 2, NULL, NULL, 0, 1550747939, 1550747939),
+  (37, 2, 'ILS', 2, NULL, NULL, 0, 1550747939, 1550747939),
+  (38, 2, 'JPY', 2, NULL, NULL, 0, 1550747939, 1550747939),
+  (39, 2, 'MYR', 2, NULL, NULL, 0, 1550747939, 1550747939),
+  (40, 2, 'MXN', 2, NULL, NULL, 0, 1550747939, 1550747939),
+  (41, 2, 'NZD', 2, NULL, NULL, 0, 1550747939, 1550747939),
+  (42, 2, 'NOK', 2, NULL, NULL, 0, 1550747939, 1550747939),
+  (43, 2, 'PHP', 2, NULL, NULL, 0, 1550747939, 1550747939),
+  (44, 2, 'PLN', 2, NULL, NULL, 0, 1550747939, 1550747939),
+  (45, 2, 'GBP', 2, NULL, NULL, 0, 1550747939, 1550747939),
+  (46, 2, 'RUB', 2, NULL, NULL, 0, 1550747939, 1550747939),
+  (47, 2, 'SGD', 2, NULL, NULL, 0, 1550747939, 1550747939),
+  (48, 2, 'SEK', 2, NULL, NULL, 0, 1550747939, 1550747939),
+  (49, 2, 'CHF', 2, NULL, NULL, 0, 1550747939, 1550747939),
+  (50, 2, 'TWD', 2, NULL, NULL, 0, 1550747939, 1550747939),
+  (51, 2, 'THB', 2, NULL, NULL, 0, 1550747939, 1550747939),
+  (52, 2, 'TRY', 2, NULL, NULL, 0, 1550747939, 1550747939),
+  (53, 3, 'USD', 3, NULL, NULL, 0, 1550747939, 1550747939),
+  (54, 3, 'AUD', 3, NULL, NULL, 0, 1550747939, 1550747939),
+  (55, 3, 'BRL', 3, NULL, NULL, 0, 1550747939, 1550747939),
+  (56, 3, 'CAD', 3, NULL, NULL, 0, 1550747939, 1550747939),
+  (57, 3, 'CZK', 3, NULL, NULL, 0, 1550747939, 1550747939),
+  (58, 3, 'DKK', 3, NULL, NULL, 0, 1550747939, 1550747939),
+  (59, 3, 'EUR', 3, NULL, NULL, 0, 1550747939, 1550747939),
+  (60, 3, 'HKD', 3, NULL, NULL, 0, 1550747939, 1550747939),
+  (61, 3, 'HUF', 3, NULL, NULL, 0, 1550747939, 1550747939),
+  (62, 3, 'ILS', 3, NULL, NULL, 0, 1550747939, 1550747939),
+  (63, 3, 'JPY', 3, NULL, NULL, 0, 1550747939, 1550747939),
+  (64, 3, 'MYR', 3, NULL, NULL, 0, 1550747939, 1550747939),
+  (65, 3, 'MXN', 3, NULL, NULL, 0, 1550747939, 1550747939),
+  (66, 3, 'NZD', 3, NULL, NULL, 0, 1550747939, 1550747939),
+  (67, 3, 'NOK', 3, NULL, NULL, 0, 1550747939, 1550747939),
+  (68, 3, 'PHP', 3, NULL, NULL, 0, 1550747939, 1550747939),
+  (69, 3, 'PLN', 3, NULL, NULL, 0, 1550747939, 1550747939),
+  (70, 3, 'GBP', 3, NULL, NULL, 0, 1550747939, 1550747939),
+  (71, 3, 'RUB', 3, NULL, NULL, 0, 1550747939, 1550747939),
+  (72, 3, 'SGD', 3, NULL, NULL, 0, 1550747939, 1550747939),
+  (73, 3, 'SEK', 3, NULL, NULL, 0, 1550747939, 1550747939),
+  (74, 3, 'CHF', 3, NULL, NULL, 0, 1550747939, 1550747939),
+  (75, 3, 'TWD', 3, NULL, NULL, 0, 1550747939, 1550747939),
+  (76, 3, 'THB', 3, NULL, NULL, 0, 1550747939, 1550747939),
+  (77, 3, 'INR', 3, NULL, NULL, 0, 1550747939, 1550747939),
+  (78, 3, 'IDR', 3, NULL, NULL, 0, 1550747939, 1550747939),
+  (79, 3, 'TRY', 3, NULL, NULL, 0, 1550747939, 1550747939),
+  (80, 3, 'KRW', 3, NULL, NULL, 0, 1550747939, 1550747939),
+  (81, 4, 'BRL', 4, NULL, NULL, 0, 1550747939, 1550747939),
+  (82, 5, 'RUB', 5, NULL, NULL, 0, 1550747939, 1550747939),
+  (83, 6, 'RUB', 7, NULL, NULL, 0, 1550747939, 1550747939),
+  (84, 7, 'RUB', 6, NULL, NULL, 0, 1550747939, 1550747939),
+  (85, 8, 'TRY', 10, NULL, NULL, 0, 1550747939, 1550747939),
+  (86, 9, 'TRY', 8, NULL, NULL, 0, 1550747939, 1550747939),
+  (87, 10, 'MYR', 9, NULL, NULL, 0, 1550747939, 1550747939),
+  (88, 11, 'USD', 11, NULL, NULL, 0, 1550747939, 1550747939),
+  (90, 12, 'RUB', 13, NULL, NULL, 0, 1550747939, 1550747939),
+  (91, 13, 'USD', 14, NULL, NULL, 0, 1550747939, 1550747939),
+  (92, 13, 'EUR', 14, NULL, NULL, 0, 1550747939, 1550747939),
+  (93, 14, 'BRL', 0, NULL, NULL, 0, 1550747939, 1550747939),
+  (94, 15, 'USD', 15, NULL, NULL, 0, 1550747939, 1550747939),
+  (95, 16, 'EUR', 16, NULL, NULL, 0, 1550747939, 1550747939),
+  (96, 17, 'USD', 17, NULL, NULL, 0, 1550747939, 1550747939),
+  (97, 17, 'EUR', 17, NULL, NULL, 0, 1550747939, 1550747939);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `payment_methods_last`
+--
+
+CREATE TABLE `payment_methods_last` (
+  `id` int(11) UNSIGNED NOT NULL,
+  `method_name` varchar(255) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `class_name` varchar(255) NOT NULL,
+  `url` varchar(255) NOT NULL,
+  `settings_form` text,
+  `icon` varchar(64) DEFAULT NULL,
+  `addfunds_form` text,
+  `settings_form_description` text,
+  `manual_callback_url` smallint(1) NOT NULL DEFAULT '0',
+  `created_at` int(11) DEFAULT NULL,
+  `updated_at` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `payment_methods_last`
+--
+
+INSERT INTO `payment_methods_last` (`id`, `method_name`, `name`, `class_name`, `url`, `settings_form`, `icon`, `addfunds_form`, `settings_form_description`, `manual_callback_url`, `created_at`, `updated_at`) VALUES
+  (1, 'PayPal', 'PayPal', 'Paypal', 'paypalexpress', '{\"username\":{\"code\":\"username\",\"name\":\"username\",\"type\":\"input\",\"label\":\"settings.payments_paypal_username\"}, \"password\":{\"code\":\"password\",\"name\":\"password\",\"type\":\"input\",\"label\":\"settings.payments_paypal_password\"}, \"signature\":{\"code\":\"signature\",\"name\":\"signature\",\"type\":\"input\",\"label\":\"settings.payments_paypal_signature\"}, \"test_mode\":{\"code\":\"test_mode\",\"name\":\"test_mode\",\"type\":\"checkbox\",\"label\":\"settings.payments_test_mode\"}}', '/img/pg/paypal.png', NULL, '<ol>\r\n<li>Login to your PayPal account.</li>\r\n<li>Get your <a href=\"https://www.paypal.com/us/cgi-bin/webscr?cmd=_get-api-signature&generic-flow=true\" target=\"_blank\">API Credentials</a>.</li>\r\n<li>Enter your PayPal API details below.</li>\r\n</ol>', 0, NULL, NULL),
+  (2, '2Checkout', '2Checkout', 'Twocheckout', '2checkout', '{\"account_number\":{\"code\":\"account_number\",\"name\":\"account_number\",\"type\":\"input\",\"label\":\"settings.payments_2checkout_account_number\"}, \"secret_word\":{\"code\":\"secret_word\",\"name\":\"secret_word\",\"type\":\"input\",\"label\":\"settings.payments_2checkout_secret_word\"}, \"test_mode\":{\"code\":\"test_mode\",\"name\":\"test_mode\",\"type\":\"checkbox\",\"label\":\"settings.payments_test_mode\"}}', '/img/pg/2checkout.png', NULL, '<ol>\r\n<li>Login to your 2Checkout account</li>\r\n<li>Go to <a href=\"https://www.2checkout.com/va/notifications/\" target=\"_blank\">https://www.2checkout.com/va/notifications/</a>\r\n<ul>\r\n<li>Global URL:  <code>{site}/2checkout</code></li>\r\n<li><i>Enable</i> Order Created: <code>{site}/2checkout</code></li>\r\n<li><i>Enable</i> Fraud Status Changed: <code>{site}/2checkout</code></li>\r\n<li>Click Save Settings</li>\r\n</ul></li>\r\n<li>Go to <a href=\"https://www.2checkout.com/va/acct/detail_company_info\" target=\"_blank\">https://www.2checkout.com/va/acct/detail_company_info</a>\r\n<ul>\r\n<li>Demo Setting: <code>Off</code></li>\r\n<li>Pricing Currency: <code>US Dollars</code></li>\r\n<li>Direct Return: <code>Given links back to my website</code></li>\r\n<li>Approved URL: <code>{site}</code></li>\r\n<li>Secret Word: set strong password</li>\r\n<li>Click Save Settings</li>\r\n</ul></li>\r\n<li>Enter your 2Checkout details below.</li>\r\n</ol>', 0, NULL, NULL),
+  (3, 'CoinPayments', 'CoinPayments', 'Coinpayments', 'coinpayments', '{\"merchant_id\":{\"code\":\"merchant_id\",\"name\":\"merchant_id\",\"type\":\"input\",\"label\":\"settings.payments_coinpayments_merchant_id\"},\"ipn_secret\":{\"code\":\"ipn_secret\",\"name\":\"ipn_secret\",\"type\":\"input\",\"label\":\"settings.payments_coinpayments_ipn_secret\"}}', '/img/pg/coinpayments.png', NULL, '<ol>\r\n<li>Login to <a href=\"https://www.coinpayments.net/\" target=\"_blank\">CoinPayments</a></li>\r\n<li>Go to <b>Account → Account Settings → Merchant Settings</b></li>\r\n<ul>\r\n<li>Generate IPN Secret</li>\r\n<li>Apply Changes</li>\r\n</ul>\r\n<li>Enter your Merchant ID and IPN Secret below.</li>\r\n</ol>', 0, NULL, NULL),
+  (4, 'PagSeguro', 'PagSeguro', 'Pagseguro', 'pagseguro', '{\"email\":{\"code\":\"email\",\"name\":\"email\",\"type\":\"input\",\"label\":\"settings.payments_pagseguro_email\"},\"token\":{\"code\":\"token\",\"name\":\"token\",\"type\":\"input\",\"label\":\"settings.payments_pagseguro_token\"}}', '/img/pg/pagseguro.png', NULL, '<ol>\r\n<li>Enter your email and token below.</li>\r\n</ol>', 0, NULL, NULL),
+  (5, 'WebMoney', 'WebMoney', 'Webmoney', 'webmoney', '{\"purse\":{\"code\":\"purse\",\"name\":\"purse\",\"type\":\"input\",\"label\":\"settings.payments_webmoney_purse\"},\"secret_key\":{\"code\":\"secret_key\",\"name\":\"secret_key\",\"type\":\"input\",\"label\":\"settings.payments_webmoney_secret_key\"}}', '/img/pg/webmoney.png', NULL, '<ol>\r\n<li>To receive payments you must have minimum formal certificate with verified documents (or certificate of higher level).</li>\r\n<li>Go to <a href=\"https://merchant.wmtransfer.com/conf/purses.asp\" target=\"_blank\">https://merchant.wmtransfer.com/conf/purses.asp</a></li>\r\n<li>Enter login details.</li>\r\n<li>Click <i>change</i> for WMR purse\r\n<ul>\r\n<li>Test/Work modes: <code>work</code></li>\r\n<li>Merchant name: set your panel title</li>\r\n<li>Secret Key: set strong password</li>\r\n<li>\"Let to use URL sent in form\" must be enabled</li>\r\n<li>Control sign forming method: <code>SHA256</code></li>\r\n</ul>\r\n</li>\r\n<li>Enter your WebMoney details below.</li>\r\n</ol>', 0, NULL, NULL),
+  (6, 'Yandex.Money', 'Yandex.Money', 'Yandexmoney', 'yandexmoney', '{\"wallet_number\":{\"code\":\"wallet_number\",\"name\":\"wallet_number\",\"type\":\"input\",\"label\":\"settings.payments_yandex_money_wallet_number\"},\"secret_word\":{\"code\":\"secret_word\",\"name\":\"secret_word\",\"type\":\"input\",\"label\":\"settings.payments_yandex_money_secret_word\"}}', '/img/pg/yandex_money.png', NULL, '<ol>\r\n<li>Go to <a href=\"https://money.yandex.ru/myservices/online.xml\" target=\"_blank\">https://money.yandex.ru/myservices/online.xml</a></li>\r\n<li>Enter login details.</li>\r\n<ul>\r\n<li>Secret word: set strong password</li>\r\n<li>HTTP-notices URL: <code>{site}/yandexmoney</code></li>\r\n</ul>\r\n<li>Enter your Yandex money details below.\r\n</ol>', 0, NULL, NULL),
+  (7, 'Free-Kassa', 'Free-Kassa', 'Freekassa', 'freekassa', '{\"merchant_id\":{\"code\":\"merchant_id\",\"name\":\"merchant_id\",\"type\":\"input\",\"label\":\"settings.payments_free_kassa_merchant_id\"},\"secret_word\":{\"code\":\"secret_word\",\"name\":\"secret_word\",\"type\":\"input\",\"label\":\"settings.payments_free_kassa_secret_word\"},\"secret_word2\":{\"code\":\"secret_word2\",\"name\":\"secret_word2\",\"type\":\"input\",\"label\":\"settings.payments_free_kassa_secret_word2\"}}', '/img/pg/free_kassa.png', NULL, '<ul>\r\n<li> Go to the Free Kassa settings page </li>\r\n<li> Select the notification method <code>POST</code> </li>\r\n<li> Select the integration mode <code>NO</code></li>\r\n<li> Site URL: <code>{site}/</code> </li>\r\n<li> Notification URL: <code>{site}/freekassa</code></li>\r\n<li> Success URL: <code>{site}/cart</code></li>\r\n<li> Unsuccess URL: <code>{site}/cart</code></i>\r\n</ul>', 0, NULL, NULL),
+  (8, 'Paytr', 'Paytr', 'Paytr', 'paytr', '{\"merchant_id\":{\"code\":\"merchant_id\",\"name\":\"merchant_id\",\"type\":\"input\",\"label\":\"settings.payments_paytr_merchant_id\"},\"merchant_key\":{\"code\":\"merchant_key\",\"name\":\"merchant_key\",\"type\":\"input\",\"label\":\"settings.payments_paytr_merchant_key\"},\"merchant_salt\":{\"code\":\"merchant_salt\",\"name\":\"merchant_salt\",\"type\":\"input\",\"label\":\"settings.payments_paytr_merchant_salt\"},\"commission\":{\"code\":\"commission\",\"name\":\"commission\",\"type\":\"input\",\"label\":\"settings.payments_paytr_merchant_comission\"}}', '/img/pg/paytr.png', '{\"phone\":{\"label\":\"addfunds.phone\",\"type\":\"input\",\"rules\":[{\"0\":\"phone\",\"1\":\"required\",\"message\":\"addfunds.error.phone\"},{\"0\":\"phone\",\"1\":\"string\",\"message\":\"addfunds.error.phone\"}]}}', '<ul>\r\n<li>Go to Merchant Settings</li>\r\n<li>Set callback url: <code>{site}/paytr</code></li>\r\n</ul>', 0, NULL, NULL),
+  (9, 'Paywant', 'Paywant', 'Paywant', 'paywant', '{\"apiKey\":{\"code\":\"apiKey\",\"name\":\"apiKey\",\"type\":\"input\",\"label\":\"settings.payments_paywant_apiKey\"},\"apiSecret\":{\"code\":\"apiSecret\",\"name\":\"apiSecret\",\"type\":\"input\",\"label\":\"settings.payments_paywant_apiSecret\"},\"fee\":{\"code\":\"fee\",\"name\":\"fee\",\"type\":\"input\",\"label\":\"settings.payments_paywant_fee\"}}', '/img/pg/paywant.png', NULL, '<ul>\r\n<li>Go to Merchant Settings</li>\r\n<li>Store Site: <code>{site}</code></li>\r\n<li>IP address (Site): <code>54.36.105.233</code></li>\r\n<li>API IPN: <code>{site}/paywant</code></li>\r\n</ul>', 0, NULL, NULL),
+  (10, 'Billplz', 'Billplz', 'Billplz', 'billplz', '{\"collectionId\":{\"code\":\"collectionId\",\"name\":\"collectionId\",\"type\":\"input\",\"label\":\"settings.payments_billplz_collectionId\"},\"secret\":{\"code\":\"secret\",\"name\":\"secret\",\"type\":\"input\",\"label\":\"settings.payments_billplz_secret\"}}', '/img/pg/billplz.png', NULL, '<ul>\r\n<li>Go to Merchant Settings</li>\r\n<li>Status URL: <code>{site}/billplz</code></li>\r\n<li>Success URL: <code>{site}/addfunds</code></li>\r\n<li>Fail URL: <code>{site}/addfunds</code></li>\r\n</ul>', 0, NULL, 1548246383),
+  (11, 'Authorize', 'Authorize', 'Authorize', 'authorize', '{\"merchant_client_key\":{\"code\":\"merchant_client_key\",\"name\":\"merchant_client_key\",\"type\":\"input\",\"label\":\"settings.payments_authorize_merchant_client_key\"},\"merchant_login_id\":{\"code\":\"merchant_login_id\",\"name\":\"merchant_login_id\",\"type\":\"input\",\"label\":\"settings.payments_authorize_merchant_login_id\"},\"merchant_transaction_id\":{\"code\":\"merchant_transaction_id\",\"name\":\"merchant_transaction_id\",\"type\":\"input\",\"label\":\"settings.payments_authorize_merchant_transaction_id\"},\"test_mode\":{\"code\":\"test_mode\",\"name\":\"test_mode\",\"type\":\"checkbox\",\"label\":\"settings.payments_test_mode\"}}', '/img/pg/authorize.png', '{\"data_descriptor\":{\"name\":\"data_descriptor\",\"type\":\"hidden\"},\"data_value\":{\"name\":\"data_value\",\"type\":\"hidden\"}}', '<ol>\r\n<li>Enter your merchant client key, merchant login id and merchant transaction id below.</li>\r\n</ol>', 0, NULL, 1548246383),
+  (12, 'Yandex.Cards', 'Yandex.Cards', 'Yandexcards', 'yandexmoney', '{\"wallet_number\":{\"code\":\"wallet_number\",\"name\":\"wallet_number\",\"type\":\"input\",\"label\":\"settings.payments_yandex_cards_wallet_number\"},\"secret_word\":{\"code\":\"secret_word\",\"name\":\"secret_word\",\"type\":\"input\",\"label\":\"settings.payments_yandex_cards_secret_word\"}}', '/img/pg/yandex_money.png', NULL, '<ol>\r\n<li>Go to <a href=\"https://money.yandex.ru/myservices/online.xml\" target=\"_blank\">https://money.yandex.ru/myservices/online.xml</a></li>\r\n<li>Enter login details.</li>\r\n<ul>\r\n<li>Secret word: set strong password</li>\r\n<li>HTTP-notices URL: <code>{site}/yandexmoney</code></li>\r\n</ul>\r\n<li>Enter your Yandex money details below.</li>\r\n</ol>', 0, NULL, 1548246383),
+  (13, 'Stripe', 'Stripe', 'Stripe', 'stripe', '{\"public_key\":{\"code\":\"public_key\",\"name\":\"public_key\",\"type\":\"input\",\"label\":\"settings.payments_stripe_public_key\"},\"secret_key\":{\"code\":\"secret_key\",\"name\":\"secret_key\",\"type\":\"input\",\"label\":\"settings.payments_stripe_secret_key\"},\"webhook_secret\":{\"code\":\"webhook_secret\",\"name\":\"webhook_secret\",\"type\":\"input\",\"label\":\"settings.payments_stripe_webhook_secret\"}}', '/img/pg/stripe_logo.png', '{\"token\":{\"name\":\"token\",\"type\":\"hidden\"},\"email\":{\"name\":\"email\",\"type\":\"hidden\"}}', '<ol>\r\n<li>Publishable key and Secret key you may find on <a href=\"https://dashboard.stripe.com/account/apikeys\" target=\"_blank\">https://dashboard.stripe.com/account/apikeys</a></li>\r\n<li>Go to <a href=\"https://dashboard.stripe.com/account/webhooks\" target=\"_blank\">https://dashboard.stripe.com/account/webhooks</a> and add endpoint for <code>{site}/stripe</code></li>\r\n<li>Click on created webhook to get Signing secret</li>\r\n</ol>', 0, NULL, 1548246383),
+  (14, 'MercadoPago', 'MercadoPago', 'Mercadopago', 'mercadopago', '{\"client_id\":{\"code\":\"client_id\",\"name\":\"client_id\",\"type\":\"input\",\"label\":\"settings.payments_mercadopago_client_id\"},\"secret\":{\"code\":\"secret\",\"name\":\"secret\",\"type\":\"input\",\"label\":\"settings.payments_mercadopago_secret\"}, \"test_mode\":{\"code\":\"test_mode\",\"name\":\"test_mode\",\"type\":\"checkbox\",\"label\":\"settings.payments_mercadopago_test_mode\"}}', '/img/pg/mercado_pago.png', NULL, '<ol>\r\n<li>Enter your client_id and secret below.</li>\r\n</ol>', 0, NULL, 1548246383),
+  (15, 'PayPal Standard', 'PayPal Standard', 'Paypalstandard', 'paypalstandard', '{\"email\":{\"code\":\"email\",\"name\":\"email\",\"type\":\"input\",\"label\":\"settings.payments_paypal_email\"}, \"test_mode\":{\"code\":\"test_mode\",\"name\":\"test_mode\",\"type\":\"checkbox\",\"label\":\"settings.payments_test_mode\"}}', '/img/pg/paypal.png', NULL, '<ol>\r\n<li>Enter your PayPal Email address below.</li>\r\n</ol>', 0, NULL, 1548246383),
+  (16, 'Mollie', 'Mollie', 'Mollie', 'mollie', '{\"secret_key\":{\"code\":\"secret_key\",\"name\":\"secret_key\",\"type\":\"input\",\"label\":\"settings.payments_mollie_api\"}}', '/img/pg/mollie.png', NULL, '<ul>\r\n<li>Go to Mollie website → <a href=\"https://www.mollie.com/dashboard/developers/api-keys\" target=\"_blank\">Developer Dashboard</a> and get your <b>Live API key</b></li>\r\n<li>If you want to test payment system, use <b>Test API key</b> instead.</li>\r\n</ul>', 0, NULL, 1548246383),
+  (17, 'Stripe 3D Secure', 'Stripe 3D Secure', 'Stripe3dSecure', 'stripe_3d_secure', '{\"public_key\":{\"code\":\"public_key\",\"name\":\"public_key\",\"type\":\"input\",\"label\":\"settings.payments_stripe_public_key\"},\"secret_key\":{\"code\":\"secret_key\",\"name\":\"secret_key\",\"type\":\"input\",\"label\":\"settings.payments_stripe_secret_key\"},\"webhook_secret\":{\"code\":\"webhook_secret\",\"name\":\"webhook_secret\",\"type\":\"input\",\"label\":\"settings.payments_stripe_webhook_secret\"}}', '/img/pg/stripe_logo.png', '{\"token\":{\"name\":\"token\",\"type\":\"hidden\"},\"email\":{\"name\":\"email\",\"type\":\"hidden\"}}', '<ol>\r\n<li>Publishable key and Secret key you may find on <a href=\"https://dashboard.stripe.com/account/apikeys\" target=\"_blank\">https://dashboard.stripe.com/account/apikeys</a></li>\r\n<li>Go to <a href=\"https://dashboard.stripe.com/account/webhooks\" target=\"_blank\">https://dashboard.stripe.com/account/webhooks</a> and add endpoint for <code>{site}/stripe_3d_secure</code></li>\r\n<li>Click on created webhook to get Signing secret</li>\r\n</ol>', 0, NULL, 1548246383);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `providers`
+--
+
+CREATE TABLE `providers` (
+  `id` int(11) NOT NULL,
+  `site` varchar(45) DEFAULT NULL,
+  `protocol` tinyint(1) NOT NULL COMMENT '0 - http, 1 - https',
+  `type` tinyint(1) DEFAULT NULL COMMENT '0 - internal, 1 - external',
+  `created_at` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `providers`
+--
+
+INSERT INTO `providers` (`id`, `site`, `protocol`, `type`, `created_at`) VALUES
+  (1, 'paneldev.perfectpanel.net', 0, 0, NULL),
+  (2, 'justanotherpanel.com', 1, 0, 1550062056);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `stores`
+--
+
+CREATE TABLE `stores` (
+  `id` int(11) NOT NULL,
+  `customer_id` int(11) DEFAULT NULL,
+  `domain` varchar(255) DEFAULT NULL,
+  `subdomain` smallint(1) DEFAULT '0',
+  `ssl` varchar(1) DEFAULT '0',
+  `name` varchar(255) DEFAULT NULL,
+  `timezone` int(11) DEFAULT NULL,
+  `language` varchar(10) DEFAULT NULL,
+  `status` tinyint(1) NOT NULL COMMENT '1 - active, 2 - frozen, 3 - terminated',
+  `hide` tinyint(1) DEFAULT '0',
+  `db_name` varchar(255) DEFAULT NULL,
+  `trial` tinyint(1) NOT NULL DEFAULT '0',
+  `expired` int(11) UNSIGNED NOT NULL,
+  `created_at` int(11) DEFAULT NULL,
+  `updated_at` int(11) DEFAULT NULL,
+  `logo` varchar(255) DEFAULT NULL,
+  `favicon` varchar(255) DEFAULT NULL,
+  `currency` varchar(10) DEFAULT NULL,
+  `seo_title` varchar(255) DEFAULT NULL,
+  `seo_keywords` varchar(2000) DEFAULT NULL,
+  `seo_description` varchar(2000) DEFAULT NULL,
+  `folder` varchar(255) DEFAULT NULL,
+  `folder_content` varchar(255) DEFAULT NULL,
+  `theme_name` varchar(255) DEFAULT NULL,
+  `theme_folder` varchar(255) DEFAULT NULL,
+  `block_slider` tinyint(1) NOT NULL DEFAULT '0',
+  `block_features` tinyint(1) NOT NULL DEFAULT '0',
+  `block_reviews` tinyint(1) NOT NULL DEFAULT '0',
+  `block_process` tinyint(1) NOT NULL DEFAULT '0',
+  `custom_header` text,
+  `custom_footer` text,
+  `last_count` int(11) DEFAULT '0',
+  `current_count` int(11) DEFAULT '0',
+  `no_referral` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0 - disabled, 1 - enabled',
+  `whois_lookup` text COMMENT 'Json domain data',
+  `nameservers` text COMMENT 'Json domain nameservers data',
+  `dns_checked_at` text COMMENT 'Last dns-check timestamp',
+  `dns_status` text COMMENT 'dns-check result: null-неизвестно, 0-не наши ns, 1-наш ns'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `stores`
+--
+
+INSERT INTO `stores` (`id`, `customer_id`, `domain`, `subdomain`, `ssl`, `name`, `timezone`, `language`, `status`, `hide`, `db_name`, `trial`, `expired`, `created_at`, `updated_at`, `logo`, `favicon`, `currency`, `seo_title`, `seo_keywords`, `seo_description`, `folder`, `folder_content`, `theme_name`, `theme_folder`, `block_slider`, `block_features`, `block_reviews`, `block_process`, `custom_header`, `custom_footer`, `last_count`, `current_count`, `no_referral`, `whois_lookup`, `nameservers`, `dns_checked_at`, `dns_status`) VALUES
+  (1, 1, 'sommerce.sommerce.team', 0, '0', 'sommerce.sommerce.team', 10800, 'ru', 1, 0, 'sommerce_1_dev', 0, 1999999999, 1539999999, 1551094171, NULL, NULL, 'USD', 'Dev', '', '', 'kps15w', '{\"css\":[\"smm24.css\",\"owl.carousel.css\",\"bootstrap.css\"],\"js\":[\"main.js\",\"jquery.sticky.js\",\"owl.carousel.js\",\"bootstrap.js\"],\"json\":[]}', 'SMM24', 'smm24', 1, 1, 0, 0, '', '', 0, 0, 0, NULL, NULL, NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `stores_send_orders`
+--
+
+CREATE TABLE `stores_send_orders` (
+  `id` int(11) UNSIGNED NOT NULL,
+  `store_id` int(11) DEFAULT NULL,
+  `provider_id` int(11) DEFAULT NULL,
+  `suborder_id` int(11) DEFAULT NULL,
+  `store_db` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `store_admins`
+--
+
+CREATE TABLE `store_admins` (
+  `id` int(11) NOT NULL,
+  `store_id` int(11) DEFAULT NULL,
+  `username` varchar(255) DEFAULT NULL,
+  `password` varchar(64) DEFAULT NULL,
+  `auth_key` varchar(64) NOT NULL,
+  `first_name` varchar(255) DEFAULT NULL,
+  `last_name` varchar(255) DEFAULT NULL,
+  `status` tinyint(1) DEFAULT NULL COMMENT '1 - active\n2 - suspended',
+  `ip` varchar(255) DEFAULT NULL,
+  `last_login` int(11) DEFAULT NULL,
+  `rules` varchar(1000) DEFAULT NULL,
+  `created_at` int(11) DEFAULT NULL,
+  `updated_at` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `store_admins`
+--
+
+INSERT INTO `store_admins` (`id`, `store_id`, `username`, `password`, `auth_key`, `first_name`, `last_name`, `status`, `ip`, `last_login`, `rules`, `created_at`, `updated_at`) VALUES
+  (1, 1, 'admin', 'b8debceae0c4b8a60048e41d3b90c451bb437c4a157f8e550c2958fec15e9edc', '', NULL, NULL, 1, '80.211.90.169', 1551366822, '{\"orders\":1,\"products\":1,\"payments\":1,\"settings\":1}', 1539172158, 1551366822);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `store_admins_hash`
+--
+
+CREATE TABLE `store_admins_hash` (
+  `id` int(11) NOT NULL,
+  `admin_id` int(11) NOT NULL,
+  `hash` varchar(64) NOT NULL,
+  `ip` varchar(255) NOT NULL,
+  `super_user` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0 - admin, 1 - superadmin',
+  `updated_at` int(11) NOT NULL DEFAULT '0',
+  `created_at` int(11) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `store_admins_hash`
+--
+
+INSERT INTO `store_admins_hash` (`id`, `admin_id`, `hash`, `ip`, `super_user`, `updated_at`, `created_at`) VALUES
+  (254, 1, '357d8488239fbd867135d411c39b93323e2dd2ef44e1344879530ab966569fd5', '80.211.90.169', 0, 1551368653, 1551366822);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `store_default_messages`
+--
+
+CREATE TABLE `store_default_messages` (
+  `id` int(11) UNSIGNED NOT NULL,
+  `lang_code` varchar(10) DEFAULT NULL COMMENT 'Language code in IETF lang format',
+  `section` varchar(100) DEFAULT NULL COMMENT 'Message section',
+  `name` varchar(500) DEFAULT NULL COMMENT 'Message variable name',
+  `value` varchar(2000) DEFAULT NULL COMMENT 'Message text'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `store_default_messages`
+--
+
+INSERT INTO `store_default_messages` (`id`, `lang_code`, `section`, `name`, `value`) VALUES
+  (1, 'en', 'cart', 'title', 'Cart'),
+  (2, 'en', 'cart', 'package', 'Package name'),
+  (3, 'en', 'cart', 'details', 'Details'),
+  (4, 'en', 'cart', 'price', 'Price'),
+  (5, 'en', 'cart', 'remove', 'Remove'),
+  (6, 'en', 'cart', 'total', 'Total'),
+  (7, 'en', 'cart', 'total_price', 'Total price'),
+  (8, 'en', 'cart', 'email', 'Email'),
+  (9, 'en', 'cart', 'payment_method', 'Payment method'),
+  (10, 'en', 'cart', 'button.continue', 'Continue shopping'),
+  (11, 'en', 'cart', 'button.checkout', 'Proceed to Checkout'),
+  (12, 'en', 'cart', 'no_orders', 'No orders'),
+  (13, 'en', 'cart', 'quantity', 'Quantity'),
+  (14, 'en', 'contact', 'header', 'Get in touch'),
+  (15, 'en', 'contact', 'subject', 'Subject'),
+  (16, 'en', 'contact', 'name', 'Name'),
+  (17, 'en', 'contact', 'email', 'Email'),
+  (18, 'en', 'contact', 'message', 'Message'),
+  (19, 'en', 'contact', 'button.submit', 'Send message'),
+  (20, 'en', 'contact', 'form.message.success', 'Thank you! Your message has been sent'),
+  (21, 'en', 'contact', 'form.message.error', 'Internal error. Try again later!'),
+  (22, 'en', 'order', 'title', 'Add to cart'),
+  (23, 'en', 'order', 'package', 'Package'),
+  (24, 'en', 'order', 'quantity', 'Quantity'),
+  (25, 'en', 'order', 'price', 'Price'),
+  (26, 'en', 'order', 'link', 'Link'),
+  (27, 'en', 'order', 'button.back_url', 'Cancel'),
+  (28, 'en', 'order', 'button.add_to_cart', 'Add to Cart'),
+  (29, 'en', 'order', 'details', 'Order details'),
+  (30, 'en', 'order', 'info', 'Order info'),
+  (31, 'en', 'product', 'button.buy_now', 'Buy now'),
+  (32, 'en', 'payment_result', 'completed.title', 'Completed'),
+  (33, 'en', 'payment_result', 'completed.description', 'Thank you! Your payment has been successfully processed.'),
+  (34, 'en', 'payment_result', 'failed.title', 'Failed'),
+  (35, 'en', 'payment_result', 'failed.description', 'Your payment failed! Please try again later'),
+  (36, 'en', 'payment_result', 'awaiting.title', 'Awaiting'),
+  (37, 'en', 'payment_result', 'awaiting.description', 'Your payment awaiting!'),
+  (38, 'en', 'footer', 'terms', 'Terms of Service'),
+  (39, 'en', 'footer', 'policy', 'Privacy Policy'),
+  (40, 'en', 'footer', 'contact', 'Contact Us'),
+  (41, 'en', '404', 'title', '404'),
+  (42, 'en', '404', 'description', 'The requested page was not found'),
+  (43, 'en', '404', 'button.home_page', 'Home page'),
+  (44, 'en', 'checkout', 'redirect.title', 'Checkout'),
+  (45, 'en', 'checkout', 'redirect.redirect', 'Redirecting...'),
+  (46, 'en', 'checkout', 'redirect.go', 'Go'),
+  (47, 'ru', 'cart', 'title', 'Корзина'),
+  (48, 'ru', 'cart', 'package', 'Пакет'),
+  (49, 'ru', 'cart', 'details', 'Детали'),
+  (50, 'ru', 'cart', 'price', 'Цена'),
+  (51, 'ru', 'cart', 'remove', 'Удалить'),
+  (52, 'ru', 'cart', 'total', 'Всего'),
+  (53, 'ru', 'cart', 'total_price', 'Общая стоимость'),
+  (54, 'ru', 'cart', 'email', 'Email'),
+  (55, 'ru', 'cart', 'payment_method', 'Метод оплаты'),
+  (56, 'ru', 'cart', 'button.continue', 'Продолжить с покупками'),
+  (57, 'ru', 'cart', 'button.checkout', 'Оплатить'),
+  (58, 'ru', 'cart', 'no_orders', 'Нет товаров'),
+  (59, 'ru', 'cart', 'quantity', 'Количество'),
+  (60, 'ru', 'contact', 'header', 'Связаться с нами'),
+  (61, 'ru', 'contact', 'subject', 'Тема'),
+  (62, 'ru', 'contact', 'name', 'Имя'),
+  (63, 'ru', 'contact', 'email', 'Email'),
+  (64, 'ru', 'contact', 'message', 'Сообщение'),
+  (65, 'ru', 'contact', 'button.submit', 'Отправить'),
+  (66, 'ru', 'contact', 'form.message.success', 'Спасибо! Ваше сообщение отправлено'),
+  (67, 'ru', 'contact', 'form.message.error', 'Ошибка! Попробуйте отправить сообщение позже'),
+  (68, 'ru', 'order', 'title', 'Добавить в корзину'),
+  (69, 'ru', 'order', 'package', 'Пакет'),
+  (70, 'ru', 'order', 'quantity', 'Количество'),
+  (71, 'ru', 'order', 'price', 'Цена'),
+  (72, 'ru', 'order', 'link', 'Ссылка'),
+  (73, 'ru', 'order', 'button.back_url', 'Вернуться'),
+  (74, 'ru', 'order', 'button.add_to_cart', 'Добавить в корзину'),
+  (75, 'ru', 'order', 'details', 'Дополнительные детали заказа'),
+  (76, 'ru', 'order', 'info', 'Информация о заказе'),
+  (77, 'ru', 'product', 'button.buy_now', 'Купить'),
+  (78, 'ru', 'payment_result', 'completed.title', 'Выполнено'),
+  (79, 'ru', 'payment_result', 'completed.description', 'Спасибо! Ваш платеж успешно обработан'),
+  (80, 'ru', 'payment_result', 'failed.title', 'Ошибка'),
+  (81, 'ru', 'payment_result', 'failed.description', 'Платеж не прошел! Пожалуйста, повторите попытку позже'),
+  (82, 'ru', 'payment_result', 'awaiting.title', 'В ожидании'),
+  (83, 'ru', 'payment_result', 'awaiting.description', 'Платеж принят и ожидает проверки'),
+  (84, 'ru', 'footer', 'terms', 'Условия использования'),
+  (85, 'ru', 'footer', 'policy', 'Политика конфиденциальности'),
+  (86, 'ru', 'footer', 'contact', 'Контакты'),
+  (87, 'ru', '404', 'title', '404'),
+  (88, 'ru', '404', 'description', 'Запрашиваемая страница не найдена'),
+  (89, 'ru', '404', 'button.home_page', 'Главная'),
+  (90, 'ru', 'checkout', 'redirect.title', 'Ожидайте'),
+  (91, 'ru', 'checkout', 'redirect.redirect', 'Перенаправление...'),
+  (92, 'ru', 'checkout', 'redirect.go', 'Перейти'),
+  (93, 'en', 'cart', 'payment_description', 'Order #{order_id}'),
+  (94, 'en', 'order', 'invalid_link', 'Invalid {name} link.'),
+  (95, 'en', 'cart', 'phone', 'Phone'),
+  (96, 'en', 'cart', 'error.phone', 'Incorrect phone.'),
+  (97, 'en', 'vieworder', 'title', 'Order #{id}'),
+  (98, 'en', 'vieworder', 'package', 'Package name'),
+  (99, 'en', 'vieworder', 'details', 'Details'),
+  (100, 'en', 'vieworder', 'quantity', 'Quantity'),
+  (101, 'en', 'vieworder', 'price', 'Price'),
+  (102, 'en', 'vieworder', 'status', 'Status'),
+  (103, 'en', 'orders', 'status_awaiting', 'Awaiting'),
+  (104, 'en', 'orders', 'status_pending', 'Pending'),
+  (105, 'en', 'orders', 'status_in_progress', 'In progress'),
+  (106, 'en', 'orders', 'status_completed', 'Completed'),
+  (107, 'en', 'orders', 'status_canceled', 'Canceled'),
+  (108, 'en', 'orders', 'status_failed', 'Failed'),
+  (109, 'en', 'orders', 'status_error', 'Error');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `store_domains`
+--
+
+CREATE TABLE `store_domains` (
+  `id` int(11) NOT NULL,
+  `store_id` int(11) DEFAULT NULL,
+  `domain` varchar(255) DEFAULT NULL,
+  `type` tinyint(1) DEFAULT '0' COMMENT '0 - sommerce, 1 - default, 2 - additional, 3 - subdomain',
+  `ssl` tinyint(1) NOT NULL COMMENT '0 - disabled, 1 - enabled',
+  `updated_at` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `store_domains`
+--
+
+INSERT INTO `store_domains` (`id`, `store_id`, `domain`, `type`, `ssl`, `updated_at`) VALUES
+  (1, 1, 'sommerce.sommerce.team', 0, 0, 1539172158);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `store_integrations`
+--
+
+CREATE TABLE `store_integrations` (
+  `id` int(11) NOT NULL,
+  `integration_id` int(11) DEFAULT NULL,
+  `store_id` int(11) DEFAULT NULL,
+  `options` text,
+  `visibility` tinyint(1) NOT NULL DEFAULT '0' COMMENT '1 - active, 0 - inactive',
+  `position` int(11) DEFAULT NULL,
+  `created_at` int(11) DEFAULT NULL,
+  `updated_at` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `store_payment_methods`
+--
+
+CREATE TABLE `store_payment_methods` (
+  `id` int(11) UNSIGNED NOT NULL,
+  `store_id` int(11) NOT NULL,
+  `options` text,
+  `visibility` smallint(1) NOT NULL DEFAULT '1',
+  `method_id` int(11) UNSIGNED DEFAULT NULL,
+  `currency_id` int(11) UNSIGNED DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `position` int(11) DEFAULT NULL,
+  `created_at` int(11) DEFAULT NULL,
+  `updated_at` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `store_providers`
+--
+
+CREATE TABLE `store_providers` (
+  `id` int(11) NOT NULL,
+  `provider_id` int(11) DEFAULT NULL,
+  `store_id` int(11) DEFAULT NULL,
+  `apikey` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `system_migrations`
+--
+
+CREATE TABLE `system_migrations` (
+  `version` varchar(180) NOT NULL,
+  `apply_time` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Индексы таблицы `content`
+--
+ALTER TABLE `content`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Индексы таблицы `customers`
+--
+ALTER TABLE `customers`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `referrer_id` (`referrer_id`),
+  ADD KEY `idx_status` (`status`);
+
+--
+-- Индексы таблицы `customers_counters`
+--
+ALTER TABLE `customers_counters`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `customer_id` (`customer_id`);
+
+--
+-- Индексы таблицы `customers_note`
+--
+ALTER TABLE `customers_note`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_notes_customer_id` (`customer_id`),
+  ADD KEY `fk_notes_created_by` (`created_by`),
+  ADD KEY `fk_notes_updated_by` (`updated_by`);
+
+--
+-- Индексы таблицы `domains`
+--
+ALTER TABLE `domains`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `customer_id` (`customer_id`),
+  ADD KEY `zone_id` (`zone_id`),
+  ADD KEY `idx_status_created_at` (`status`,`created_at`);
+
+--
+-- Индексы таблицы `domain_zones`
+--
+ALTER TABLE `domain_zones`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Индексы таблицы `expired_log`
+--
+ALTER TABLE `expired_log`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Индексы таблицы `invoices`
+--
+ALTER TABLE `invoices`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Индексы таблицы `invoice_details`
+--
+ALTER TABLE `invoice_details`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `invoice_id` (`invoice_id`);
+
+--
+-- Индексы таблицы `logs`
+--
+ALTER TABLE `logs`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Индексы таблицы `my_activity_log`
+--
+ALTER TABLE `my_activity_log`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Индексы таблицы `my_customers_hash`
+--
+ALTER TABLE `my_customers_hash`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `hash` (`hash`),
+  ADD KEY `user_id` (`customer_id`);
+
+--
+-- Индексы таблицы `my_verified_paypal`
+--
+ALTER TABLE `my_verified_paypal`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Индексы таблицы `notifications`
+--
+ALTER TABLE `notifications`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Индексы таблицы `notification_email`
+--
+ALTER TABLE `notification_email`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Индексы таблицы `orders`
+--
+ALTER TABLE `orders`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `domain` (`domain`(255));
+
+--
+-- Индексы таблицы `order_logs`
+--
+ALTER TABLE `order_logs`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Индексы таблицы `params`
+--
+ALTER TABLE `params`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `uniq_code` (`code`),
+  ADD UNIQUE KEY `uniq_category_code` (`code`,`category`);
+
+--
+-- Индексы таблицы `payments`
+--
+ALTER TABLE `payments`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Индексы таблицы `payments_log`
+--
+ALTER TABLE `payments_log`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Индексы таблицы `payment_hash`
+--
+ALTER TABLE `payment_hash`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Индексы таблицы `reports`
+--
+ALTER TABLE `reports`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Индексы таблицы `ssl_cert`
+--
+ALTER TABLE `ssl_cert`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `item_id` (`item_id`),
+  ADD KEY `fk_ssl_cert__customers` (`cid`),
+  ADD KEY `idx_status_created_at` (`status`,`created_at`);
+
+--
+-- Индексы таблицы `ssl_cert_item`
+--
+ALTER TABLE `ssl_cert_item`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Индексы таблицы `ssl_validation`
+--
+ALTER TABLE `ssl_validation`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `pid` (`pid`),
+  ADD KEY `file_name` (`file_name`);
+
+--
+-- Индексы таблицы `super_admin`
+--
+ALTER TABLE `super_admin`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Индексы таблицы `super_admin_token`
+--
+ALTER TABLE `super_admin_token`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Индексы таблицы `super_credits_log`
+--
+ALTER TABLE `super_credits_log`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Индексы таблицы `super_log`
+--
+ALTER TABLE `super_log`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `admin_id` (`admin_id`);
+
+--
+-- Индексы таблицы `super_tasks`
+--
+ALTER TABLE `super_tasks`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Индексы таблицы `third_party_log`
+--
+ALTER TABLE `third_party_log`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Индексы таблицы `tickets`
+--
+ALTER TABLE `tickets`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_status` (`status`);
+
+--
+-- Индексы таблицы `ticket_files`
+--
+ALTER TABLE `ticket_files`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_ticket_files_tickets` (`ticket_id`),
+  ADD KEY `fk_ticket_files_ticket_message` (`message_id`);
+
+--
+-- Индексы таблицы `ticket_messages`
+--
+ALTER TABLE `ticket_messages`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- AUTO_INCREMENT для сохранённых таблиц
+--
+
+--
+-- AUTO_INCREMENT для таблицы `content`
+--
+ALTER TABLE `content`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+
+--
+-- AUTO_INCREMENT для таблицы `customers`
+--
+ALTER TABLE `customers`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT для таблицы `customers_counters`
+--
+ALTER TABLE `customers_counters`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- AUTO_INCREMENT для таблицы `customers_note`
+--
+ALTER TABLE `customers_note`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
+--
+-- AUTO_INCREMENT для таблицы `domains`
+--
+ALTER TABLE `domains`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT для таблицы `domain_zones`
+--
+ALTER TABLE `domain_zones`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT для таблицы `expired_log`
+--
+ALTER TABLE `expired_log`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT для таблицы `invoices`
+--
+ALTER TABLE `invoices`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=285;
+
+--
+-- AUTO_INCREMENT для таблицы `invoice_details`
+--
+ALTER TABLE `invoice_details`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=307;
+
+--
+-- AUTO_INCREMENT для таблицы `logs`
+--
+ALTER TABLE `logs`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT для таблицы `my_activity_log`
+--
+ALTER TABLE `my_activity_log`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT для таблицы `my_customers_hash`
+--
+ALTER TABLE `my_customers_hash`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=435;
+
+--
+-- AUTO_INCREMENT для таблицы `my_verified_paypal`
+--
+ALTER TABLE `my_verified_paypal`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
+
+--
+-- AUTO_INCREMENT для таблицы `notifications`
+--
+ALTER TABLE `notifications`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT для таблицы `notification_email`
+--
+ALTER TABLE `notification_email`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT для таблицы `orders`
+--
+ALTER TABLE `orders`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT для таблицы `order_logs`
+--
+ALTER TABLE `order_logs`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT для таблицы `params`
+--
+ALTER TABLE `params`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+
+--
+-- AUTO_INCREMENT для таблицы `payments`
+--
+ALTER TABLE `payments`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT для таблицы `payments_log`
+--
+ALTER TABLE `payments_log`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT для таблицы `payment_hash`
+--
+ALTER TABLE `payment_hash`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+
+--
+-- AUTO_INCREMENT для таблицы `reports`
+--
+ALTER TABLE `reports`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT для таблицы `ssl_cert`
+--
+ALTER TABLE `ssl_cert`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT для таблицы `super_admin`
+--
+ALTER TABLE `super_admin`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+
+--
+-- AUTO_INCREMENT для таблицы `super_admin_token`
+--
+ALTER TABLE `super_admin_token`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=80;
+
+--
+-- AUTO_INCREMENT для таблицы `super_credits_log`
+--
+ALTER TABLE `super_credits_log`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT для таблицы `super_log`
+--
+ALTER TABLE `super_log`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT для таблицы `super_tasks`
+--
+ALTER TABLE `super_tasks`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=512;
+
+--
+-- AUTO_INCREMENT для таблицы `third_party_log`
+--
+ALTER TABLE `third_party_log`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT для таблицы `tickets`
+--
+ALTER TABLE `tickets`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24808;
+
+--
+-- AUTO_INCREMENT для таблицы `ticket_files`
+--
+ALTER TABLE `ticket_files`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT для таблицы `ticket_messages`
+--
+ALTER TABLE `ticket_messages`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=165;
+
+--
+-- Ограничения внешнего ключа сохраненных таблиц
+--
+
+--
+-- Ограничения внешнего ключа таблицы `customers_counters`
+--
+ALTER TABLE `customers_counters`
+  ADD CONSTRAINT `fk_customers_counters_customers` FOREIGN KEY (`customer_id`) REFERENCES `customers` (`id`);
+
+--
+-- Ограничения внешнего ключа таблицы `ticket_files`
+--
+ALTER TABLE `ticket_files`
+  ADD CONSTRAINT `fk_ticket_files_ticket_message` FOREIGN KEY (`message_id`) REFERENCES `ticket_messages` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_ticket_files_tickets` FOREIGN KEY (`ticket_id`) REFERENCES `tickets` (`id`);
+COMMIT;
+
+--
+-- Indexes for table `background_tasks`
+--
+ALTER TABLE `background_tasks`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `integrations`
+--
+ALTER TABLE `integrations`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `code` (`code`);
+
+--
+-- Indexes for table `link_validations`
+--
+ALTER TABLE `link_validations`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `store_id` (`store_id`);
+
+--
+-- Indexes for table `notification_default_templates`
+--
+ALTER TABLE `notification_default_templates`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `payment_methods`
+--
+ALTER TABLE `payment_methods`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `payment_methods_currency`
+--
+ALTER TABLE `payment_methods_currency`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_method_id` (`method_id`);
+
+--
+-- Indexes for table `payment_methods_last`
+--
+ALTER TABLE `payment_methods_last`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `providers`
+--
+ALTER TABLE `providers`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `stores`
+--
+ALTER TABLE `stores`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_customer_id_stores_idx` (`customer_id`),
+  ADD KEY `status` (`status`);
+
+--
+-- Indexes for table `stores_send_orders`
+--
+ALTER TABLE `stores_send_orders`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `store_admins`
+--
+ALTER TABLE `store_admins`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_admin_store_id_idx` (`store_id`),
+  ADD KEY `idx_id_store_id_status` (`id`,`store_id`,`status`);
+
+--
+-- Indexes for table `store_admins_hash`
+--
+ALTER TABLE `store_admins_hash`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `hash` (`hash`),
+  ADD KEY `__admin_id__hash` (`admin_id`,`hash`),
+  ADD KEY `idx_hash` (`hash`),
+  ADD KEY `idx_admin_id` (`admin_id`);
+
+--
+-- Indexes for table `store_default_messages`
+--
+ALTER TABLE `store_default_messages`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx__lang_code_name` (`lang_code`,`name`(191)),
+  ADD KEY `idx_lang_code__name` (`lang_code`,`name`);
+
+--
+-- Indexes for table `store_domains`
+--
+ALTER TABLE `store_domains`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `domain_UNIQUE` (`domain`),
+  ADD KEY `fk_domain_store_id_idx` (`store_id`),
+  ADD KEY `idx_store_id_type` (`store_id`,`type`);
+
+--
+-- Indexes for table `store_integrations`
+--
+ALTER TABLE `store_integrations`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_store_integrations_integrations` (`integration_id`),
+  ADD KEY `fk_store_integrations_stores` (`store_id`);
+
+--
+-- Indexes for table `store_payment_methods`
+--
+ALTER TABLE `store_payment_methods`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_store_id` (`store_id`),
+  ADD KEY `idx_method_id` (`method_id`),
+  ADD KEY `idx_currency_id` (`currency_id`);
+
+--
+-- Indexes for table `store_providers`
+--
+ALTER TABLE `store_providers`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_provider_store_id_idx` (`store_id`),
+  ADD KEY `fk_provider_provider_id_idx` (`provider_id`);
+
+--
+-- Indexes for table `system_migrations`
+--
+ALTER TABLE `system_migrations`
+  ADD PRIMARY KEY (`version`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `background_tasks`
+--
+ALTER TABLE `background_tasks`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `integrations`
+--
+ALTER TABLE `integrations`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `link_validations`
+--
+ALTER TABLE `link_validations`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+
+--
+-- AUTO_INCREMENT for table `notification_default_templates`
+--
+ALTER TABLE `notification_default_templates`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- AUTO_INCREMENT for table `payment_methods`
+--
+ALTER TABLE `payment_methods`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+
+--
+-- AUTO_INCREMENT for table `payment_methods_currency`
+--
+ALTER TABLE `payment_methods_currency`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=146;
+
+--
+-- AUTO_INCREMENT for table `payment_methods_last`
+--
+ALTER TABLE `payment_methods_last`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+
+--
+-- AUTO_INCREMENT for table `providers`
+--
+ALTER TABLE `providers`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `stores`
+--
+ALTER TABLE `stores`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
+
+--
+-- AUTO_INCREMENT for table `stores_send_orders`
+--
+ALTER TABLE `stores_send_orders`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
+
+--
+-- AUTO_INCREMENT for table `store_admins`
+--
+ALTER TABLE `store_admins`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+
+--
+-- AUTO_INCREMENT for table `store_admins_hash`
+--
+ALTER TABLE `store_admins_hash`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=255;
+
+--
+-- AUTO_INCREMENT for table `store_default_messages`
+--
+ALTER TABLE `store_default_messages`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=110;
+
+--
+-- AUTO_INCREMENT for table `store_domains`
+--
+ALTER TABLE `store_domains`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+
+--
+-- AUTO_INCREMENT for table `store_integrations`
+--
+ALTER TABLE `store_integrations`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=85;
+
+--
+-- AUTO_INCREMENT for table `store_payment_methods`
+--
+ALTER TABLE `store_payment_methods`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=103;
+
+--
+-- AUTO_INCREMENT for table `store_providers`
+--
+ALTER TABLE `store_providers`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `link_validations`
+--
+ALTER TABLE `link_validations`
+  ADD CONSTRAINT `fk_link_validations__stores` FOREIGN KEY (`store_id`) REFERENCES `stores` (`id`);
+
+--
+-- Constraints for table `payment_methods_currency`
+--
+ALTER TABLE `payment_methods_currency`
+  ADD CONSTRAINT `fk_payment_methods_currency_payment_methods` FOREIGN KEY (`method_id`) REFERENCES `payment_methods_last` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `store_domains`
+--
+ALTER TABLE `store_domains`
+  ADD CONSTRAINT `fk_domain_store_id` FOREIGN KEY (`store_id`) REFERENCES `stores` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `store_integrations`
+--
+ALTER TABLE `store_integrations`
+  ADD CONSTRAINT `fk_store_integrations_integrations` FOREIGN KEY (`integration_id`) REFERENCES `integrations` (`id`),
+  ADD CONSTRAINT `fk_store_integrations_stores` FOREIGN KEY (`store_id`) REFERENCES `stores` (`id`);
+
+--
+-- Constraints for table `store_payment_methods`
+--
+ALTER TABLE `store_payment_methods`
+  ADD CONSTRAINT `fk_store_payment_methods_payment_methods` FOREIGN KEY (`method_id`) REFERENCES `payment_methods_last` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_store_payment_methods_payment_methods_currency` FOREIGN KEY (`currency_id`) REFERENCES `payment_methods_currency` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_store_payment_methods_stores` FOREIGN KEY (`store_id`) REFERENCES `stores` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `store_providers`
+--
+ALTER TABLE `store_providers`
+  ADD CONSTRAINT `fk_provider_store_id` FOREIGN KEY (`store_id`) REFERENCES `stores` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

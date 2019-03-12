@@ -5,12 +5,18 @@ body {
 	-webkit-backface-visibility: hidden;
 	-moz-backface-visibility: hidden;
 	-ms-backface-visibility: hidden;
+	/* padding-top: 30px; */
 }
 
-.new {
-	padding-top: 30px;
-    background: white;
-	/* opacity: 0.5; */
+.nav-scroll {
+  box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.04);
+  background-color: #ffffff;
+  padding-top: 0px;
+  border-bottom: 1px solid #e5e5e9;
+}
+
+#footer .form-control {
+	border: 0px;
 }
 
 #features img {
@@ -64,7 +70,7 @@ button:focus {
 
 /* STYLE WITHOUT DEMO-BLOCK */
 .gradient {
-    padding-bottom: 30px;
+    padding-bottom: 40px;
 }
 
 
@@ -105,12 +111,12 @@ button:focus {
 }
 
 .navbar {
-	padding-top: 30px;
+	padding-top: 10px;
 }
 
 .navbar-toggler {
 	display: block;
-	background-image: url("../img/lp-sources/ic-other/close.svg");
+	background-image: url("../images/other/close.svg");
 	width: 40px;
 	height: 40px;
 	text-decoration: none;
@@ -127,7 +133,7 @@ button:focus {
 
 .navbar-toggler.collapsed {
 	display: block;
-	background-image: url("../img/lp-sources/ic-other/burger-menu.svg");
+	background-image: url("../images/other/burger-menu.svg");
 	width: 40px;
 	height: 40px;
 	text-decoration: none;
@@ -176,7 +182,7 @@ button:focus {
 }
 
 .technology-driven {
-	padding-top: 200px;
+	padding-top: 250px;
 	padding-bottom: 300px;
 }
 
@@ -222,7 +228,8 @@ button:focus {
 
 #pricing {
 	margin-top: 200px;
-	background-image: linear-gradient(245deg, #ada0f8, #7765d6), url("../img/lp-sources/illustrations/demo.svg");
+	background-image: linear-gradient(245deg, #ada0f8, #7765d6);
+	/* url("../img/lp-sources/illustrations/demo.svg"); */
     position: relative;
     z-index:0;
 }
@@ -449,7 +456,7 @@ a .hello {
 }
 
 a:hover .hello {
-	border-bottom: 1px solid!important;
+	border-bottom: 1px solid #8672ED !important;
 }
 
 .hello-faq-button {
@@ -474,7 +481,7 @@ a:hover .hello {
 
 .toggle .plus {
 	display: block;
-	background-image: url("../img/lp-sources/ic-other/minus.svg");
+	background-image: url("../images/other/minus.svg");
 	width: 24px;
 	height: 24px;
 	text-decoration: none;
@@ -604,7 +611,7 @@ ul li {
 
 .d-flex .collapsed .plus {
 	display: block;
-	background-image: url("../img/lp-sources/ic-other/plus.svg");
+	background-image: url("../images/other/plus.svg");
 	width: 24px;
 	height: 24px;
 	text-decoration: none;
@@ -673,6 +680,12 @@ ul li {
 @media screen and (min-width: 992px) {
 	.navbar-toggler.collapsed {
 		display: none;
+	}
+}
+
+@media screen and (max-width: 992px) {
+	.navbar-collapse {
+		padding-top: 0px;	
 	}
 }
 
@@ -819,6 +832,12 @@ ul li {
 @media (max-width: 425px) {
 	.mail {
 		background-position: 50% 100%;
+	}
+}
+
+@media (min-width: 575px) {
+	.navbar .container {
+		padding-left: 15px !important;
 	}
 }
 

@@ -1,0 +1,32 @@
+# Hides the fact that we even have the denied files below
+# Otherwise, we'll get a different error message, which indicates
+# the file is actually there
+ErrorDocument 403 /index.php
+
+# Audio
+AddType audio/ogg                      oga ogg
+AddType audio/mp4                      m4a f4a f4b
+
+# Video
+AddType video/ogg                      ogv
+AddType video/mp4                      mp4 m4v f4v f4p
+AddType video/webm                     webm
+AddType video/x-flv                    flv
+#AddType application/x-iwork-keynote-sffkey key
+
+# Tmp for large data uploads
+<IfModule mod_php5.c>
+    # comment this lines so far since we implemented direct upload to s3.
+    php_value upload_max_filesize 20M
+    php_value post_max_size 20M
+</IfModule>
+
+
+RewriteEngine on
+
+# if a directory or a file exists, use it directly
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# otherwise forward it to index.php
+RewriteRule . index.php

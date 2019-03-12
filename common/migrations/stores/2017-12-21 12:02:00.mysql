@@ -1,0 +1,10 @@
+# Navigation migration
+USE `stores`;
+CREATE TABLE `default_themes` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(300) NOT NULL,
+  `folder` varchar(300) NOT NULL,
+  `position` int(11) NOT NULL,
+  `thumbnail` varchar(300) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

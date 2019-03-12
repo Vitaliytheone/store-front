@@ -2,8 +2,8 @@
 
 namespace sommerce\modules\admin\controllers\traits\settings;
 
-use common\models\stores\PaymentMethods;
-use common\models\stores\PaymentMethodsCurrency;
+use common\models\sommerces\PaymentMethods;
+use common\models\sommerces\PaymentMethodsCurrency;
 use my\components\ActiveForm;
 use sommerce\helpers\UiHelper;
 use sommerce\modules\admin\components\Url;
@@ -63,7 +63,7 @@ trait PaymentsTrait
             throw new NotFoundHttpException();
         }
 
-        /** @var \common\models\stores\StoreAdminAuth $identity */
+        /** @var \common\models\sommerces\StoreAdminAuth $identity */
         $identity = Yii::$app->user->getIdentity(false);
 
         $paymentModel->setUser($identity);
@@ -123,7 +123,7 @@ trait PaymentsTrait
             throw new NotFoundHttpException();
         }
 
-        /** @var \common\models\stores\StoreAdminAuth $identity */
+        /** @var \common\models\sommerces\StoreAdminAuth $identity */
         $identity = Yii::$app->user->getIdentity(false);
 
         $paymentModel->setUser($identity);

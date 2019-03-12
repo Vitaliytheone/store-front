@@ -1,0 +1,4 @@
+USE `store`;
+INSERT INTO `pages` (`name`, `template`, `visibility`, `content`, `seo_title`, `seo_description`, `url`, `deleted`, `created_at`, `updated_at`) VALUES
+('contact',	'contact',	1,	'Contact',	'contact',	'contact',	'contact',	0,	NULL,	NULL),
+('page',	'page',	1,	'Page',	'page',	'page',	'page',	0,	NULL,	NULL);

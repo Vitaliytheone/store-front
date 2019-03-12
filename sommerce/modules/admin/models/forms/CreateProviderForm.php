@@ -1,11 +1,11 @@
 <?php
 namespace sommerce\modules\admin\models\forms;
 
-use common\models\store\ActivityLog;
-use common\models\stores\Providers;
-use common\models\stores\StoreAdminAuth;
-use common\models\stores\StoreProviders;
-use common\models\stores\Stores;
+use common\models\panels\AdditionalServices;
+use common\models\sommerce\ActivityLog;
+use common\models\sommerces\StoreAdminAuth;
+use common\models\sommerces\StoreProviders;
+use common\models\sommerces\Stores;
 use Yii;
 use yii\base\Model;
 use yii\web\User;
@@ -19,7 +19,7 @@ class CreateProviderForm extends Model {
     public $name;
 
     /**
-     * @var Providers
+     * @var AdditionalServices
      */
     protected $_provider;
 
@@ -86,7 +86,7 @@ class CreateProviderForm extends Model {
         }
 
         $provider = new StoreProviders();
-        $provider->provider_id = $this->_provider->id;
+        $provider->provider_id = $this->_provider->provider_id;
         $provider->store_id = $this->_store->id;
 
         if (!$provider->save()) {
@@ -153,45 +153,24 @@ class CreateProviderForm extends Model {
 
         $value = $this->{$attribute};
 
-        if (($this->_provider = Providers::findOne([
-            'site' => $value
+        if (($this->_provider = AdditionalServices::findOne([
+            'name' => $value,
+            'store' => 1,
+            'status' => 0,
+
         ]))) {
 
             if (StoreProviders::findOne([
-                'provider_id' => $this->_provider->id,
+                'provider_id' => $this->_provider->provider_id,
                 'store_id' => $this->_store->id
             ])) {
-                $this->addError($attribute, 'Provider already exist.');
+                $this->addError($attribute, Yii::t('admin', 'settings.errors_providers_exist'));
                 return false;
             }
             return true;
         }
+        $this->addError($attribute, Yii::t('admin', 'settings.errors_providers_vaild'));
 
-        $key = Yii::$app->params['getyourpanelKey'];
-
-        $result = file_get_contents("http://getyourpanel.com/checkpanel?key={$key}&domain=" . urlencode($value));
-
-        $result = json_decode($result, true);
-
-        if (empty($result['result']) || 'ok' != $result['result']) {
-            $this->addError($attribute, 'Incorrect ' . $attribute . ' value.');
-            return false;
-        }
-
-        if (!$this->_provider) {
-            $this->_provider = new Providers();
-            $this->_provider->site = $this->name;
-            $this->_provider->type = Providers::TYPE_INTERNAL;
-            $this->_provider->protocol = !empty($result['ssl']) ? Providers::PROTOCOL_HTTPS : Providers::PROTOCOL_HTTP;
-
-            if (!$this->_provider->save()) {
-                $this->addError($attribute, 'Incorrect ' . $attribute . ' value.');
-                return false;
-            }
-        }
-
-        $this->{$attribute} = $value;
-
-        return true;
+        return false;
     }
 }

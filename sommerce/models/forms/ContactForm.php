@@ -2,8 +2,8 @@
 
 namespace sommerce\models\forms;
 
-use common\models\stores\Stores;
-use common\mail\mailers\store\ContactFormMailer;
+use common\models\sommerces\Stores;
+use sommerce\mail\mailers\ContactFormMailer;
 use Yii;
 use yii\base\Exception;
 use yii\base\Model;
@@ -21,51 +21,47 @@ class ContactForm extends Model
     public $message;
     public $recaptcha;
 
-    public $_sentSuccess;
+    protected $_sentSuccess = '';
 
-    /** @var  Stores */
+    /** @var Stores */
     private $_store;
 
-    public function init()
-    {
-        parent::init();
-
-        $this->_store = Yii::$app->store->getInstance();
-
-        // Get sent result from session
-        $this->_sentSuccess = Yii::$app->session->getFlash('sent_success');
-    }
 
     public function formName()
     {
         return '';
     }
 
+    public function setStore(Stores $store)
+    {
+        $this->_store = $store;
+    }
+
     public function rules()
     {
         return [
-            ['recaptcha', 'recaptchaValidator', 'message' => 'reCAPTCHA validation error! Try some times latter!'],
-            ['recaptcha', 'required', 'message' => 'Please solve captcha'],
+            ['recaptcha', 'recaptchaValidator', 'message' => Yii::t('app', 'contact.form.recaptcha.error')],
+            ['recaptcha', 'required', 'message' => Yii::t('app', 'contact.form.recaptcha.required')],
             [['subject', 'name', 'email', 'message'], 'required'],
             [['subject', 'name', 'message'], 'string'],
-            ['email', 'emailValidator'],
+            ['email', 'email'],
         ];
     }
 
     public function load($data, $formName = null)
     {
         $this->setAttributes([
-            'recaptcha' =>  ArrayHelper::getValue($data, 'g-recaptcha-response')
+            'recaptcha' => ArrayHelper::getValue($data, 'g-recaptcha-response')
         ]);
 
         return parent::load($data, $formName);
     }
 
     /**
-     * Return true if message successfully sent
-     * @return mixed
+     * Return success text if message successfully sent
+     * @return string
      */
-    public function getSentSuccess()
+    public function getSentSuccess(): string
     {
         return $this->_sentSuccess;
     }
@@ -92,28 +88,13 @@ class ContactForm extends Model
         $sentResult = $mail->send();
 
         if ($sentResult === true) {
-            // Store sent result to session
-            Yii::$app->session->setFlash('sent_success', $sentResult);
-        }  else {
+            $this->_sentSuccess = Yii::t('app', 'contact.form.message.success');
+        } else {
             // Set validation error
             $this->addError(null, Yii::t('app', 'contact.form.message.error'));
         }
 
         return $sentResult;
-    }
-
-    /**
-     * Custom email validator
-     * @param $attribute
-     * @param $params
-     * @param $validator
-     * @return bool
-     */
-    public function emailValidator($attribute, $params, $validator) {
-        if ($this->$attribute !== filter_var($this->$attribute, FILTER_VALIDATE_EMAIL)) {
-            return false;
-        }
-        return true;
     }
 
     /**
@@ -124,7 +105,8 @@ class ContactForm extends Model
      * @return bool
      * @throws Exception
      */
-    public function recaptchaValidator($attribute, $params, $validator) {
+    public function recaptchaValidator($attribute, $params, $validator)
+    {
 
         $recaptchaResponse = $this->$attribute;
 
@@ -186,9 +168,7 @@ class ContactForm extends Model
 
         curl_close($ch);
 
-        $jsonResponse = json_decode($response, true);
-
-        return $jsonResponse;
+        return json_decode($response, true);
     }
 
 }

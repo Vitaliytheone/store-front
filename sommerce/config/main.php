@@ -1,4 +1,6 @@
 <?php
+
+use common\components\response\CustomResponse;
 use yii\web\UrlNormalizer;
 
 $db = array_merge(
@@ -32,6 +34,11 @@ $config = [
                 'application/json' => 'yii\web\JsonParser'
             ],
         ],
+        'response' => [
+            'formatters' => [
+                CustomResponse::FORMAT_AJAX_API => 'common\components\response\AjaxApiFormatter',
+            ],
+        ],
         'devMailer' => [
             'class' => 'yii\swiftmailer\Mailer',
             'transport' => [
@@ -40,7 +47,7 @@ $config = [
         ],
         'user' => [
             'class' => 'sommerce\modules\admin\components\CustomUser',
-            'identityClass' => 'common\models\stores\StoreAdminAuth',
+            'identityClass' => 'common\models\sommerces\StoreAdminAuth',
             'loginUrl' => '/admin',
             'enableSession' => true,
             'enableAutoLogin' => true,
@@ -60,7 +67,7 @@ $config = [
             ],
         ],
         'errorHandler' => [
-            'errorAction' => 'site/error',
+            'errorAction' => 'page/error',
         ],
         'urlManager' => [
             'enablePrettyUrl' => true,
@@ -80,7 +87,7 @@ $config = [
                 ],
                 'yii\web\YiiAsset' => [
                     'depends' => [
-                        'sommerce\assets\JqueryAsset'
+                        'sommerce\assets\AdminCustomJsAsset'
                     ]
                 ],
             ],
@@ -110,7 +117,7 @@ $config = [
             'class' => 'sommerce\components\View',
             'renderers' => [
                 'twig' => [
-                    'class' => 'common\components\twig\ViewRenderer',
+                    'class' => \sommerce\components\twig\ViewRenderer::class,
                     'cachePath' => null,
                     'extension' => \sommerce\components\twig\Extension::class,
                     'options' => [
@@ -120,7 +127,7 @@ $config = [
             ],
         ],
         'store' => [
-            'class' => 'common\components\stores\StoreComponent'
+            'class' => 'common\components\sommerces\StoreComponent'
         ],
         'db' => $db['db'],
         'storeDb' => $db['storeDb'],
@@ -164,7 +171,7 @@ if (YII_ENV_DEV) {
     $config['modules']['debug'] = [
         'class' => 'yii\debug\Module',
         // uncomment the following to add your IP if you are not connecting from localhost.
-        'allowedIPs' => $params['debugIps']
+        'allowedIPs' => $params['debugIps'],
     ];
 
     $config['bootstrap'][] = 'gii';

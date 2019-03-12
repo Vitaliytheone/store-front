@@ -1,0 +1,3 @@
+# Delete Bitcoin payments method
+USE `stores`;
+DELETE FROM `payment_methods` WHERE `method` = 'bitcoin';

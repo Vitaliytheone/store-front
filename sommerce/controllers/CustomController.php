@@ -2,18 +2,15 @@
 
 namespace sommerce\controllers;
 
-use common\helpers\ThemesHelper;
 use sommerce\components\filters\IntegrationsFilter;
+use sommerce\components\View;
 use sommerce\helpers\AssetsHelper;
-use sommerce\models\search\CartSearch;
 use sommerce\models\search\NavigationSearch;
 use sommerce\modules\admin\components\Url;
-use sommerce\modules\admin\helpers\LanguagesHelper;
-use yii\base\InvalidParamException;
 use Yii;
+use yii\base\Exception;
 use yii\bootstrap\Html;
 use yii\helpers\ArrayHelper;
-use yii\web\View;
 
 /**
  * Custom controller for the Sommerce
@@ -50,7 +47,7 @@ class CustomController extends CommonController
     /**
      * @var string
      */
-    public $layout = '@sommerce/views/site/layout.php';
+    public $layout = 'layout.twig';
 
     /**
      * @var
@@ -71,7 +68,6 @@ class CustomController extends CommonController
 
         $store = Yii::$app->store->getInstance();
 
-        $this->layout = "layout.twig";
         Yii::$app->language = $store->language;
     }
 
@@ -137,12 +133,16 @@ class CustomController extends CommonController
         }
 
         $this->endContent = [];
+        $this->startHeadContent[] = Html::csrfMetaTags();
 
         if (!empty($this->customJs)) {
-            foreach (AssetsHelper::getStoreScripts() as $src) {
-                $this->endContent[] = Html::script('', ['src' => $src, 'type' => 'text/javascript']);
+
+            if (!empty($this->customJs)) {
+                foreach (AssetsHelper::getStoreScripts() as $src) {
+                    $this->endContent[] = Html::script('', ['src' => $src, 'type' => 'text/javascript']);
+                }
+                $this->endContent[] = Html::script(implode("\r\n", $this->customJs), ['type' => 'text/javascript']);
             }
-            $this->endContent[] = Html::script(implode("\r\n", $this->customJs), ['type' => 'text/javascript']);
         }
 
         if (YII_ENV_DEV) {
@@ -151,32 +151,23 @@ class CustomController extends CommonController
             $this->endContent[] = ob_get_contents();
             ob_end_clean();
         }
-        $search =  new NavigationSearch();
-        $search->setStore($this->store);
 
         $this->_globalParams = [
             'csrfname' => Yii::$app->getRequest()->csrfParam,
             'csrftoken' => Yii::$app->getRequest()->getCsrfToken(),
             'site' => [
-                'page_title' => $this->pageTitle ? $this->pageTitle : $this->store->seo_title,
-                'menu' => $search->getSiteMenuTree(Yii::$app->request->url),
-                'cart' => [
-                    'item_count' => (int)(new CartSearch())->setStore($this->store)->getCount(),
-                ],
-                'language' => Yii::$app->language,
-                'rtl' => LanguagesHelper::getLanguageRtl($this->store),
-                'store_name' => $this->store->name,
+                'captcha_key' => Yii::$app->params['reCaptcha.siteKey'],
+                'url' => trim(Yii::$app->getRequest()->url, '/'),
                 'favicon' => $this->store->favicon,
                 'logo' => $this->store->logo,
-                'meta' => [
-                    'keywords' => $this->seoKeywords ? $this->seoKeywords : $this->store->seo_keywords,
-                    'description' => $this->seoDescription ? $this->seoDescription : $this->store->seo_description,
-                ],
                 'story_domain' => Yii::$app->getRequest()->getHostName(),
-                'story_name' => Yii::$app->store->getInstance()->name,
-                'active_menu' => trim(Yii::$app->getRequest()->getUrl(), '/'),
-                'custom_header' => $this->store->custom_header,
-                'custom_footer' => $this->store->custom_footer,
+            ],
+            'page' => [
+                'title' => $this->pageTitle ?: $this->store->seo_title,
+                'meta' => [
+                    'keywords' => $this->seoKeywords ?: $this->store->seo_keywords,
+                    'description' => $this->seoDescription ?: $this->store->seo_description,
+                ],
             ]
         ];
 
@@ -230,78 +221,89 @@ class CustomController extends CommonController
     }
 
     /**
+     * Render content partial without applying layout
+     * @param $content
+     * @param $params
+     * @return mixed
+     * @throws Exception
+     */
+    public function renderContentPartial($content, $params)
+    {
+        $renderer = $this->getView();
+
+        if (!method_exists($renderer, 'renderContent')) {
+            throw new Exception('This View does not support renderContent method!');
+        }
+
+        $content = $renderer->renderContent($content, $params);
+
+        return $renderer->renderContent($content, $params);
+    }
+
+    /**
      * Renders a static string by applying a layout.
      * @param string $content the static string being rendered
+     * @param array $params
+     * @param boolean $layout
      * @return string the rendering result of the layout with the given static string as the `$content` variable.
      * If the layout is disabled, the string will be returned back.
      * @throws \yii\base\InvalidConfigException
+     * @since 2.0.1
      */
-    public function renderContent($content)
+    public function renderTwigContent($content, $params = [], $layout = true)
     {
-        $layoutFile = $this->findLayoutFile($this->getView());
-        if ($layoutFile !== false) {
-            return $this->getView()->renderFile($layoutFile, array_merge($this->_getGlobalParams(), [
-                'content' => $content,
-            ]), $this);
+        $renderer = $this->getView();
+
+        if (!method_exists($renderer, 'renderContent')) {
+            return '';
         }
 
-        return $content;
+        $global = $this->_getGlobalParams();
+        $content = $renderer->renderContent($content, array_merge($global, $params));
+
+        if (!$layout) {
+            return $content;
+        }
+
+        $layoutFile = file_get_contents(self::getTwigView($this->layout));
+
+        if ($layoutFile === false) {
+            return $content;
+        }
+
+        $renderedContent = $renderer->renderContent($layoutFile, array_merge($global, [
+            'page_content' => $content,
+        ]), $this->endContent, $this->startHeadContent);
+
+        return $renderedContent;
     }
 
     /**
-     * Custom render partial
-     * @param $view
-     * @param array $params
-     * @return string
+     * Get view path use view name
+     * @param string $view
+     * @param string $defaultExtension
+     * @return string|null
      */
-    public function renderPartialCustom($view, $params = [])
+    public static function getTwigView($view, $defaultExtension = 'twig')
     {
-        $filename = ThemesHelper::getView($view) ? $view : pathinfo($view, PATHINFO_FILENAME);
+        $view = ltrim($view, '/');
+        if (strpos($view, '.twig') === false && strpos($view, '.php') === false) {
+            $view = "{$view}.{$defaultExtension}";
+        }
 
-        return $this->renderPartial($filename, $params);
+        $sp = DIRECTORY_SEPARATOR;
+        $viewsPath = Yii::getAlias('@sommerce' . $sp . 'views');
+        $rootPath = $viewsPath . $sp . $view;
+        $pagePath = $viewsPath . $sp . 'page' . $sp . $view;
+
+        if (is_file($rootPath) || is_file($rootPath . '.' . $defaultExtension) || is_file($rootPath . '.php')) {
+            return $rootPath;
+        }
+        if (is_file($pagePath) || is_file($pagePath . '.' . $defaultExtension) || is_file($pagePath . '.php')) {
+            return $pagePath;
+        }
+
+        return null;
     }
 
-    /**
-     * Finds the applicable layout file.
-     * @param View $view the view object to render the layout file.
-     * @return string|bool the layout file path, or false if layout is not needed.
-     * Please refer to [[render()]] on how to specify this parameter.
-     * @throws InvalidParamException if an invalid path alias is used to specify the layout.
-     */
-    public function findLayoutFile($view)
-    {
-        $module = $this->module;
-        if (is_string($this->layout)) {
-            $layout = $this->layout;
-        } elseif ($this->layout === null) {
-            while ($module !== null && $module->layout === null) {
-                $module = $module->module;
-            }
-            if ($module !== null && is_string($module->layout)) {
-                $layout = $module->layout;
-            }
-        }
-
-        if (!isset($layout)) {
-            return false;
-        }
-
-        if (strncmp($layout, '@', 1) === 0) {
-            $file = Yii::getAlias($layout);
-        } elseif (strncmp($layout, '/', 1) === 0) {
-            $file = $view->getThemeViewFile(substr($layout, 1));
-        } else {
-            $file = $view->getThemeViewFile($layout);
-        }
-
-        if (pathinfo($file, PATHINFO_EXTENSION) !== '') {
-            return $file;
-        }
-        $path = $file . '.' . $view->defaultExtension;
-        if ($view->defaultExtension !== 'php' && !is_file($path)) {
-            $path = $file . '.php';
-        }
-
-        return $path;
-    }
 }

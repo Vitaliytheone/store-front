@@ -2,7 +2,7 @@
 
 namespace sommerce\components\i18n;
 
-use common\models\stores\Stores;
+use common\models\sommerces\Stores;
 use Yii;
 use yii\helpers\ArrayHelper;
 use yii\i18n\PhpMessageSource;

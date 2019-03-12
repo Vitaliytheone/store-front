@@ -2,8 +2,8 @@
 
 namespace common\models\store\queries;
 
-use yii\db\ActiveQuery;
 use common\models\store\CustomThemes;
+use yii\db\ActiveQuery;
 
 /**
  * This is the ActiveQuery class for [[CustomThemes]].

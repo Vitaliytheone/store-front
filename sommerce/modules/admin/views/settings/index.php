@@ -1,9 +1,9 @@
 <?php
 
-use yii\helpers\Html;
-use sommerce\modules\admin\components\Url;
 use common\components\ActiveForm;
-use common\models\store\Files;
+use common\models\sommerce\Files;
+use sommerce\modules\admin\components\Url;
+use yii\helpers\Html;
 
 /* @var $this \yii\web\View */
 /* @var $timezones array */
@@ -133,71 +133,6 @@ $storeUrl = $store->getBaseSite();
                         </select>
                     </div>
 
-                    <div class="form-group">
-                        <label for="custom_header">
-                            <?= Yii::t('admin', 'settings.general_custom_header') ?>
-                        </label>
-                        <textarea class="form-control" id="custom_header" rows="3" name="SettingsGeneralForm[custom_header]" placeholder="<?= Html::encode(Yii::t('admin', 'settings.general_custom_header_placeholder')) ?>"><?= Html::encode($store->custom_header) ?></textarea>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="custom_footer">
-                            <?= Yii::t('admin', 'settings.general_custom_footer') ?>
-                        </label>
-                        <textarea class="form-control" id="custom_footer" rows="3" name="SettingsGeneralForm[custom_footer]" placeholder="<?= Html::encode(Yii::t('admin', 'settings.general_custom_footer_placeholder')) ?>"><?= Html::encode($store->custom_footer) ?></textarea>
-                    </div>
-
-                    <div class="card card-white ">
-                        <div class="card-body">
-
-                            <div class="row seo-header align-items-center">
-                                <div class="col-sm-8">
-                                    <?= Yii::t('admin', 'settings.general_seo') ?>
-                                </div>
-                                <div class="col-sm-4 text-sm-right">
-                                    <url class="btn btn-sm btn-link" data-toggle="collapse" href="#seo-block">
-                                        <?= Yii::t('admin', 'settings.general_seo_edit') ?>
-                                    </url>
-                                </div>
-                            </div>
-
-                            <div class="seo-preview">
-                                <div class="seo-preview__title edit-seo__title">
-                                    <?= Yii::t('admin', 'settings.general_seo_index') ?>
-                                </div>
-                                <div class="seo-preview__url"><?= $storeUrl ?></div>
-                                <div class="seo-preview__description edit-seo__meta">
-                                    <?/*= Yii::t('admin', 'settings.general_seo_meta_default') */?>
-                                </div>
-                            </div>
-
-                            <div class="collapse" id="seo-block">
-                                <div class="form-group">
-                                    <label for="edit-seo__title">
-                                        <?= Yii::t('admin', 'settings.general_seo_index') ?>
-                                    </label>
-                                    <input class="form-control" id="edit-seo__title" name="SettingsGeneralForm[seo_title]"
-                                           value="<?= Html::encode($store->seo_title) ?>">
-                                    <small class="form-text text-muted"><span class="edit-seo__title-muted"></span>
-                                        <?= Yii::t('admin', 'settings.general_seo_index_limits') ?>
-                                         </small>
-                                </div>
-                                <div class="form-group">
-                                    <label for="edit-seo__meta">
-                                        <?= Yii::t('admin', 'settings.general_seo_meta') ?>
-                                    </label>
-                                    <textarea class="form-control" id="edit-seo__meta" rows="3" name="SettingsGeneralForm[seo_description]"><?= $store->seo_description ? Html::encode($store->seo_description) : "" /* Yii::t('admin', 'settings.general_seo_meta_default') */ ?></textarea>
-                                    <small class="form-text text-muted"><span class="edit-seo__meta-muted"></span>
-                                        <?= Yii::t('admin', 'settings.general_seo_meta_limits') ?>
-                                    </small>
-                                </div>
-                                <div class="form-group">
-                                    <label for="edit-seo__meta-keyword"><?= Yii::t('admin', 'settings.general_seo_meta_keywords') ?></label>
-                                    <textarea class="form-control" id="edit-seo__meta-keyword" rows="3" name="SettingsGeneralForm[seo_keywords]"><?= $store->seo_keywords ?></textarea>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                     <hr>
                     <div class="form-group">
                         <button type="submit" class="btn btn-success m-btn--air 3333222" id="generalSettingsSubmit" name="save-button"

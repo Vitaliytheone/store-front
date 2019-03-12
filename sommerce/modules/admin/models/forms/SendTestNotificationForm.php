@@ -1,9 +1,9 @@
 <?php
 namespace sommerce\modules\admin\models\forms;
 
-use common\models\store\NotificationAdminEmails;
-use common\models\store\NotificationTemplates;
-use common\models\stores\Stores;
+use common\models\sommerce\NotificationAdminEmails;
+use common\models\sommerce\NotificationTemplates;
+use common\models\sommerces\Stores;
 use Yii;
 use yii\base\Model;
 use yii\db\Query;

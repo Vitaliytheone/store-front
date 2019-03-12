@@ -1,0 +1,21 @@
+/* Modal window content hider */
+.modal-loader {
+    position:   absolute;
+    z-index:    1000;
+    top:        0;
+    left:       0;
+    height:     100%;
+    width:      100%;
+    border-radius: 28px;
+    background: rgba( 255, 255, 255, .8 )
+    url('/img/ajax-loader.gif')
+    50% 50%
+    no-repeat;
+}
+.modal-loader.hidden {
+    display: none;
+}
+
+.modal-loader.square {
+    border-radius: 0;
+}

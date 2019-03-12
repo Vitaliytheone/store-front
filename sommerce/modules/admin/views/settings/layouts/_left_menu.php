@@ -2,7 +2,8 @@
     /* @var $this \yii\web\View */
     /* @var $active string */
 
-    use sommerce\modules\admin\components\Url;
+use sommerce\modules\admin\components\Url;
+
 ?>
 <!-- BEGIN: Aside Menu -->
 <div
@@ -36,45 +37,11 @@
                 </span>
             </a>
         </li>
-        <?php /*
         <li class="m-nav__item <?=('integrations' == $active ? 'm-nav__item--active' : '') ?>">
             <a href="<?= Url::toRoute('/settings/integrations')?>" class="m-nav__link">
                 <i class="m-nav__link-icon flaticon-app"></i>
                 <span class="m-nav__link-text">
                     <?= Yii::t('admin', 'settings.left_menu_integrations') ?>
-                </span>
-            </a>
-        </li>
- */ ?>
-        <li class="m-nav__item <?=('navigation' == $active ? 'm-nav__item--active' : '') ?>">
-            <a href="<?= Url::toRoute('/settings/navigation')?>" class="m-nav__link">
-                <i class="m-nav__link-icon flaticon-list-1"></i>
-                <span class="m-nav__link-text">
-                    <?= Yii::t('admin', 'settings.left_menu_navigation') ?>
-                </span>
-            </a>
-        </li>
-        <li class="m-nav__item <?=('pages' == $active ? 'm-nav__item--active' : '') ?>">
-            <a href="<?= Url::toRoute('/settings/pages')?>" class="m-nav__link">
-                <i class="m-nav__link-icon icon-docs"></i>
-                <span class="m-nav__link-text">
-                    <?= Yii::t('admin', 'settings.left_menu_pages') ?>
-                </span>
-            </a>
-        </li>
-        <li class="m-nav__item <?=('themes' == $active ? 'm-nav__item--active' : '') ?>">
-            <a href="<?= Url::toRoute('/settings/themes')?>" class="m-nav__link">
-                <i class="m-nav__link-icon icon-puzzle"></i>
-                <span class="m-nav__link-text">
-                    <?= Yii::t('admin', 'settings.left_menu_themes') ?>
-                </span>
-            </a>
-        </li>
-        <li class="m-nav__item <?=('blocks' == $active ? 'm-nav__item--active' : '') ?>">
-            <a href="<?= Url::toRoute('/settings/blocks')?>" class="m-nav__link">
-                <i class="m-nav__link-icon icon-layers"></i>
-                <span class="m-nav__link-text">
-                    <?= Yii::t('admin', 'settings.left_menu_blocks') ?>
                 </span>
             </a>
         </li>

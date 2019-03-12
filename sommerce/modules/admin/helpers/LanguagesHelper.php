@@ -1,10 +1,10 @@
 <?php
 namespace sommerce\modules\admin\helpers;
 
-use common\models\store\Languages;
-use common\models\store\Messages;
-use common\models\stores\StoreDefaultMessages;
-use common\models\stores\Stores;
+use common\models\sommerce\Languages;
+use common\models\sommerce\Messages;
+use common\models\sommerces\StoreDefaultMessages;
+use common\models\sommerces\Stores;
 use Yii;
 use yii\db\Exception;
 use yii\helpers\ArrayHelper;

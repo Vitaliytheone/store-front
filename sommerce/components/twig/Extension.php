@@ -1,10 +1,13 @@
 <?php
+
 namespace sommerce\components\twig;
 
+use common\models\sommerce\Packages;
 use sommerce\components\twig\parsers\TokenParser_Include;
-use common\models\store\Pages;
+use common\models\sommerce\Pages;
 use sommerce\helpers\AssetsHelper;
 use sommerce\helpers\PackageHelper;
+use sommerce\helpers\PagesHelper;
 use Yii;
 use Twig_SimpleFunction;
 use Twig_SimpleFilter;
@@ -46,17 +49,18 @@ class Extension extends \Twig_Extension {
                 return Yii::t('app', $value, array_merge(static::getTemplateVariables(), $options));
             }),
             new Twig_SimpleFunction('ceil', 'ceil'),
-            new Twig_SimpleFunction('asset', function($value) {
-                return AssetsHelper::getAssetPath() . $value;
+            new Twig_SimpleFunction('assets', function($value) {
+                return AssetsHelper::getAssets($value);
             }),
             new Twig_SimpleFunction('page_url', function($pageId){
-                $page = Pages::find()->active()->andWhere([
-                    'id' => $pageId,
-                ])->one();
-                return '/' . ($page ? $page->url : '#');
+                $page = PagesHelper::getPageById($pageId);
+                return ($page ? '/' . $page['url'] : '#');
             }),
-            new Twig_SimpleFunction('package', function($value) {
-                return PackageHelper::getPackageBuyNow($value);
+            new Twig_SimpleFunction('package', function($packageId) {
+                return PackageHelper::getPackageById($packageId);
+            }),
+            new Twig_SimpleFunction('products', function($productId) {
+                return PackageHelper::getPackagesByProductId($productId);
             }),
         ];
 

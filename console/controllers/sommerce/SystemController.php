@@ -2,24 +2,20 @@
 
 namespace console\controllers\sommerce;
 
-use common\models\store\Languages;
-use common\models\store\Messages;
-use common\models\stores\Integrations;
-use common\models\stores\StoreAdmins;
-use common\models\stores\StoreIntegrations;
-use my\components\ActiveForm;
+use common\models\sommerces\Integrations;
+use common\models\sommerces\PaymentMethods;
+use common\models\sommerces\PaymentMethodsCurrency;
+use common\models\sommerces\StoreAdmins;
+use common\models\sommerces\StoreIntegrations;
+use common\models\sommerces\StorePaymentMethods;
+use common\models\sommerces\Stores;
+use control_panel\components\ActiveForm;
 use sommerce\helpers\MessagesHelper;
+use Yii;
 use yii\db\Exception;
 use yii\db\Query;
-use yii\helpers\ArrayHelper;
 use yii\helpers\Console;
-use common\models\stores\Stores;
-use sommerce\helpers\StoreHelper;
-use Yii;
 use yii\helpers\FileHelper;
-use common\models\stores\PaymentMethodsCurrency;
-use common\models\stores\StorePaymentMethods;
-use common\models\stores\PaymentMethods;
 
 /**
  * Class SystemController
@@ -90,7 +86,7 @@ class SystemController extends CustomController
 
                 $store->generateFolderName();
                 $store->save(false);
-                StoreHelper::generateAssets($store->id);
+
 
                 $this->stderr('Generated for ' . $store->id . "\n", Console::FG_GREEN);
             }
@@ -247,7 +243,7 @@ class SystemController extends CustomController
 
         $templates = (new Query())
             ->select('*')
-            ->from(Yii::$app->params['storeDefaultDatabase'] . '.pages')
+            ->from(Yii::$app->params['sommerceDefaultDatabase'] . '.pages')
             ->indexBy('url')
             ->all();
 
@@ -457,7 +453,7 @@ class SystemController extends CustomController
             ->andWhere('db_name != ""')
             ->all();
 
-        $templateDb = Yii::$app->params['storeDefaultDatabase'];
+        $templateDb = Yii::$app->params['sommerceDefaultDatabase'];
         $stores[] = ['db_name' => $templateDb];
 
         $count = 0;

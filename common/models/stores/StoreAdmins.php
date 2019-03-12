@@ -235,6 +235,8 @@ class StoreAdmins extends ActiveRecord
             return !!$rule;
         });
 
+
+
         $controllers = array_keys($rules);
         array_push($controllers, self::DEFAULT_CONTROLLER);
 

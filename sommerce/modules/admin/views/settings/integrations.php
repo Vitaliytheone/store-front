@@ -1,6 +1,6 @@
 <?php
 
-use common\models\stores\StoreIntegrations;
+use common\models\sommerces\StoreIntegrations;
 
 /* @var $this \yii\web\View */
 /* @var $integrations array */

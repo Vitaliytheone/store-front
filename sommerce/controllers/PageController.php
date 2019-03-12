@@ -2,11 +2,12 @@
 
 namespace sommerce\controllers;
 
-use common\models\store\Pages;
-use yii\web\NotFoundHttpException;
+use my\helpers\Url;
+use sommerce\helpers\PageFilesHelper;
+use sommerce\helpers\PagesHelper;
+use sommerce\models\forms\OrderForm;
 use Yii;
-use sommerce\models\forms\ContactForm;
-use common\components\ActiveForm;
+use yii\web\NotFoundHttpException;
 
 /**
  * Page controller
@@ -14,86 +15,111 @@ use common\components\ActiveForm;
 class PageController extends CustomController
 {
     /**
-     * Displays page.
-     * @param $id
-     * @return string|\yii\web\Response
-     * @throws NotFoundHttpException
+     * Error action
+     * @return string
+     * @throws \yii\base\InvalidConfigException
      */
-    public function actionIndex($id)
+    public function actionError()
     {
-        $page = $this->_findPage($id);
-        $this->pageTitle = $page->seo_title;
-        $this->seoDescription = $page->seo_description;
-        $this->seoKeywords = $page->seo_keywords;
+        $content = file_get_contents(self::getTwigView('404'));
 
-        switch ($page->url) {
-            case $page->template === $page::TEMPLATE_CONTACT : return $this->_actionContactUs($page); break;
-        }
-
-        if ($page->template == Pages::TEMPLATE_FILE) {
-            $this->layout = false;
-            return $this->renderContent($page->content);
-        }
-
-        return $this->render($page->template . '.twig', [
-            'page' => [
-                'title' => $page->title,
-                'content' => $page->content,
-            ]
-        ]);
+        return $this->renderTwigContent($content, [], false);
     }
 
     /**
-     * Render `contact form` page
-     * @param Pages $page
-     * @return string|\yii\web\Response
-     */
-    protected function _actionContactUs($page)
-    {
-        $request = Yii::$app->getRequest();
-        $contactForm = new ContactForm();
-
-        if ($contactForm->load($request->post()) && $contactForm->contact()) {
-            return $this->refresh();
-        }
-
-        return $this->render($page->template . '.twig', [
-            'page' => [
-                'title' => $page->title,
-                'content' => $page->content,
-            ],
-            'contact' => [
-                'form' => [
-                    'subject' => $contactForm->subject,
-                    'name' => $contactForm->name,
-                    'email' => $contactForm->email,
-                    'message' => $contactForm->message,
-                ],
-            ],
-
-            'error' => $contactForm->hasErrors(),
-            'error_message' => ActiveForm::firstError($contactForm),
-            'success' => $contactForm->getSentSuccess(),
-            'captcha_key' => Yii::$app->params['reCaptcha.siteKey'],
-        ]);
-    }
-
-    /**
-     * Find page or return exception
-     * @param int $id
-     * @return Pages
+     * Render page by url
+     * @param string $url
+     * @return string
      * @throws NotFoundHttpException
+     * @throws \yii\base\Exception
      */
-    protected function _findPage(int $id)
+    public function actionIndex($url = 'index')
     {
-        $page = Pages::find()->active()->andWhere([
-            'id' => $id,
-        ])->one();
+        $page = PagesHelper::getPage($url);
 
         if (!$page) {
-            throw new NotFoundHttpException();
+            throw new NotFoundHttpException("Page by url '{$url}' not found");
         }
 
-        return $page;
+        Url::remember();
+
+        $this->pageTitle = $page['seo_title'];
+        $this->seoKeywords = $page['seo_keywords'];
+        $this->seoDescription = $page['seo_description'];
+
+        $content = $page['twig'] ?? '';
+
+        $this->addModule('contactsForm', [
+            'contact_action_url' => Url::toRoute(['/system/contacts']),
+        ]);
+        $this->addPaymentModal();
+        $orderForm = new OrderForm();
+        $orderForm->setStore($this->store);
+
+        $this->addModule('orderFormFrontend', [
+            'order_data_url' => Url::toRoute(['/cart/get-order-data', 'id' => '_id_']),
+            'form_action_url' => Url::toRoute(['/cart']),
+            'form_validate_ulr' => Url::toRoute(['/cart/validate']),
+            'payment_methods' =>  $orderForm->getPaymentsMethodsForView(),
+            'fieldOptions' => $orderForm->getPaymentsFields(),
+            'options' => $orderForm->getJsOptions(),
+        ]);
+
+        return $this->renderTwigContent($content);
+    }
+
+    /**
+     * Add payment modal
+     */
+    protected function addPaymentModal()
+    {
+        $cookies = Yii::$app->request->cookies;
+        if (($cookie = $cookies->get('modal')) !== null) {
+            $this->addModule('paymentResultModal', $cookie->value);
+            $cookies = Yii::$app->response->cookies;
+            $cookies->remove('modal');
+        }
+    }
+
+    /**
+     * Render page styles by url
+     * @param string $name
+     * @return string
+     * @throws NotFoundHttpException
+     * @throws \yii\web\RangeNotSatisfiableHttpException
+     */
+    public function actionStyles($name = 'styles.css')
+    {
+        $files = PageFilesHelper::getFileByName($name);
+
+        if (empty($files)) {
+            throw new NotFoundHttpException("File {$name} not found");
+        }
+
+        return Yii::$app->response->sendContentAsFile($files['content'], $name, [
+            'mimeType' => 'text/css;charset=UTF-8',
+            'inline' => true,
+        ]);
+    }
+
+    /**
+     * Render page scripts by url
+     * @param string $name
+     * @return string
+     * @throws NotFoundHttpException
+     * @throws \yii\web\RangeNotSatisfiableHttpException
+     */
+    public function actionScripts($name = 'scripts.js')
+    {
+        $files = PageFilesHelper::getFileByName($name);
+
+        if (empty($files)) {
+            throw new NotFoundHttpException("File {$name} not found");
+        }
+
+        return Yii::$app->response->sendContentAsFile($files['content'], $name, [
+            'mimeType' => 'text/javascript;charset=UTF-8',
+            'inline' => true,
+        ]);
     }
 }

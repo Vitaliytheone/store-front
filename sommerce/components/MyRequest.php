@@ -1,8 +1,7 @@
 <?php
 namespace sommerce\components;
 
-use common\helpers\CurrencyHelper;
-use common\models\stores\Stores;
+use common\models\sommerces\Stores;
 use sommerce\helpers\RouteHelper;
 use Yii;
 use yii\base\InvalidConfigException;
@@ -31,13 +30,10 @@ class MyRequest extends Request
          * @var $store Stores
          */
         $store = Yii::$app->store->getInstance();
-
         $isAdminModule = strpos($pathInfo, 'admin') !== false;
 
         if ($store && !$isAdminModule) {
-
             $urls = RouteHelper::getRoutes();
-
             foreach ($urls as $url => $options) {
                 if (preg_match($options['rule'], $pathInfo, $match)) {
                     $pathInfo = $options['url'];

@@ -2,7 +2,7 @@
 
 namespace common\models\store;
 
-use sommerce\modules\admin\helpers\LanguagesHelper;
+use store\modules\admin\helpers\LanguagesHelper;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use \yii\db\Connection;

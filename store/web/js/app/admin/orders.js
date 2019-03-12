@@ -1,0 +1,115 @@
+/**
+ * Order details custom js module
+ * @type {{run: customModule.ordersDetails.run}}
+ */
+customModule.ordersDetails = {
+    run : function(params) {
+        $(document).ready(function () {
+            var ajaxEndpoint = '/admin/orders/get-order-details';
+            var $detailsModal = $('#suborder-details-modal'),
+                $modalTitle = $detailsModal.find('.modal-title'),
+                $provider = $detailsModal.find('#order-detail-provider'),
+                $providerOrderId = $detailsModal.find('#order-detail-provider-order-id'),
+                $providerResponse = $detailsModal.find('#order-detail-provider-response'),
+                $providerUpdate = $detailsModal.find('#order-detail-lastupdate'),
+                $modalLoader = $detailsModal.find('.modal-loader');
+
+            $detailsModal.on('show.bs.modal', function(e) {
+                var $target = $(e.relatedTarget),
+                    suborderId = $target.data('suborder-id'),
+                    modalTitle = $target.data('modal_title');
+
+                if (suborderId === undefined || isNaN(suborderId)) {
+                    return;
+                }
+                $modalLoader.removeClass('hidden');
+                $.ajax({
+                    url: ajaxEndpoint,
+                    type: "GET",
+                    data: {
+                        'suborder_id': suborderId
+                    },
+                    success: function (data) {
+                        $modalLoader.addClass('hidden');
+                        if (data.details === undefined) {
+                            return;
+                        }
+                        renderLogs(data.details);
+                    },
+                    error: function(jqXHR, textStatus, errorThrown){
+                        console.log('Something is wrong!');
+                        console.log(jqXHR, textStatus, errorThrown);
+                        $modalLoader.addClass('hidden');
+                    }
+                });
+
+                function renderLogs(details){
+                    $modalTitle.html(modalTitle);
+                    $provider.val(details.provider);
+                    $providerOrderId.val(details.provider_order_id);
+                    $providerResponse.html(details.provider_response);
+                    $providerUpdate.val(details.updated_at);
+                }
+            });
+
+            $detailsModal.on('hidden.bs.modal',function(e) {
+                var $currentTarget = $(e.currentTarget);
+                $currentTarget.find('input').val('');
+                $providerResponse.html('');
+            });
+        });
+    }
+};
+
+/**
+ * Order clipboard custom js module
+ * @type {{run: customModule.ordersClipboard.run}}
+ */
+customModule.ordersClipboard = {
+    run : function(params) {
+
+        var messageCopied = params.messageCopied || 'Copied!';
+
+        $(document).ready(function () {
+            var ClipboardDemo = function () {
+                var n = function n() {
+                    new Clipboard("[data-clipboard=true]").on("success", function (n) {
+                        n.clearSelection();
+                        // Check toastr notification plugin
+                        if (toastr === undefined) {
+                            alert("Copied!");
+                        }   else {
+                            toastr.options = {
+                                "positionClass": "toast-bottom-right"
+                            };
+                            toastr.success(messageCopied);
+                        }
+                    });
+                };return { init: function init() {
+                    n();
+                } };
+            }();jQuery(document).ready(function () {
+                ClipboardDemo.init();
+            });
+        });
+    }
+};
+
+/**
+ * Order change status custom js module
+ * @type {{run: customModule.ordersModalAlerts.run}}
+ */
+customModule.ordersModalAlerts = {
+    run : function(params) {
+
+        var $modals = $('.order_modal_alert');
+
+        $modals.on('show.bs.modal', function(event){
+            var $modal = $(this),
+                $target = $(event.relatedTarget);
+            var actionUrl = $target.data('action_url');
+
+            $modal.find('.submit_action').attr('href', actionUrl);
+        });
+    }
+};
