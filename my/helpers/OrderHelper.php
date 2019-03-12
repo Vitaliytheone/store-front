@@ -4,7 +4,7 @@ namespace my\helpers;
 
 use common\components\domains\Domain;
 use common\components\letsencrypt\Letsencrypt;
-use common\components\models\SslCertLetsencrypt;
+use common\models\panels\SslCertLetsencrypt;
 use common\helpers\CurrencyHelper;
 use common\helpers\DbHelper;
 use common\helpers\IntegrationsHelper;

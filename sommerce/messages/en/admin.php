@@ -13,6 +13,7 @@ return [
     'header.menu_settings_payments' => 'Payments',
     'header.menu_settings_providers' => 'Providers',
     'header.menu_settings_integrations' => 'Integrations',
+    'header.menu_settings_notifications' => 'Notifications',
     'header.menu_settings_languages' => 'Languages',
     'header.menu_pages' => 'Pages',
 
@@ -170,6 +171,7 @@ return [
 
 
     'products.package_create' => 'Create package',
+    'products.package_service_default' => 'Choose service',
 
     'products.message_product_created' => 'Product was successfully created!',
     'products.message_product_updated' => 'Product was successfully updated!',
@@ -218,6 +220,7 @@ return [
     'pages.confirm_message' => 'Are you sure?',
     'pages.duplicate_confirm' => '<p>Are your sure that your want to <br><strong>duplicate</strong> this page?</p>',
     'pages.is_duplicated' => 'Page success duplicated!',
+    'pages.link_invalid' => 'URL is invalid! Check it again.',
 
 
     'settings.page_title' => 'Settings',

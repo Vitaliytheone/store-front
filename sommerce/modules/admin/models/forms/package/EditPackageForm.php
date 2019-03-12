@@ -5,10 +5,10 @@ namespace admin\models\forms\package;
 use admin\models\forms\BaseForm;
 use common\models\panels\AdditionalServices;
 use common\models\sommerce\ActivityLog;
-use yii\db\Query;
 use common\models\sommerce\Packages;
 use common\models\sommerces\StoreProviders;
 use Yii;
+use yii\db\Query;
 use yii\db\Transaction;
 use yii\helpers\ArrayHelper;
 
@@ -46,7 +46,7 @@ class EditPackageForm extends BaseForm
         return [
             [['name', 'price', 'quantity',], 'required'],
             [['link_type', 'visibility', 'mode', 'provider_id', 'id'], 'integer'],
-            ['price', 'number', 'min' => 0.01, 'max' => MAX_MYSQL_INT],
+            ['price', 'number', 'min' => 0.01, 'max' => MAX_MYSQL_INT, 'numberPattern' => '/^\d+(?:[.,]\d{1,2})?$/'],
             [['quantity',], 'number', 'min' => 1, 'max' => MAX_MYSQL_INT],
             [['name', 'provider_service'], 'string', 'max' => 255],
             ['provider_id', 'required', 'when' => function($model){

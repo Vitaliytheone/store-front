@@ -1,7 +1,7 @@
 <?php
 namespace control_panel\helpers\order;
 
-use common\components\models\SslCertLetsencrypt;
+use common\models\panels\SslCertLetsencrypt;
 use control_panel\components\ddos\Ddos;
 use control_panel\components\ssl\Ssl;
 use common\helpers\CurlHelper;

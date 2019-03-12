@@ -1,12 +1,11 @@
 <?php
 
-namespace common\components\letsencrypt;
+namespace control_panel\components\letsencrypt;
 
-use common\models\panels\SslCertLetsencrypt;
-use common\models\panels\Customers;
-use common\models\panels\Project;
-use common\models\panels\SslCertItem;
-use console\controllers\SystemController;
+use common\models\sommerces\SslCertLetsencrypt;
+use common\models\sommerces\Customers;
+use common\models\sommerces\Stores;
+use common\models\sommerces\SslCertItem;
 use yii\base\Component;
 use Yii;
 use yii\base\Exception;
@@ -15,19 +14,18 @@ use yii\console\ExitCode;
 
 /**
  * Class AcmeInstaller
- * @package common\components\letsencrypt
+ * @package control_panel\components\letsencrypt
  */
 class AcmeInstaller extends Component
 {
     public $customersClass = Customers::class;
-    public $projectClass = Project::class;
+    public $projectClass = Stores::class;
     public $sslCertItemClass = SslCertItem::class;
     public $sslCertLetsencryptClass = SslCertLetsencrypt::class;
     public $letsencryptClass = Letsencrypt::class;
 
     /**
      * Current console
-     * @var SystemController
      */
     public $console;
 
@@ -38,7 +36,6 @@ class AcmeInstaller extends Component
      */
     public function run()
     {
-        /** @var Letsencrypt $letsencrypt */
         $letsencrypt = new $this->letsencryptClass();
         $letsencrypt->setPaths(Yii::$app->params['letsencrypt']['paths']);
 
@@ -190,8 +187,8 @@ class AcmeInstaller extends Component
             }
 
             $ssl = new $this->sslCertLetsencryptClass();
-            $ssl->cid = $customer->id;
-            $ssl->pid = $panel->id;
+            $ssl->cid = $panel->id;
+            $ssl->pid = $customer->id;
             $ssl->project_type = $this->sslCertLetsencryptClass::PROJECT_TYPE_PANEL;
             $ssl->item_id = $sslCertItem->id;
             $ssl->status = $this->sslCertLetsencryptClass::STATUS_PENDING;
@@ -199,7 +196,7 @@ class AcmeInstaller extends Component
             $ssl->domain = trim($domain);
 
             $letsencrypt->setSsl($ssl);
-            $letsencrypt->issueCert(false);
+            $letsencrypt->issueCert(!(bool)$panel->subdomain);
 
             $ssl->status = $this->sslCertLetsencryptClass::STATUS_ACTIVE;
             $ssl->checked = $this->sslCertLetsencryptClass::CHECKED_YES;
