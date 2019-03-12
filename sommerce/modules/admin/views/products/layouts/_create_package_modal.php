@@ -1,9 +1,9 @@
 <?php
 
-use yii\helpers\Url;
-use yii\bootstrap\Html;
 use admin\models\forms\package\CreatePackageForm;
 use common\components\ActiveForm;
+use yii\bootstrap\Html;
+use yii\helpers\Url;
 
 /* @var $this yii\web\View */
 /* @var $store \common\models\sommerces\Stores */
@@ -44,6 +44,7 @@ $model->setStore($store);
                 <?= $form->field($model, 'price')->textInput([
                     'type' => 'number',
                     'min' => '0.01',
+                    'max' => MAX_MYSQL_INT,
                     'step' => '0.01',
                 ]) ?>
 
