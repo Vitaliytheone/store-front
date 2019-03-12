@@ -1,12 +1,12 @@
-$(document).ready(function() {
+$(document).ready(function () {
 	//Scrolling
-	$(document).ready(function() {
-		$('#navbar-scrolling').on('click', 'a', function(event) {
+	$(document).ready(function () {
+		$('#navbar-scrolling').on('click', 'a', function (event) {
 			var navbarHeight = $('nav').height();
 			event.preventDefault();
 			var id = $(this).attr('href'),
 				top = $(id).offset().top;
-			var scrollTopHeigt = top - navbarHeight;
+			var scrollTopHeigt = top - navbarHeight - 50;
 			$('body,html').animate({ scrollTop: scrollTopHeigt }, 1000);
 		});
 	});
@@ -23,13 +23,13 @@ $(document).ready(function() {
 	});
 
 
-	$(document).ready(function() {
-		$('#footer-scrolling').on('click', 'a', function(event) {
+	$(document).ready(function () {
+		$('#footer-scrolling').on('click', 'a', function (event) {
 			var footerHeight = $('nav').height();
 			event.preventDefault();
 			var id = $(this).attr('href'),
 				top = $(id).offset().top;
-			var scrollTopHeigt = top - footerHeight;
+			var scrollTopHeigt = top - footerHeight - 50;
 			$('body,html').animate({ scrollTop: scrollTopHeigt }, 1000);
 		});
 	});
