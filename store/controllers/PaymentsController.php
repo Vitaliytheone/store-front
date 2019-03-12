@@ -2,6 +2,7 @@
 
 namespace store\controllers;
 
+use common\models\store\Checkouts;
 use store\components\payments\Payment;
 use yii\base\UnknownClassException;
 use yii\helpers\ArrayHelper;
@@ -52,8 +53,7 @@ class PaymentsController extends CustomController
         if (!$checkoutId) {
             $checkoutId = ArrayHelper::getValue($_GET, 'checkout_id');
         }
-        return $this->render('payment_result.twig', [
-            'payment_result' => $paymentMethod::getPaymentResult($checkoutId),
-        ]);
+
+        return $this->render('payment_result.twig', $paymentMethod::getPaymentResult($checkoutId));
     }
 }
