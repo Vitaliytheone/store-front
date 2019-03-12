@@ -6,6 +6,7 @@ use common\models\panels\SslCertLetsencrypt;
 use common\models\panels\Customers;
 use common\models\panels\Project;
 use common\models\panels\SslCertItem;
+use console\controllers\SystemController;
 use yii\base\Component;
 use Yii;
 use yii\base\Exception;
@@ -26,6 +27,7 @@ class AcmeInstaller extends Component
 
     /**
      * Current console
+     * @var SystemController
      */
     public $console;
 
@@ -36,6 +38,7 @@ class AcmeInstaller extends Component
      */
     public function run()
     {
+        /** @var Letsencrypt $letsencrypt */
         $letsencrypt = new $this->letsencryptClass();
         $letsencrypt->setPaths(Yii::$app->params['letsencrypt']['paths']);
 
@@ -187,8 +190,8 @@ class AcmeInstaller extends Component
             }
 
             $ssl = new $this->sslCertLetsencryptClass();
-            $ssl->cid = $panel->id;
-            $ssl->pid = $customer->id;
+            $ssl->cid = $customer->id;
+            $ssl->pid = $panel->id;
             $ssl->project_type = $this->sslCertLetsencryptClass::PROJECT_TYPE_PANEL;
             $ssl->item_id = $sslCertItem->id;
             $ssl->status = $this->sslCertLetsencryptClass::STATUS_PENDING;
@@ -196,7 +199,7 @@ class AcmeInstaller extends Component
             $ssl->domain = trim($domain);
 
             $letsencrypt->setSsl($ssl);
-            $letsencrypt->issueCert(!(bool)$panel->subdomain);
+            $letsencrypt->issueCert(false);
 
             $ssl->status = $this->sslCertLetsencryptClass::STATUS_ACTIVE;
             $ssl->checked = $this->sslCertLetsencryptClass::CHECKED_YES;

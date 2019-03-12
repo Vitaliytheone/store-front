@@ -2,6 +2,7 @@
 namespace common\components\letsencrypt\traits;
 
 use common\components\letsencrypt\interfaces\SslCertLetsencryptInterface;
+use yii\helpers\ArrayHelper;
 
 /**
  * Trait SslCertLetsencryptTrait
