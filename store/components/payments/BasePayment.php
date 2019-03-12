@@ -349,6 +349,7 @@ abstract class BasePayment extends Component
             'id' => $checkoutId,
         ];
 
+        $paymentAmount = null;
         if (!$checkoutId ||
             !$payment = Payments::findOne(['checkout_id' => $checkoutId])
         ) {
@@ -357,9 +358,13 @@ abstract class BasePayment extends Component
             $paymentsResult['failed'] = in_array($payment->status, [Payments::STATUS_FAILED]);
             $paymentsResult['awaiting'] = in_array($payment->status, [Payments::STATUS_AWAITING]);
             $paymentsResult['completed'] = in_array($payment->status, [Payments::STATUS_COMPLETED]);
+            $paymentAmount = $payment->amount;
         }
 
-        return $paymentsResult;
+        return [
+            'payment_result' => $paymentsResult,
+            'payment_amount' => $paymentAmount,
+        ];
     }
 
     /**
