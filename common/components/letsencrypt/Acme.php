@@ -327,8 +327,6 @@ class Acme extends Component
             $cmdParams['-d'] = 'www.' . $domain;
         }
 
-        error_log(print_r($cmdParams,1));
-
         $success = $this->execCmd('--issue', $cmdParams);
 
         if (!$success) {
