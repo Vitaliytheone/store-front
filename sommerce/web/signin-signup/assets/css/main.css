@@ -45,8 +45,16 @@ h3 {
   color: #7765d6; }
 
 Input {
+  width: 100%;
   border-radius: 2px;
   border: solid 1px #bdbcc8; }
+
+Input::placeholder {
+  font-family: Montserrat;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 24px;
+  color: #bdbcc8; }
 
 .card-body {
   border: 0px; }
@@ -54,8 +62,11 @@ Input {
 .alert {
   padding: 7px; }
 
+Input::placeholder {
+  padding: 8px 12px 8px 12px; }
+
 Input {
-  height: 20px; }
+  height: 40px; }
 
 .forgot {
   font-size: 12px;
