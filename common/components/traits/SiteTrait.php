@@ -18,7 +18,8 @@ trait SiteTrait {
      */
     public function getSubdomain()
     {
-        $domain = $this->site;
+        $domain = $this->getDomain();
+        $domain = preg_replace("/\.com$/uis", "", $domain);
         $subPrefix = str_replace('.', '-', $domain);
         $subDomain = $subPrefix . '.' . $this->getMainDomain();
 

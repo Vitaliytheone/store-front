@@ -192,30 +192,6 @@ class Sites extends ActiveRecord implements ProjectInterface
     }
 
     /**
-     * @inheritdoc
-     */
-    public function getBaseDomain()
-    {
-        return DomainsHelper::idnToUtf8($this->domain);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getBaseSite()
-    {
-        return ($this->ssl == ProjectInterface::SSL_MODE_ON ? 'https://' : 'http://') . $this->getBaseDomain();
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function setSslMode($isActive)
-    {
-        $this->ssl = $isActive;
-    }
-
-    /**
      * Set whois_lookup
      * @param array|mixed $whoisLookupData
      */
