@@ -22,18 +22,9 @@ $(document).ready(function () {
 		});
 	});
 
-
-	$(document).ready(function () {
-		$('#footer-scrolling').on('click', 'a', function (event) {
-			var footerHeight = $('nav').height();
-			event.preventDefault();
-			var id = $(this).attr('href'),
-				top = $(id).offset().top;
-			var scrollTopHeigt = top - footerHeight - 50;
-			$('body,html').animate({ scrollTop: scrollTopHeigt }, 1000);
-		});
-	});
-
+	$(function () {
+		$('[data-toggle="popover"]').popover()
+	})
 
 	$(window).scroll(function () {
 		$(".navbar").toggleClass("nav-scroll", $(this).scrollTop() > 0);

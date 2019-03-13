@@ -25,6 +25,7 @@
 </head>
 
 <body>
+
     <!-- Google Tag Manager (noscript) -->
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NZ39BZB" height="0" width="0"
             style="display:none;visibility:hidden"></iframe></noscript>
@@ -38,8 +39,8 @@
                 aria-label="Toggle navigation">
                 <span class="icon"></span>
             </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="nav header-links color-disabled ">
+            <div class="collapse navbar-collapse justify-content-between" id="navbarSupportedContent">
+                <ul class="nav header-links color-disabled">
                     <li class="nav-item">
                         <a href="#why">About</a>
                     </li>
@@ -55,11 +56,23 @@
                     <li class="nav-item">
                         <a href="#faq">FAQ</a>
                     </li>
+
                 </ul>
+                <div class="login">
+                    <span class="login-link">Log In</span>
+                    <img class="arrow-login" src="assets/images/other/arrow-right.svg" alt="arrow">
+                    <button type="button" class="footer-button login-button" data-trigger="focus" data-container="body"
+                        data-toggle="popover" data-placement="bottom" data-content="Coming soon.."><span
+                            class="notify-button">Get
+                            started</span></button>
+                </div>
+                <!-- <button type="button" class="login-button"><span class="notify-button">Get
+                        started</span></button> -->
             </div>
         </div>
         </div>
     </nav>
+
     <header id="header">
         <div class="container technology-driven">
             <div class="row">
@@ -69,12 +82,14 @@
                         <p class="footer-links"><span class="interested">Are you interested?</span> Be the first to know
                             when we launch!</p>
                         <div class="d-flex flex-column flex-md-row">
-                            <div class="form-group mb-2">
+                            <!-- <div class="form-group mb-2">
                                 <input type="text" class="form-control header-input" id="email"
                                     placeholder="Your email address">
-                            </div>
-                            <button type="button" class="btn footer-button"><span class="notify-button">Notify
-                                    me</span></button>
+                            </div> -->
+                            <button type="button" class="btn footer-button" data-trigger="focus" data-container="body"
+                                data-toggle="popover" data-placement="bottom" data-content="Coming soon.."><span
+                                    class=" notify-button">Get
+                                    started</span></button>
                         </div>
                     </div>
                 </div>
@@ -454,11 +469,11 @@
 
     <footer id="footer">
         <div class="container">
-            <div class="container mail">
+            <div class="container d-flex justify-content-center">
                 <div class="row footer-padding">
-                    <div id="ready" class="col ready-input">
+                    <div id="ready" class="col ready-input text-center">
                         <div class="h-bolder">Ready to give it a try?</div>
-                        <div class="color-disabled footer-links">Be the first to know when we launch!</div>
+                        <!-- <div class="color-disabled footer-links">Be the first to know when we launch!</div>
                         <div class="d-flex flex-column flex-md-row">
                             <div class="form-group mb-2">
                                 <form method="POST"
@@ -467,62 +482,38 @@
                                         placeholder="Your email address">
 
                             </div>
-                            <div>
-                                <button type="submit" class="btn footer-button"><span class="notify-button">Notify
-                                        me</span></button>
-                            </div>
-                            </form>
-                        </div>
+                            <div> -->
+
+                        <button type="submit" class="btn footer-button account-button" data-container="body"
+                            data-toggle="popover" data-placement="bottom" data-trigger="focus"
+                            data-content="Coming soon..."><span class=" notify-button">Create an account
+                            </span></button>
+                        <!-- </div>
+                    </form> -->
                     </div>
                 </div>
             </div>
-            <div class="arrow"></div>
-            <div class="container pt-5 pb-5 pl-0">
-                <div class="row">
-                    <div class="col-lg-3 col-sm-12 pb-sm-3 color-disabled">
-                        <h3 class="footer-logo">Sommerce</h3>
-                        <p class="footer-links">© 2019 &nbsp</p>
-                    </div>
-                    <div id="footer-scrolling" class="col d-flex flex-column pb-3">
-                        <p class="f-name">Product</p>
-                        <ul class="nav flex-column footer-links color-disabled">
-                            <li class="nav-item">
-                                <a href="#why">About</a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="#features">Features</a>
-                            </li>
-                            <!-- <li class="nav-item">
-                                <a href="#demo">Demo</a>
-                            </li> -->
-                            <li class="nav-item">
-                                <a href="#pricing">Pricing</a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="#faq">FAQ</a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="col pb-3">
-                        <p class="f-name">Legal</p>
-                        <ul class="nav flex-column footer-links color-disabled">
-                            <li class="nav-item">
-                                <a href="https://sommerce.com/terms">Terms & Conditions</a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="https://sommerce.com/privacy">Privacy Policy</a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="col">
-                        <p class="f-name">Keep in touch</p>
-                        <form action="mailto:hello@sommerce.com" enctype="text/plain">
-                            <p><button class="hello-button footer-links color-disabled"
-                                    type=submit>hello@sommerce.com</button></p>
-                        </form>
-                    </div>
-                </div>
+        </div>
+        <div class="arrow"></div>
+        <div class="container d-flex flex-column flex-md-row justify-content-md-between">
+            <div class="d-flex flex-row ">
+                <p class="footer-links copy">© 2019</p>
+                <h3 class="footer-links" style="font-weight: 600">Sommerce</h3>
             </div>
+            <ul class="nav flex-row footer-links color-disabled">
+                <li class="nav-item">
+                    <a href="https://sommerce.com/terms">Terms & Conditions</a>
+                </li>
+                <li class="nav-item">
+                    <a href="https://sommerce.com/privacy">Privacy Policy</a>
+                </li>
+                <form action="mailto:hello@sommerce.com" enctype="text/plain">
+                    <p><button class="hello-button footer-links color-disabled"
+                            type="submit">hello@sommerce.com</button>
+                    </p>
+                </form>
+            </ul>
+        </div>
         </div>
     </footer>
 
@@ -536,7 +527,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
         integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
         crossorigin="anonymous"></script>
-    <!-- <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script> -->
     <script src="assets/js/main.js"></script>
     <script src="assets/js/bootstrap.min.js"></script>
 </body>
