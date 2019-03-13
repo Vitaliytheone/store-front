@@ -29,7 +29,8 @@ return [
 
     'myUrl' => 'http://sommerce.my/', // Полный url раздела My
     'panelDomain' => 'myperfectpanel.com', // Домен нашего сайта
-    'storeDomain' => 'sommerce.net', // Домен нашего сайта
+    'storeDomain' => 'mysmmstore.com', // Домен нашего сайта
+    'sommerceDomain' => 'sommerce.link', // Домен нашего сайта
     'gatewayDomain' => 'gateway.net',
 
     'nginx_restart' => '/etc/init.d/nginx restart',
