@@ -2,11 +2,14 @@
 
 namespace sommerce\components\validators\product;
 
-use common\models\store\Pages;
-use common\models\store\Products;
+use common\models\sommerce\Pages;
+use common\models\sommerce\Products;
+use Yii;
 use yii\validators\Validator;
 
 /**
+ * Custom link prepare and validate with rules
+ *
  * Class UrlValidator
  * @package sommerce\components\validators\product
  */
@@ -23,27 +26,30 @@ class UrlValidator extends Validator
         /**
          * @var Products $model
          */
-        if (empty($model->$attribute) || $model->hasErrors()) {
+        if (empty($attribute) || $model->hasErrors()) {
             return false;
         }
 
+        $url = trim($model->$attribute, ' -_');
+        $url = preg_replace('/([^a-zA-Z\d\s_-])+/iu', '', $url);
+        $url = preg_replace('/([\s_])+/', '-', $url);
+        $url = preg_replace('/(-)\\1+/', '-', $url);
+        $url = strtolower($url);
 
-        $url = trim($model->$attribute, ' ');
-        $url = trim($url, '_');
-        $url = trim($url, '-');
+        if (preg_match('/^[a-z\d][a-z\d-]*[a-z\d]$/iu', $url) !== 1) {
+            $this->addError($model, $attribute, Yii::t('admin', 'pages.link_invalid'));
+            return false;
+        }
 
         $url = !empty($url) ? $url : Products::NEW_PRODUCT_URL_PREFIX . $model->id;
 
-        $_url = $url;
-        $postfix = 1;
 
-        while (Pages::findOne(['url' => $_url])) {
-            $_url = $url . '-' . $postfix;
-            $postfix++;
-        };
+        if (Pages::findOne(['url' => $url])) {
+            $this->addError($model, $attribute, Yii::t('admin', 'pages.link_exist'));
+            return false;
+        }
 
-        $model->$attribute = $_url;
-        $model->save(false);
+        $model->$attribute = $url;
 
         return true;
     }
