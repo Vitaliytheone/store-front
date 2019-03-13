@@ -31,8 +31,6 @@ class Products extends ActiveRecord
     public const VISIBILITY_YES = 1;
     public const VISIBILITY_NO = 0;
 
-    public const NEW_PRODUCT_URL_PREFIX = 'product-';
-
     public static function getDb()
     {
         return Yii::$app->storeDb;
