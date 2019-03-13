@@ -2,6 +2,7 @@
 
 namespace common\models\sommerce;
 
+use common\components\behaviors\PaymentHashBehavior;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
@@ -25,6 +26,7 @@ use common\models\sommerce\queries\PaymentsQuery;
  * @property string $name
  * @property string $email
  * @property string $country
+ * @property string $hash
  * @property integer $created_at
  * @property integer $updated_at
  * @property string $currency
@@ -79,6 +81,7 @@ class Payments extends ActiveRecord
             [['currency'], 'string', 'max' => 10],
             [['checkout_id'], 'exist', 'skipOnError' => true, 'targetClass' => Checkouts::class, 'targetAttribute' => ['checkout_id' => 'id']],
             [['status'], 'default', 'value' => static::STATUS_AWAITING],
+            [['hash'], 'string', 'max' => 32],
         ];
     }
 
@@ -102,6 +105,7 @@ class Payments extends ActiveRecord
             'name' => Yii::t('app', 'Name'),
             'email' => Yii::t('app', 'Email'),
             'country' => Yii::t('app', 'Country'),
+            'hash' => Yii::t('app', 'Hash'),
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
             'currency' => Yii::t('app', 'Currency'),
@@ -151,6 +155,12 @@ class Payments extends ActiveRecord
                 'value' => function() {
                     return time();
                 },
+            ],
+            'hash' => [
+                'class' => PaymentHashBehavior::class,
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => 'hash',
+                ],
             ],
         ];
     }
