@@ -65,8 +65,8 @@ return [
     'dnsPassword' => '2njujbuhwrZSgW96JynTN7JASe6Q8X64',
     'dnsIp' => $serverIp,
 
-    'panelDomain' => 'myperfectpanel.com',// Домен нашего сайта
-    'my_domain' => 'myperfectpanel.com',// Домен панели
+    'panelDomain' => 'mypanel.link',// Домен нашего сайта
+    'my_domain' => 'mypanel.link',// Домен панели
 
     //
     'testPayPal' => false, // true - используем sandbox, false - рабочий аккаунт

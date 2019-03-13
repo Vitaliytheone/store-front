@@ -28,10 +28,11 @@ return [
     'sommerceDefaultDatabase' => 'sommerce_template', // Шаблонная база данных создаваемых sommerce
 
     'myUrl' => 'http://sommerce.my/', // Полный url раздела My
-    'panelDomain' => 'myperfectpanel.com', // Домен нашего сайта
-    'storeDomain' => 'mysmmstore.com', // Домен нашего сайта
-    'sommerceDomain' => 'sommerce.link', // Домен нашего сайта
-    'gatewayDomain' => 'gateway.net',
+
+    'panelDomain' => 'mypanel.link', // Домен нашего сайта - panel
+    'storeDomain' => 'mysmmstore.com', // Домен нашего сайта - store
+    'sommerceDomain' => 'sommerce.link', // Домен нашего сайта - sommerce
+    'gatewayDomain' => 'gateway.net', // Домен нашего сайта - gateway
 
     'nginx_restart' => '/etc/init.d/nginx restart',
 
