@@ -141,8 +141,8 @@ return [
     'products.create_package.link' => 'Link Type',
     'products.create_package.availability' => 'Availability',
     'products.create_package.mode' => 'Mode',
-    'products.create_package.provider_service' => 'Provider service',
-    'products.create_package.provider' => 'Provider',
+    'products.create_package.provider_service' => 'Provider service *',
+    'products.create_package.provider' => 'Provider *',
 
     'products.create_package.availability_enabled' => 'Enabled',
     'products.create_package.availability_disabled' => 'Disabled',
@@ -171,7 +171,8 @@ return [
 
 
     'products.package_create' => 'Create package',
-    'products.package_service_default' => 'Choose service',
+    'products.package_service_default' => 'Choose service...',
+    'products.package_provider_default' => 'Choose provider...',
 
     'products.message_product_created' => 'Product was successfully created!',
     'products.message_product_updated' => 'Product was successfully updated!',
