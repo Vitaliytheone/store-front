@@ -51,15 +51,6 @@ class EditPageForm extends Model
                 }
                 return $model->url !== $this->_page->url;
             }],
-//            ['url', 'match', 'pattern' => '/^[a-z\d][a-z\d-]*[a-z\d]$/iu'],
-//            ['url', 'unique', 'targetClass' => Pages::class, 'targetAttribute' => ['url' => 'url'],
-//                'when' => function ($model) {
-//                    if (empty($this->_page->url)) {
-//                        return true;
-//                    }
-//                    return $model->url !== $this->_page->url;
-//                }
-//            ]
         ];
     }
 
