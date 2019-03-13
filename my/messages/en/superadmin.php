@@ -27,6 +27,7 @@ return [
     'header.nav.panelfire_scanner' => 'Panelfire scanner',
     'header.nav.rentalpanel_scanner' => 'Rentalpanel scanner',
     'header.nav.db_helper' => 'DB helper',
+    'header.nav.exchange_rates' => 'Exchange rates',
     'header.nav.fraud' => 'Fraud',
     'header.nav.fraud_reports' => 'Reports',
     'header.nav.fraud_incidents' => 'Incidents',
@@ -74,6 +75,7 @@ return [
     'pages.pagination.to' => ' to ',
     'pages.pagination.of' => ' of ',
     'pages.title.panels.edit_payment_methods' => 'Panels - Edit Payment Methods',
+    'pages.title.tools.exchange_rates' => 'Exchange rates',
 
     'panels.edit.header' => 'Edit {domain} panel',
     'panels.edit.panel_name' => 'Panel name',
@@ -1032,4 +1034,8 @@ return [
     'gateways.edit.expiry' => 'Edit expiry',
     'gateways.change_domain.domain' => 'Domain',
     'gateways.change_domain.subdomain' => 'Is subdomain',
+
+
+    'tools.exchange_rates.field.currency' => 'Currency',
+    'tools.exchange_rates.field.exchange_rate' => 'Exchange rate',
 ];
