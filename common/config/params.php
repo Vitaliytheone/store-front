@@ -66,7 +66,7 @@ return [
     'ahnames.my.ns' => [
         'ns_1' => 'ns1.perfectdns.com',
         'ns_2' => 'ns2.perfectdns.com',
-        'ns_3' => 'ns3.perfectdns.com',
+        'ns_3' => null,
         'ns_4' => null,
     ],
 
@@ -87,7 +87,7 @@ return [
     'namesilo.my.ns' => [
         'ns1' => 'ns1.perfectdns.com',
         'ns2' => 'ns2.perfectdns.com',
-        'ns3' => 'ns3.perfectdns.com',
+        'ns3' => null,
         'ns4' => null,
     ],
 
