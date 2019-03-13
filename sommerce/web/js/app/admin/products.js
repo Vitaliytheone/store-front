@@ -170,6 +170,9 @@ customModule.adminProducts = {
             $('#editpackageform-quantity', modal).val(details.quantity);
             $('#editpackageform-link_type', modal).val(details.link_type);
             $('#editpackageform-visibility', modal).val(details.visibility);
+            if (!details.provider_id) {
+                $('#editpackageform-provider_id select option[value=""]').prop('selected', true);
+            }
             $('#editpackageform-provider_id', modal).val(details.provider_id);
             $('#editpackageform-provider_service', modal).val(details.provider_service);
             $('#editpackageform-id', modal).val(details.id);

@@ -105,7 +105,7 @@ class ProductsSearch extends Model
             array_walk($productPackages, function (&$package, $key) use ($providers) {
                 $provider = ArrayHelper::getValue($providers, $package['provider_id'] . '.site', '');
                 if (empty($provider)) {
-                    $package['provider_id'] = ArrayHelper::getValue(reset($providers), 'id');
+                    $package['provider_id'] = null;
                 }
 
 
