@@ -220,7 +220,8 @@ return [
     'pages.confirm_message' => 'Are you sure?',
     'pages.duplicate_confirm' => '<p>Are your sure that your want to <br><strong>duplicate</strong> this page?</p>',
     'pages.is_duplicated' => 'Page success duplicated!',
-    'pages.link_invalid' => 'URL is invalid! Check it again.',
+    'pages.link_invalid' => 'URL is invalid! Allows only a-z, 0-9 and "-"',
+    'pages.link_exist' => 'URL is already exist!',
 
 
     'settings.page_title' => 'Settings',
