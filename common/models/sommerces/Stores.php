@@ -254,30 +254,6 @@ class Stores extends ActiveRecord implements ProjectInterface
     }
 
     /**
-     * @inheritdoc
-     */
-    public function getBaseDomain()
-    {
-        return DomainsHelper::idnToUtf8($this->domain);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getBaseSite()
-    {
-        return ($this->ssl == ProjectInterface::SSL_MODE_ON ? 'https://' : 'http://') . $this->getBaseDomain();
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function setSslMode($isActive)
-    {
-        $this->ssl = $isActive;
-    }
-
-    /**
      * Set whois_lookup
      * @param array|mixed $whoisLookupData
      */
@@ -697,10 +673,7 @@ class Stores extends ActiveRecord implements ProjectInterface
      */
     public function enableSubDomain()
     {
-        $domain = $this->domain;
-        $subPrefix = str_replace('.', '-', $domain);
-        $storeDomainName = Yii::$app->params['sommerceDomain'];
-        $subDomain = $subPrefix . '.' . $storeDomainName;
+        $subDomain = $this->getSubdomain();
 
         $storeDomain = StoreDomains::findOne([
             'domain' => $subDomain,
@@ -769,25 +742,6 @@ class Stores extends ActiveRecord implements ProjectInterface
     }
 
     /**
-     * Create store db name
-     */
-    public function generateDbName()
-    {
-        $domain = Yii::$app->params['sommerceDomain'];
-
-        $baseDbName = self::DB_NAME_PREFIX . $this->id . "_" . strtolower(str_replace([$domain, '.', '-'], '', DomainsHelper::idnToAscii($this->domain)));
-
-        $postfix = null;
-
-        do {
-            $dbName = $baseDbName .  ($postfix ? '_' . $postfix : '');
-            $postfix ++;
-        } while(DbHelper::existDatabase($dbName));
-
-        $this->db_name = $dbName;
-    }
-
-    /**
      * Generate store expired datetime
      * @param bool $isTrial is store trial
      */
@@ -837,7 +791,7 @@ class Stores extends ActiveRecord implements ProjectInterface
             ])
             ->andFilterWhere([
                 'AND',
-                ['like', 'domain', Yii::$app->params['sommerceDomain']]
+                ['like', 'domain', $this->getMainDomain()]
             ])
             ->one();
 
@@ -1005,5 +959,21 @@ class Stores extends ActiveRecord implements ProjectInterface
     public function getDomain()
     {
         return $this->domain;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getMainDomain()
+    {
+        return Yii::$app->params['sommerceDomain'];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getDbNamePrefix()
+    {
+        return static::DB_NAME_PREFIX . $this->id;
     }
 }

@@ -10,6 +10,7 @@ interface ProjectInterface
     const PROJECT_TYPE_PANEL = 1;
     const PROJECT_TYPE_STORE = 2;
     const PROJECT_TYPE_GATEWAY = 3;
+    const PROJECT_TYPE_SOMMERCE = 4;
 
     const SSL_MODE_ON = 1;
     const SSL_MODE_OFF = 0;
@@ -91,8 +92,20 @@ interface ProjectInterface
     public function getDomain();
 
     /**
+     * Get domain name
+     * @return string
+     */
+    public function getMainDomain();
+
+    /**
      * Set database name
      * @param string $name
      */
     public function setDbName($name);
+
+    /**
+     * Set database name
+     * @return string
+     */
+    public function getDbNamePrefix();
 }

@@ -362,25 +362,6 @@ class Sites extends ActiveRecord implements ProjectInterface
     }
 
     /**
-     * Create gateway db name
-     */
-    public function generateDbName()
-    {
-        $domain = Yii::$app->params['gatewayDomain'];
-
-        $baseDbName = static::DB_NAME_PREFIX . $this->id . "_" . strtolower(str_replace([$domain, '.', '-'], '', DomainsHelper::idnToAscii($this->domain)));
-
-        $postfix = null;
-
-        do {
-            $dbName = $baseDbName .  ($postfix ? '_' . $postfix : '');
-            $postfix ++;
-        } while(DbHelper::existDatabase($dbName));
-
-        $this->db_name = $dbName;
-    }
-
-    /**
      * Generate gateway expired datetime
      * @param bool $isTrial is gateway trial
      */
@@ -598,5 +579,21 @@ class Sites extends ActiveRecord implements ProjectInterface
     public function getDomain()
     {
         return $this->domain;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getMainDomain()
+    {
+        return Yii::$app->params['gatewayDomain'];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getDbNamePrefix()
+    {
+        return static::DB_NAME_PREFIX . $this->id;
     }
 }
