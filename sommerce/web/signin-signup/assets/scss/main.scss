@@ -2,16 +2,13 @@
 
 
 
+
 .card-body {
     border: 0px;
 }
 
 .card {
     @extend %card;
-}
-
-label {
-    @extend %label;
 }
 
 .error-text {
@@ -26,10 +23,11 @@ Input::placeholder {
     @extend %placeholder-input-normal;
     padding: 8px 12px 8px 12px;
 }
-Input {
-    @extend %normal-input;
-    height: 40px;
-}
+
+// Input {
+//     @extend %normal-input;
+//     height: 40px;
+// }
 
 .text-under {
     @extend %text-under;

@@ -8,6 +8,22 @@ body {
 	/* padding-top: 30px; */
 }
 
+// INPUT'S DEFAULT STYLES
+
+label {
+	font-size: 12px;
+	font-weight: 600;
+	line-height: 20px;
+	color: #6e6c88;
+}
+
+Input {
+	@extend %normal-input;
+}
+ 
+Input:active {
+	@extend %active-input;
+}
 
 // CARD 
 
@@ -19,13 +35,6 @@ body {
 }
 
 // TEXT'S PATTERNS 
-
-%label {
-	font-size: 12px;
-	font-weight: 600;
-	line-height: 20px;
-	color: #6e6c88;
-}
 
 %error-text {
 	font-size: 12px;
@@ -114,29 +123,34 @@ $opacitgrey: #e5e5e9;
 	width: 100%;
 	border-radius: 2px;
 	border: solid 1px #bdbcc8;
+	height: 40px;
 }
 
 %focus-input {
 	border-radius: 2px;
 	border: solid 1px #6e6c88;
 	background-color: #ffffff;
+	height: 40px;
 }
 
 %active-input {
-	box-shadow: 0 2px 4px 0 rgba(123, 98, 221, 0.1);
-	border: solid 1px #7765d6;
+	box-shadow: 0 2px 4px 0 rgba(123, 98, 221, 0.1) !important;
+	border: solid 1px #7765d6 !important;
 	background-color: #ffffff;
+	height: 40px;
 }
 
 %filled-input {
 	border-radius: 2px;
 	border: solid 1px #bdbcc8;
+	height: 40px;
 }
 
 %disable-input {
 	border-radius: 2px;
 	border: solid 1px #bdbcc8;
 	background-color: #e5e5e9;
+	height: 40px;
 }
 
 %large-input {
