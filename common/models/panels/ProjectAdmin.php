@@ -56,7 +56,6 @@ class ProjectAdmin extends ActiveRecord
         'tickets' => 1,
         'reports' => 1,
         'affiliates' => 1,
-        'tools' => 1,
         'providers' => 0,
         'settings_general' => 1,
         'settings_providers' => 1,
@@ -147,7 +146,6 @@ class ProjectAdmin extends ActiveRecord
             'tickets' => Yii::t('app', 'project_admin.rules_tickets'),
             'reports' => Yii::t('app', 'project_admin.rules_stats'),
             'affiliates' => Yii::t('app', 'project_admin.rules_affiliate'),
-            'tools' => Yii::t('app', 'project_admin.rules_tools'),
             'providers' => Yii::t('app', 'project_admin.rules_providers'),
             'settings' => Yii::t('app', 'project_admin.rules_settings'),
             'settings_general' => Yii::t('app', 'project_admin.rules_settings_general'),
@@ -235,9 +233,6 @@ class ProjectAdmin extends ActiveRecord
     {
         $rules = $this->getRules();
 
-        // 25.02.2019 Александр http://prntscr.com/mpi176
-        //надо пока закоментировать это, сделайте это срочно
-        unset($rules['tools']);
         if (empty($rules)) {
             return false;
         }
