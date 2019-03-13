@@ -183,6 +183,7 @@ return [
             'target' => [
                 'perfectpanel.com',
                 'managerdns.com',
+                'sommerce.com',
             ],
         ],
     ],
