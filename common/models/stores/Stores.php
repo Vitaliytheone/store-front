@@ -3,6 +3,7 @@
 namespace common\models\stores;
 
 use common\components\behaviors\CustomersCountersBehavior;
+use common\components\traits\SiteTrait;
 use common\helpers\DbHelper;
 use common\models\common\ProjectInterface;
 use common\models\panels\Customers;
@@ -98,9 +99,10 @@ class Stores extends ActiveRecord implements ProjectInterface
     const CAN_STAFF_EDIT = 8;
     const CAN_STAFF_UPDATE_PASSWORD = 9;
 
-    const STORE_DB_NAME_PREFIX = 'store_';
+    const DB_NAME_PREFIX = 'store_';
 
     use UnixTimeFormatTrait;
+    use SiteTrait;
 
     /**
      * @inheritdoc
@@ -846,7 +848,7 @@ class Stores extends ActiveRecord implements ProjectInterface
     {
         $domain = Yii::$app->params['storeDomain'];
 
-        $baseDbName = self::STORE_DB_NAME_PREFIX . $this->id . "_" . strtolower(str_replace([$domain, '.', '-'], '', DomainsHelper::idnToAscii($this->domain)));
+        $baseDbName = self::DB_NAME_PREFIX . $this->id . "_" . strtolower(str_replace([$domain, '.', '-'], '', DomainsHelper::idnToAscii($this->domain)));
 
         $postfix = null;
 
@@ -1060,5 +1062,21 @@ class Stores extends ActiveRecord implements ProjectInterface
     public function hasManualPaymentMethods()
     {
         return true;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setDbName($name)
+    {
+        $this->db_name = $name;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getDomain()
+    {
+        return $this->domain;
     }
 }

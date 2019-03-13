@@ -4,6 +4,8 @@ namespace common\models\gateways;
 
 
 use common\components\behaviors\CustomersCountersBehavior;
+use common\components\traits\SiteTrait;
+use common\components\traits\UnixTimeFormatTrait;
 use common\helpers\DbHelper;
 use common\helpers\DnsHelper;
 use common\helpers\NginxHelper;
@@ -54,13 +56,16 @@ use yii\base\Exception;
  */
 class Sites extends ActiveRecord implements ProjectInterface
 {
-    const GATEWAY_DB_NAME_PREFIX = 'gateway_';
+    const DB_NAME_PREFIX = 'gateway_';
 
     const STATUS_ACTIVE = 1;
     const STATUS_FROZEN = 2;
     const STATUS_TERMINATED = 3;
 
     const CAN_DASHBOARD = 1;
+
+    use SiteTrait;
+    use UnixTimeFormatTrait;
 
     /**
      * @inheritdoc
@@ -363,7 +368,7 @@ class Sites extends ActiveRecord implements ProjectInterface
     {
         $domain = Yii::$app->params['gatewayDomain'];
 
-        $baseDbName = static::GATEWAY_DB_NAME_PREFIX . $this->id . "_" . strtolower(str_replace([$domain, '.', '-'], '', DomainsHelper::idnToAscii($this->domain)));
+        $baseDbName = static::DB_NAME_PREFIX . $this->id . "_" . strtolower(str_replace([$domain, '.', '-'], '', DomainsHelper::idnToAscii($this->domain)));
 
         $postfix = null;
 
@@ -577,5 +582,21 @@ class Sites extends ActiveRecord implements ProjectInterface
         }
 
         return true;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setDbName($name)
+    {
+        $this->db_name = $name;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getDomain()
+    {
+        return $this->domain;
     }
 }

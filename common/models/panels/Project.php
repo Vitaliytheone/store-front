@@ -3,6 +3,7 @@
 namespace common\models\panels;
 
 use common\components\behaviors\CustomersCountersBehavior;
+use common\components\traits\SiteTrait;
 use common\helpers\CurrencyHelper;
 use common\helpers\NginxHelper;
 use common\models\common\ProjectInterface;
@@ -154,10 +155,13 @@ class Project extends ActiveRecord implements ProjectInterface
     const AFFILIATE_SYSTEM_ENABLED = 1;
     const AFFILIATE_SYSTEM_DISABLED = 0;
 
+    const DB_NAME_PREFIX = 'panel_';
+
     /** @var bool */
     private $isForeignSubdomain = false;
     
     use UnixTimeFormatTrait;
+    use SiteTrait;
 
     /**
      * @inheritdoc
@@ -333,14 +337,6 @@ class Project extends ActiveRecord implements ProjectInterface
     public static function getProjectType()
     {
         return ProjectInterface::PROJECT_TYPE_PANEL;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getDomain()
-    {
-        return $this->site;
     }
 
     /**
@@ -1059,4 +1055,19 @@ class Project extends ActiveRecord implements ProjectInterface
         $this->paypal_fraud_settings = json_encode($settings);
     }
 
+    /**
+     * @inheritdoc
+     */
+    public function getDomain()
+    {
+        return $this->site;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setDbName($name)
+    {
+        $this->db = $name;
+    }
 }

@@ -83,4 +83,16 @@ interface ProjectInterface
      * @return mixed
      */
     public function hasManualPaymentMethods();
+
+    /**
+     * Get domain name
+     * @return string
+     */
+    public function getDomain();
+
+    /**
+     * Set database name
+     * @param string $name
+     */
+    public function setDbName($name);
 }
