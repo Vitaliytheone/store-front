@@ -38,7 +38,7 @@ $model->setStore($store);
                     'id' => 'createPackageError'
                 ]); ?>
 
-                <?= $form->field($model, 'name') ?>
+                <?= $form->field($model, 'name') //todo del - придумать как убрать звездочку ?>
 
                 <?= $form->field($model, 'price')->textInput([
                     'type' => 'number',

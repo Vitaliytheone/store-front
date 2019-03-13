@@ -24,10 +24,10 @@ $model = new \sommerce\modules\admin\models\forms\ProvidersListForm();
                 'name' => 'ProvidersListForm[providers][' . $key . '][api_key]'
             ])->label($provider['site'] . ' API key') ?>
         </div>
+        <hr>
+        <?= Html::submitButton(Yii::t('admin', 'settings.providers_save'), ['class' => 'btn btn-success m-btn--air', 'name' => 'save-button']) ?>
     <?php endforeach; ?>
 <?php else : ?>
     <p><?= Yii::t('admin', 'settings.providers_no_providers') ?></p>
 <?php endif; ?>
-<hr>
-<?= Html::submitButton(Yii::t('admin', 'settings.providers_save'), ['class' => 'btn btn-success m-btn--air', 'name' => 'save-button']) ?>
 <?php ActiveForm::end(); ?>
