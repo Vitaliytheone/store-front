@@ -27,7 +27,7 @@ class SuborderDetails extends Suborders
 
         $formatter = Yii::$app->formatter;
         $orderDetails = [
-            'provider' => $provider->site,
+            'provider' => $provider->name,
             'provider_order_id' => $this->provider_order_id,
             'provider_response' => CustomHtmlHelper::responseFormatter($this->provider_response),
             'updated_at' => $formatter->asDatetime($this->updated_at,'yyyy-MM-dd HH:mm:ss'),

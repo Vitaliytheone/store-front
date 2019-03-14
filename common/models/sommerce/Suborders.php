@@ -1,6 +1,7 @@
 <?php
 namespace common\models\sommerce;
 
+use common\models\panels\AdditionalServices;
 use common\models\sommerces\Providers;
 use Yii;
 use yii\db\ActiveRecord;
@@ -33,7 +34,7 @@ use common\models\sommerce\queries\SubordersQuery;
  * @property Checkouts $checkout
  * @property Orders $order
  * @property Packages $package
- * @property Providers $provider
+ * @property AdditionalServices $provider
  */
 class Suborders extends ActiveRecord
 {
@@ -162,7 +163,7 @@ class Suborders extends ActiveRecord
      */
     public function getProvider()
     {
-        return $this->hasOne(Providers::class, ['id' => 'provider_id']);
+        return $this->hasOne(AdditionalServices::class, ['id' => 'provider_id']);
     }
 
     /**
