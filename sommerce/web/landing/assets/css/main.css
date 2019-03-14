@@ -13,9 +13,7 @@ body {
 	width: 100%;
 }
 
-#navbar-scrolling {
-	background-color: #ffffff;
-}
+
 
 /* .login {
 	position: relative;
@@ -126,7 +124,7 @@ a:focus{
 }
 
 #header {
-	background-image: url("../images/big/Main@2x-min\ 2.png");
+	background-image: url("https://perfectcdn.com/938a82d3-09c0-4514-a7e4-ede176be55db/Main2xmin2.png");
 	background-size: contain;
 	background-repeat: no-repeat;
 	background-position: top right;
@@ -150,7 +148,7 @@ a:focus{
 
 .navbar-toggler {
 	display: block;
-	background-image: url("../images/other/close.svg");
+	background-image: url("https://perfectcdn.com/2e0c8bd3-6875-439f-bf5d-de4721575f93/close.svg");
 	width: 40px;
 	height: 40px;
 	text-decoration: none;
@@ -167,7 +165,7 @@ a:focus{
 
 .navbar-toggler.collapsed {
 	display: block;
-	background-image: url("../images/other/burger-menu.svg");
+	background-image: url("https://perfectcdn.com/e251c6d3-4523-4072-bd9f-cd7ff63ab03c/burgermenu.svg");
 	width: 40px;
 	height: 40px;
 	text-decoration: none;
@@ -515,7 +513,7 @@ a:hover .hello {
 
 .toggle .plus {
 	display: block;
-	background-image: url("../images/other/minus.svg");
+	background-image: url("https://perfectcdn.com/81a6e870-5d2a-4564-af36-75b79c8a3c74/minus.svg");
 	width: 24px;
 	height: 24px;
 	text-decoration: none;
@@ -666,7 +664,7 @@ ul li {
 
 .d-flex .collapsed .plus {
 	display: block;
-	background-image: url("../images/other/plus.svg");
+	background-image: url("https://perfectcdn.com/82502347-a400-4794-ad5b-da0316c2574a/plus.svg");
 	width: 24px;
 	height: 24px;
 	text-decoration: none;
@@ -976,4 +974,8 @@ button::after {
 		text-align: center;
 		align-self: center;
 	}
+
+	#navbar-scrolling {
+	background-color: #ffffff;
+}
 }
