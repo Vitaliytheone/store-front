@@ -20,6 +20,7 @@ use common\models\panels\ProjectAdmin;
 use common\models\panels\SslCert;
 use common\models\panels\SuperAdmin;
 use common\models\panels\Tickets;
+use common\models\stores\StoreDomains;
 use common\models\stores\Stores;
 use console\components\payments\PaymentsFee;
 use Faker\Factory;
@@ -1004,6 +1005,38 @@ class SystemController extends CustomController
                 $this->stderr("Counter save error: customer_id: {$customer['id']}\n", Console::FG_RED);
             } else {
                 $this->stderr("Counter saved: customer_id: {$customer['id']}\n", Console::FG_GREEN);
+            }
+        }
+    }
+
+    /**
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
+     */
+    public function actionChangeStoresDomains()
+    {
+        $oldDomains = '/sommerce.(team|net)/i';
+        $newSommerceDomain = Yii::$app->params['storeDomain'];
+
+        $sommerceDomain = StoreDomains::find()
+            ->andWhere([
+                'type' => StoreDomains::DOMAIN_TYPE_SOMMERCE,
+            ])
+            ->andFilterWhere([
+                'OR',
+                ['like', 'domain', 'sommerce.net'],
+                ['like', 'domain', 'sommerce.team'],
+            ])
+            ->all();
+
+        foreach ($sommerceDomain as $domain) {
+            $newDomain = preg_replace($oldDomains, $newSommerceDomain, $domain->domain);
+
+            $domain->domain = $newDomain;
+            if ($domain->update(false)) {
+                $this->stderr('Updated domain: ' . $domain->id . "\n", Console::FG_GREEN);
+            } else {
+                $this->stderr('Update error: ' . $domain->id . "\n", Console::FG_RED);
             }
         }
     }

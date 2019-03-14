@@ -3,6 +3,7 @@
 namespace common\models\panels;
 
 use common\components\behaviors\CustomersCountersBehavior;
+use common\components\traits\SiteTrait;
 use common\helpers\CurrencyHelper;
 use common\helpers\NginxHelper;
 use common\models\common\ProjectInterface;
@@ -113,6 +114,7 @@ use yii\helpers\ArrayHelper;
  * @property string $affiliate_commission_rate
  * @property int $affiliate_approve_payouts 0 - manual, 1 - auto
  * @property int $affiliate_system 0 - off, 1 - active
+ * @property string $languages_for_child_panel
  *
  * @property PanelDomains[] $panelDomains
  * @property SslValidation[] $sslValidations
@@ -154,10 +156,13 @@ class Project extends ActiveRecord implements ProjectInterface
     const AFFILIATE_SYSTEM_ENABLED = 1;
     const AFFILIATE_SYSTEM_DISABLED = 0;
 
+    const DB_NAME_PREFIX = 'panel_';
+
     /** @var bool */
     private $isForeignSubdomain = false;
     
     use UnixTimeFormatTrait;
+    use SiteTrait;
 
     /**
      * @inheritdoc
@@ -191,7 +196,7 @@ class Project extends ActiveRecord implements ProjectInterface
             [['lang'], 'string', 'max' => 32],
             [['folder'], 'string', 'max' => 6],
             [['currency_code'], 'string', 'max' => 3],
-            [['folder_content', 'paypal_fraud_settings'], 'string'],
+            [['folder_content', 'paypal_fraud_settings', 'languages_for_child_panel'], 'string'],
             [['custom_header', 'custom_footer', 'seo_title', 'seo_desc', 'seo_key'], 'string', 'max' => 3000],
             [['drip_feed'], 'default', 'value' => static::DRIP_FEED_OFF],
             [['notification_email'], 'default', 'value' => ' '],
@@ -291,6 +296,7 @@ class Project extends ActiveRecord implements ProjectInterface
             'nameservers' => Yii::t('app', 'Nameservers'),
             'dns_checked_at' => Yii::t('app', 'Dns checked at'),
             'dns_status' => Yii::t('app', 'Dns status'),
+            'languages_for_child_panel' => Yii::t('app', 'Languages For Child Panel'),
         ];
     }
 
@@ -333,38 +339,6 @@ class Project extends ActiveRecord implements ProjectInterface
     public static function getProjectType()
     {
         return ProjectInterface::PROJECT_TYPE_PANEL;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getDomain()
-    {
-        return $this->site;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getBaseDomain()
-    {
-        return $this->getSite();
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function setSslMode($isActive)
-    {
-        $this->ssl = $isActive;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getBaseSite()
-    {
-        return ($this->ssl == ProjectInterface::SSL_MODE_ON ? 'https://' : 'http://') . $this->getBaseDomain();
     }
 
     /**
@@ -432,27 +406,6 @@ class Project extends ActiveRecord implements ProjectInterface
     public function getCustomer()
     {
         return $this->hasOne(Customers::class, ['id' => 'cid']);
-    }
-
-    /**
-     * Create panel db name
-     */
-    public function generateDbName()
-    {
-        $dbName = "panel_" . strtolower(str_replace(['.', '-'], '', $this->site));
-
-        if (!DbHelper::existDatabase($dbName)) {
-            $this->db = $dbName;
-            return;
-        }
-
-        $dbName = $dbName . '_';
-        for ($i = 1; $i < 100; $i++) {
-            $this->db = $dbName . $i;
-            if (!DbHelper::existDatabase($this->db)) {
-                return;
-            }
-        }
     }
 
     /**
@@ -702,10 +655,7 @@ class Project extends ActiveRecord implements ProjectInterface
      */
     public function enableSubDomain()
     {
-        $domain = $this->site;
-        $subPrefix = str_replace('.', '-', $domain);
-        $panelDomainName = Yii::$app->params['panelDomain'];
-        $subDomain = $subPrefix . '.' . $panelDomainName;
+        $subDomain = $this->getSubdomain();
 
         $panelDomain = PanelDomains::findOne([
             'domain' => $subDomain,
@@ -866,24 +816,6 @@ class Project extends ActiveRecord implements ProjectInterface
         $oldDbName = $this->db;
         $this->generateDbName();
         DbHelper::renameDatabase($oldDbName, $this->db);
-    }
-
-    /**
-     * Get site
-     * @return string
-     */
-    public function getSite()
-    {
-        return DomainsHelper::idnToUtf8($this->site);
-    }
-
-    /**
-     * Get site url
-     * @return string
-     */
-    public function getSiteUrl()
-    {
-        return ($this->ssl ? 'https://' : 'http://') . $this->getSite();
     }
 
     /**
@@ -1059,4 +991,53 @@ class Project extends ActiveRecord implements ProjectInterface
         $this->paypal_fraud_settings = json_encode($settings);
     }
 
+    /**
+     * Get languages for child panel
+     * @return array
+     */
+    public function getChildPanelLanguages(): array
+    {
+        return !empty($this->languages_for_child_panel) ? json_decode($this->languages_for_child_panel, true) : [];
+    }
+
+    /**
+     * Set languages for child panel
+     * @param array $langList
+     */
+    public function setChildPanelLanguages(array $langList)
+    {
+        $this->languages_for_child_panel = json_encode($langList);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getDomain()
+    {
+        return $this->site;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setDbName($name)
+    {
+        $this->db = $name;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getMainDomain()
+    {
+        return Yii::$app->params['panelDomain'];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getDbNamePrefix()
+    {
+        return static::DB_NAME_PREFIX;
+    }
 }
