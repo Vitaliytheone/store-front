@@ -25,7 +25,7 @@ class UrlValidator extends Validator
     public function validateAttribute($model, $attribute)
     {
         /** @var Products|Pages $model */
-        if (empty($attribute) || $model->hasErrors()) {
+        if (empty($attribute) || empty($model->$attribute) || $model->hasErrors()) {
             return false;
         }
 
