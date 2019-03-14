@@ -8,6 +8,14 @@ body {
 	/* padding-top: 30px; */
 }
 
+#navbar-scrolling ul {
+	width: 100%;
+}
+
+.login {
+	position: relative;
+	bottom: 5px;
+}
 .nav-scroll {
   box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.04);
   background-color: #ffffff;
@@ -110,8 +118,19 @@ button:focus {
 	background-position: top right;
 }
 
+.arrow-login {
+	padding-left: 5px;
+	padding-right: 30px;
+}
+
 .navbar {
 	padding-top: 10px;
+}
+
+.login-link {
+	font-size: 14px;
+	color: #312e55;
+	font-weight: 600;
 }
 
 .navbar-toggler {
@@ -144,7 +163,6 @@ button:focus {
 }
 
 .header-links {
-    font-family: Montserrat;
 	font-size: 14px;
     color: #6e6c88;
 }
@@ -532,12 +550,25 @@ a:hover .hello {
 
 .footer-button {
 	height: 48px;
-	width: 126px;
+	width: 160px;
 	border-radius: 2px;
 	color: white;
 	background-color: #ff5c86;
 	box-shadow: 0 2px 4px 0 rgba(255, 92, 134, 0.2);
 }
+
+.login-button {
+	width: 130px;
+	height: 38px;
+	border: 0px;
+	cursor: pointer;
+}
+
+
+.account-button {
+	width: 230px;
+}
+
 
 .footer-links {
 	font-family: Montserrat;
@@ -558,6 +589,11 @@ form .footer-links:hover{
 .arrow {
 	height: 1px;
 	background-color: #464366;
+	margin-bottom: 18px;
+}
+
+.copy {
+	padding-right: 10px;
 }
 
 .color-disabled,
@@ -586,6 +622,7 @@ ul li {
 
 .ready-input div {
 	padding-top: 10px;
+	padding-bottom: 30px;
 }
 
 .footer-padding {
@@ -698,11 +735,11 @@ ul li {
 		width: 100%;
 	}
 
-	.footer-padding {
+	/* .footer-padding {
 		position: relative;
 		top: -50px;
 		padding-bottom: 200px;
-	}
+	} */
 
 	.mail {
 		background-position: 50% 110%;
@@ -716,7 +753,7 @@ ul li {
 		width: 100%;
 	}
 
-	.footer-button {
+	#header .footer-button, #footer .footer-button {
 		width: 100%;
 	}
 
