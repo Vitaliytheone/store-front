@@ -42,4 +42,6 @@ return [
     ],
 
     'reactApiKey' => '2Vdqu1eG0fKhpr86AZn184X0fkx31YXZ', // api key dev-окружения для тестирования реакта
+
+    'cron.orderExpiry' => 30,
 ];

@@ -318,8 +318,9 @@ class ProductsController extends CustomController
     /**
      * Get provider`s services list AJAX action
      * @param $id
-     * @return array
+     * @return array|mixed
      * @throws NotFoundHttpException
+     * @throws \yii\base\Exception
      */
     public function actionGetProviderServices($id)
     {
@@ -345,6 +346,8 @@ class ProductsController extends CustomController
      * @return array
      * @throws NotAcceptableHttpException
      * @throws NotFoundHttpException
+     * @throws \Throwable
+     * @throws \yii\db\Exception\
      */
     public function actionDeletePackage($id)
     {

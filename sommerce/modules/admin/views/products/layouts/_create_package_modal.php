@@ -59,6 +59,7 @@ $model->setStore($store);
                 <div id="create-package-auto" class="hidden">
                     <hr>
                     <?= $form->field($model, 'provider_id')->dropDownList($model->getStoreProviders(), [
+                        'prompt' => Yii::t('admin', 'products.package_provider_default'),
                         'class' => 'form-control provider-id',
                     ]) ?>
 

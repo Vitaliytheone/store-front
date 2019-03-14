@@ -128,8 +128,8 @@ class CreatePackageForm extends BaseForm
     public function getModeVariants()
     {
         return [
-            Packages::MODE_MANUAL => Yii::t('admin', 'products.create_package.mode_manual'),
             Packages::MODE_AUTO => Yii::t('admin', 'products.create_package.mode_auto'),
+            Packages::MODE_MANUAL => Yii::t('admin', 'products.create_package.mode_manual'),
         ];
     }
 
