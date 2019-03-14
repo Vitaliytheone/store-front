@@ -8,19 +8,29 @@ body {
 	/* padding-top: 30px; */
 }
 
+
 #navbar-scrolling ul {
 	width: 100%;
 }
 
-.login {
+#navbar-scrolling {
+	background-color: #ffffff;
+}
+
+/* .login {
 	position: relative;
 	bottom: 5px;
-}
+} */
 .nav-scroll {
   box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.04);
   background-color: #ffffff;
   padding-top: 0px;
   border-bottom: 1px solid #e5e5e9;
+}
+
+.nav {
+	position: relative;
+	top: 2px;
 }
 
 #footer .form-control {
@@ -74,6 +84,10 @@ a:hover {
 
 button:focus {
     outline: none;
+}
+
+a:focus{
+	outline: none;	
 }
 
 /* STYLE WITHOUT DEMO-BLOCK */
@@ -131,6 +145,7 @@ button:focus {
 	font-size: 14px;
 	color: #312e55;
 	font-weight: 600;
+	cursor: pointer;	
 }
 
 .navbar-toggler {
@@ -197,6 +212,7 @@ button:focus {
 .notify-button {
 	font-size: 14px;
 	font-weight: 600;
+	color: white;
 }
 
 .technology-driven {
@@ -549,6 +565,7 @@ a:hover .hello {
 }
 
 .footer-button {
+	padding-top: 10px;
 	height: 48px;
 	width: 160px;
 	border-radius: 2px;
@@ -562,6 +579,7 @@ a:hover .hello {
 	height: 38px;
 	border: 0px;
 	cursor: pointer;
+	padding: 10px;
 }
 
 
@@ -933,3 +951,29 @@ button::after {
 }
 
 /* ****************** */
+
+/* MOBILE MENU RESPONSIVE */
+
+@media screen and (max-width: 960px) {
+	.nav {
+		flex-direction: column
+	}
+
+	.li {
+		flex-direction: column;
+	}
+
+	.arrow-login {
+		display: none
+	}
+
+	.login {
+		display: flex;
+		flex-direction: column;
+	}
+	.login-button {
+		width: 50% !important;
+		text-align: center;
+		align-self: center;
+	}
+}
