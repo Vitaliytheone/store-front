@@ -4,8 +4,8 @@ namespace sommerce\modules\admin\models\forms;
 
 use common\models\sommerce\ActivityLog;
 use common\models\sommerce\Pages;
-use common\models\sommerce\Products;
 use common\models\sommerces\StoreAdminAuth;
+use sommerce\components\validators\product\UrlValidator;
 use sommerce\modules\admin\components\CustomUser;
 use sommerce\modules\admin\models\search\PagesSearch;
 use Yii;
@@ -30,6 +30,11 @@ class EditPageForm extends Model
     protected $user;
 
     /**
+     * @var $_page Pages
+     */
+    protected $_page;
+
+    /**
      * @inheritdoc
      */
     public function rules()
@@ -40,15 +45,12 @@ class EditPageForm extends Model
             [['visibility'], 'integer'],
             [['url', 'title'], 'string', 'max' => 70],
             [['description'], 'string', 'max' => 160],
-            ['url', 'match', 'pattern' => '/^[a-z0-9-_]+$/i'],
-            ['url', 'unique', 'targetClass' => Pages::class, 'targetAttribute' => ['url' => 'url'],
-                'when' => function ($model) {
-                    if (empty($this->page->url)) {
-                        return true;
-                    }
-                    return $model->url !== $this->page->url;
+            [['url'], UrlValidator::class, 'when' => function ($model) {
+                if (empty($this->_page->url)) {
+                    return true;
                 }
-            ]
+                return $model->url !== $this->_page->url;
+            }],
         ];
     }
 
@@ -81,17 +83,13 @@ class EditPageForm extends Model
     {
         $this->user = $user;
     }
-    /**
-     * @var $page Pages
-     */
-    protected $page;
 
     /**
      * @return Pages
      */
     public function getPage()
     {
-        return $this->page;
+        return $this->_page;
     }
 
     /**
@@ -99,11 +97,15 @@ class EditPageForm extends Model
      */
     public function setPage($page)
     {
-        $this->page = $page;
+        $this->_page = $page;
     }
 
     /**
+     * Edit page
+     *
      * @return bool|int
+     * @throws \Throwable
+     * @throws \yii\db\Exception
      */
     public function edit()
     {
@@ -188,7 +190,11 @@ class EditPageForm extends Model
     }
 
     /**
+     * Delete current page
+     *
      * @return bool|false|int
+     * @throws \Throwable
+     * @throws \yii\db\Exception
      */
     public function delete()
     {

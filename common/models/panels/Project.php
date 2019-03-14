@@ -3,6 +3,7 @@
 namespace common\models\panels;
 
 use common\components\behaviors\CustomersCountersBehavior;
+use common\components\traits\SiteTrait;
 use common\helpers\CurrencyHelper;
 use common\helpers\NginxHelper;
 use common\models\common\ProjectInterface;
@@ -155,10 +156,13 @@ class Project extends ActiveRecord implements ProjectInterface
     const AFFILIATE_SYSTEM_ENABLED = 1;
     const AFFILIATE_SYSTEM_DISABLED = 0;
 
+    const DB_NAME_PREFIX = 'panel_';
+
     /** @var bool */
     private $isForeignSubdomain = false;
     
     use UnixTimeFormatTrait;
+    use SiteTrait;
 
     /**
      * @inheritdoc
@@ -338,38 +342,6 @@ class Project extends ActiveRecord implements ProjectInterface
     }
 
     /**
-     * @inheritdoc
-     */
-    public function getDomain()
-    {
-        return $this->site;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getBaseDomain()
-    {
-        return $this->getSite();
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function setSslMode($isActive)
-    {
-        $this->ssl = $isActive;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getBaseSite()
-    {
-        return ($this->ssl == ProjectInterface::SSL_MODE_ON ? 'https://' : 'http://') . $this->getBaseDomain();
-    }
-
-    /**
      * Get act status name
      * @return string
      */
@@ -434,27 +406,6 @@ class Project extends ActiveRecord implements ProjectInterface
     public function getCustomer()
     {
         return $this->hasOne(Customers::class, ['id' => 'cid']);
-    }
-
-    /**
-     * Create panel db name
-     */
-    public function generateDbName()
-    {
-        $dbName = "panel_" . strtolower(str_replace(['.', '-'], '', $this->site));
-
-        if (!DbHelper::existDatabase($dbName)) {
-            $this->db = $dbName;
-            return;
-        }
-
-        $dbName = $dbName . '_';
-        for ($i = 1; $i < 100; $i++) {
-            $this->db = $dbName . $i;
-            if (!DbHelper::existDatabase($this->db)) {
-                return;
-            }
-        }
     }
 
     /**
@@ -704,10 +655,7 @@ class Project extends ActiveRecord implements ProjectInterface
      */
     public function enableSubDomain()
     {
-        $domain = $this->site;
-        $subPrefix = str_replace('.', '-', $domain);
-        $panelDomainName = Yii::$app->params['panelDomain'];
-        $subDomain = $subPrefix . '.' . $panelDomainName;
+        $subDomain = $this->getSubdomain();
 
         $panelDomain = PanelDomains::findOne([
             'domain' => $subDomain,
@@ -868,24 +816,6 @@ class Project extends ActiveRecord implements ProjectInterface
         $oldDbName = $this->db;
         $this->generateDbName();
         DbHelper::renameDatabase($oldDbName, $this->db);
-    }
-
-    /**
-     * Get site
-     * @return string
-     */
-    public function getSite()
-    {
-        return DomainsHelper::idnToUtf8($this->site);
-    }
-
-    /**
-     * Get site url
-     * @return string
-     */
-    public function getSiteUrl()
-    {
-        return ($this->ssl ? 'https://' : 'http://') . $this->getSite();
     }
 
     /**
@@ -1077,5 +1007,37 @@ class Project extends ActiveRecord implements ProjectInterface
     public function setChildPanelLanguages(array $langList)
     {
         $this->languages_for_child_panel = json_encode($langList);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getDomain()
+    {
+        return $this->site;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setDbName($name)
+    {
+        $this->db = $name;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getMainDomain()
+    {
+        return Yii::$app->params['panelDomain'];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getDbNamePrefix()
+    {
+        return static::DB_NAME_PREFIX;
     }
 }

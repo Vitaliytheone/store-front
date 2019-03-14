@@ -6,6 +6,7 @@ use admin\models\forms\BaseForm;
 use common\models\sommerce\ActivityLog;
 use common\models\sommerce\Pages;
 use common\models\sommerce\Products;
+use sommerce\components\validators\product\UrlValidator;
 use Yii;
 use yii\db\Transaction;
 
@@ -40,11 +41,15 @@ class CreateProductForm extends BaseForm
             [['name',],'match','pattern'=>'/^([\w\d\s]+)$/i'],
             [['create_page'], 'integer'],
             [['name', 'url'], 'string', 'max' => 255],
+            [['url'], UrlValidator::class],
         ];
     }
 
     /**
+     * Create new product and page if checked
+     *
      * @return bool
+     * @throws \yii\db\Exception
      */
     public function save()
     {

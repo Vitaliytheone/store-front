@@ -208,7 +208,7 @@ var custom = new function() {
      */
     self.generateUrlFromString = function(string)
     {
-        var url = string.replace(/[^a-z0-9_\-\s]/gmi, "").replace(/\s+/g, '-').toLowerCase();
+        var url = string.trim().replace(/^-+|-+$/gmi, '').replace(/[^a-z0-9_\-\s]/gmi, '').replace(/[_\s]+/g, '-').replace(/-+/g, '-').toLowerCase();
 
         if (url === '-' || url === '_') {
             url = '';
@@ -1542,6 +1542,10 @@ customModule.adminProducts = {
             urlInput.val(generatedUrl);
         });
 
+        $("input[type=number]").on('change',function(){
+            this.value = parseFloat(this.value).toFixed(2);
+        });
+
         $(document).on('click', '#createProduct', function(e) {
             e.preventDefault();
 
@@ -1754,7 +1758,11 @@ customModule.adminProducts = {
                 revert: 300,
                 delay: 150,
                 dropOnEmpty: true,
-                placeholder: "movable-placeholder"
+                placeholder: "movable-placeholder",
+                forcePlaceholderSize: true,
+                start: function() {
+                    $(this).sortable('refreshPositions');
+                }
             });
 
             // Sort the children

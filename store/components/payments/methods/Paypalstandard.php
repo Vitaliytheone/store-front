@@ -318,18 +318,23 @@ class Paypalstandard extends BasePayment
         ];
 
         $checkout = Checkouts::findOne(['id' => $checkoutId]);
-
+        $paymentAmount = null;
         if (empty($checkout)) {
             $paymentsResult['failed'] = true;
-        } elseif (empty($payment = Payments::findOne(['checkout_id' => $checkoutId]))) {
+        } elseif (!($payment = Payments::findOne(['checkout_id' => $checkoutId]))) {
             $paymentsResult['awaiting'] = true; // force use Awaiting status if payment not yet created (POST is empty)
+            $paymentAmount = $checkout->amount;
         } else {
             $paymentsResult['failed'] = in_array($payment->status, [Payments::STATUS_FAILED]);
             $paymentsResult['awaiting'] = in_array($payment->status, [Payments::STATUS_AWAITING]);
             $paymentsResult['completed'] = in_array($payment->status, [Payments::STATUS_COMPLETED]);
+            $paymentAmount = $payment->amount;
         }
 
-        return $paymentsResult;
+        return [
+            'payment_result' => $paymentsResult,
+            'payment_amount' => $paymentAmount,
+        ];
     }
 
 }

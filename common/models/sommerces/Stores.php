@@ -2,6 +2,7 @@
 
 namespace common\models\sommerces;
 
+use common\components\traits\SiteTrait;
 use common\components\traits\UnixTimeFormatTrait;
 use common\helpers\DbHelper;
 use common\helpers\DnsHelper;
@@ -82,9 +83,10 @@ class Stores extends ActiveRecord implements ProjectInterface
     const CAN_STAFF_EDIT = 8;
     const CAN_STAFF_UPDATE_PASSWORD = 9;
 
-    const STORE_DB_NAME_PREFIX = 'sommerce_';
+    const DB_NAME_PREFIX = 'sommerce_';
 
     use UnixTimeFormatTrait;
+    use SiteTrait;
 
     /**
      * @inheritdoc
@@ -249,30 +251,6 @@ class Stores extends ActiveRecord implements ProjectInterface
     public static function getProjectType()
     {
         return ProjectInterface::PROJECT_TYPE_STORE;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getBaseDomain()
-    {
-        return DomainsHelper::idnToUtf8($this->domain);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getBaseSite()
-    {
-        return ($this->ssl == ProjectInterface::SSL_MODE_ON ? 'https://' : 'http://') . $this->getBaseDomain();
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function setSslMode($isActive)
-    {
-        $this->ssl = $isActive;
     }
 
     /**
@@ -695,10 +673,7 @@ class Stores extends ActiveRecord implements ProjectInterface
      */
     public function enableSubDomain()
     {
-        $domain = $this->domain;
-        $subPrefix = str_replace('.', '-', $domain);
-        $storeDomainName = Yii::$app->params['storeDomain'];
-        $subDomain = $subPrefix . '.' . $storeDomainName;
+        $subDomain = $this->getSubdomain();
 
         $storeDomain = StoreDomains::findOne([
             'domain' => $subDomain,
@@ -767,25 +742,6 @@ class Stores extends ActiveRecord implements ProjectInterface
     }
 
     /**
-     * Create store db name
-     */
-    public function generateDbName()
-    {
-        $domain = Yii::$app->params['storeDomain'];
-
-        $baseDbName = self::STORE_DB_NAME_PREFIX . $this->id . "_" . strtolower(str_replace([$domain, '.', '-'], '', DomainsHelper::idnToAscii($this->domain)));
-
-        $postfix = null;
-
-        do {
-            $dbName = $baseDbName .  ($postfix ? '_' . $postfix : '');
-            $postfix ++;
-        } while(DbHelper::existDatabase($dbName));
-
-        $this->db_name = $dbName;
-    }
-
-    /**
      * Generate store expired datetime
      * @param bool $isTrial is store trial
      */
@@ -835,7 +791,7 @@ class Stores extends ActiveRecord implements ProjectInterface
             ])
             ->andFilterWhere([
                 'AND',
-                ['like', 'domain', Yii::$app->params['storeDomain']]
+                ['like', 'domain', $this->getMainDomain()]
             ])
             ->one();
 
@@ -987,5 +943,37 @@ class Stores extends ActiveRecord implements ProjectInterface
     public function hasManualPaymentMethods()
     {
         return true;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setDbName($name)
+    {
+        $this->db_name = $name;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getDomain()
+    {
+        return $this->domain;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getMainDomain()
+    {
+        return Yii::$app->params['sommerceDomain'];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getDbNamePrefix()
+    {
+        return static::DB_NAME_PREFIX . $this->id;
     }
 }

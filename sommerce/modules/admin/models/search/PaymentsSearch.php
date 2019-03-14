@@ -253,9 +253,6 @@ class PaymentsSearch extends Model
             Payments::STATUS_FAILED => [
                 'title' => Payments::getStatusName(Payments::STATUS_FAILED),
             ],
-            Payments::STATUS_REFUNDED => [
-                'title' => Payments::getStatusName(Payments::STATUS_REFUNDED),
-            ],
         ];
 
         $countsPaymentsByStatus = $this->countsByStatus();

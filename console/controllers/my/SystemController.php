@@ -59,7 +59,7 @@ class SystemController extends CustomController
     {
         $stopDomains = [
             'getyourpanel.com',
-            'myperfectpanel.com',
+            'mypanel.link',
             'mysommerce.com',
             'perfectpanel.com',
             'sommerce.com',

@@ -3,13 +3,13 @@
 namespace common\models\sommerce;
 
 use common\components\behaviors\IpBehavior;
+use common\models\sommerce\queries\CheckoutsQuery;
 use common\models\sommerces\PaymentMethods;
 use common\models\sommerces\PaymentMethodsCurrency;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
-use common\models\sommerce\queries\CheckoutsQuery;
 
 /**
  * This is the model class for table "{{%checkouts}}".
@@ -94,7 +94,7 @@ class Checkouts extends ActiveRecord
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
             'currency' => Yii::t('app', 'Currency'),
-            'redirect_url' => ii::t('app', 'Redirect Url'),
+            'redirect_url' => Yii::t('app', 'Redirect Url'),
             'user_details' => Yii::t('app', 'User details'),
         ];
     }
