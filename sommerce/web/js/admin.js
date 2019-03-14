@@ -1761,7 +1761,14 @@ customModule.adminProducts = {
                 revert: 300,
                 delay: 150,
                 dropOnEmpty: true,
-                placeholder: "movable-placeholder"
+                placeholder: "movable-placeholder",
+                forcePlaceholderSize: true,
+                start: function() {
+                    $(this).addClass('sorting').sortable('refreshPositions');
+                },
+                stop: function() {
+                    $(this).removeClass('sorting');
+                }
             });
 
             // Sort the children

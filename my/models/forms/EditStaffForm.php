@@ -120,9 +120,6 @@ class EditStaffForm extends Model
     public function getAccessRules(): array
     {
         $labels = ProjectAdmin::getRulesLabels();
-        
-        // 25.02.2019 Александр http://prntscr.com/mpi176
-        //надо пока закоментировать это, сделайте это срочно
 
         return [
             'users' => ArrayHelper::getValue($labels, 'users'),
@@ -134,7 +131,6 @@ class EditStaffForm extends Model
             'payments' => ArrayHelper::getValue($labels, 'payments'),
             'tickets' => ArrayHelper::getValue($labels, 'tickets'),
             'reports' => ArrayHelper::getValue($labels, 'reports'),
-            //'tools' => ArrayHelper::getValue($labels, 'tools'),
             'affiliates' => ArrayHelper::getValue($labels, 'affiliates'),
             'appearance' => ArrayHelper::getValue($labels, 'appearance'),
             'appearance_themes' => ArrayHelper::getValue($labels, 'appearance_themes'),

@@ -6,6 +6,7 @@ namespace superadmin\controllers;
 use my\components\ActiveForm;
 use common\models\panels\SuperToolsScanner;
 use superadmin\models\forms\PanelsScannerAddDomainForm;
+use superadmin\models\search\CurrencyRatesSearch;
 use superadmin\models\search\DbHelperSearch;
 use superadmin\models\search\PanelsScannerSearch;
 use Yii;
@@ -25,9 +26,10 @@ class ToolsController extends CustomController
     {
         return array_merge(parent::behaviors(), [
             'verbs' => [
-                'class' => VerbFilter::className(),
+                'class' => VerbFilter::class,
                 'actions' => [
                     'index' => ['GET'],
+                    'currency' => ['GET'],
                     'levopanel'=> ['GET'],
                     'rentalpanel'=> ['GET'],
                     'panelfire' => ['GET'],
@@ -162,5 +164,18 @@ class ToolsController extends CustomController
         return [
             'status' => 'success',
         ];
+    }
+
+    /**
+     * Currency rates list
+     * @return string
+     */
+    public function actionExchangeRate()
+    {
+        $this->view->title = Yii::t('app/superadmin', 'pages.title.tools.exchange_rates');
+
+        $search = new CurrencyRatesSearch();
+
+        return $this->render('exchange_rate', ['rates' => $search->search()]);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace console\controllers\sommerce;
 
+use common\models\sommerce\Payments;
 use common\models\sommerces\Integrations;
 use common\models\sommerces\PaymentMethods;
 use common\models\sommerces\PaymentMethodsCurrency;
@@ -803,6 +804,52 @@ class SystemController extends CustomController
                 } else {
                     $this->stderr('Integration saved: ' . $integration->name . "\n", Console::FG_GREEN);
                 }
+            }
+        }
+    }
+
+    /**
+     * Fill payment hash for each payment of each store
+     */
+    public function actionFillPaymentHash()
+    {
+        /**
+         * Random string generator
+         * @param int $length
+         * @return string
+         */
+        $generateRandomString = function ($length = 10) {
+            $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+            $charactersLength = strlen($characters);
+            $randomString = '';
+            for ($i = 0; $i < $length; $i++) {
+                $randomString .= $characters[rand(0, $charactersLength - 1)];
+            }
+            return $randomString;
+        };
+
+        $stores = Stores::find()->all();
+
+        foreach ($stores as $store) {
+
+            $table = Yii::$app->db->quoteTableName($store->db_name) . '.' . Payments::tableName();
+
+            if (!Yii::$app->db->schema->getTableSchema($table)) {
+                continue;
+            }
+
+            foreach (Payments::find()->select(['id'])->andWhere('hash IS NULL')->from($table)->column() as $paymentId) {
+
+                do {
+                    $hash = $generateRandomString() . '-' . $generateRandomString() . '-' . $generateRandomString();
+
+                } while (Payments::find()->andWhere(['hash' => $hash])->from($table)->one());
+
+                Yii::$app->db->createCommand()->update($table,
+                    ['hash' => $hash],
+                    ['id' => $paymentId]
+                )->execute();
             }
         }
     }

@@ -285,8 +285,8 @@ class DnsHelper
         } elseif ($project instanceof Sommerce) {
             return [
                 'domain' => $project->domain,
-                'projectDomainName' => Yii::$app->params['storeDomain'],
-                'logCodes' => static::getLogCodes('store'),
+                'projectDomainName' => Yii::$app->params['sommerceDomain'],
+                'logCodes' => static::getLogCodes('sommerce'),
                 'logItem' => SommerceThirdPartyLog::ITEM_BUY_STORE,
                 'registrarParams' => Yii::$app->params[static::_getDns($project->domain).'.sommerce.ns'],
             ];

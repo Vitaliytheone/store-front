@@ -697,7 +697,7 @@ class Stores extends ActiveRecord implements ProjectInterface
     {
         $domain = $this->domain;
         $subPrefix = str_replace('.', '-', $domain);
-        $storeDomainName = Yii::$app->params['storeDomain'];
+        $storeDomainName = Yii::$app->params['sommerceDomain'];
         $subDomain = $subPrefix . '.' . $storeDomainName;
 
         $storeDomain = StoreDomains::findOne([
@@ -771,7 +771,7 @@ class Stores extends ActiveRecord implements ProjectInterface
      */
     public function generateDbName()
     {
-        $domain = Yii::$app->params['storeDomain'];
+        $domain = Yii::$app->params['sommerceDomain'];
 
         $baseDbName = self::STORE_DB_NAME_PREFIX . $this->id . "_" . strtolower(str_replace([$domain, '.', '-'], '', DomainsHelper::idnToAscii($this->domain)));
 
@@ -835,7 +835,7 @@ class Stores extends ActiveRecord implements ProjectInterface
             ])
             ->andFilterWhere([
                 'AND',
-                ['like', 'domain', Yii::$app->params['storeDomain']]
+                ['like', 'domain', Yii::$app->params['sommerceDomain']]
             ])
             ->one();
 
