@@ -37,9 +37,9 @@ class PaymentHashBehavior extends AttributeBehavior
      * @param int $length
      * @return string
      */
-    protected static function generateRandomString($length = 10)
+    public static function generateRandomString($length = 10)
     {
-        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyz';
 
         $charactersLength = strlen($characters);
         $randomString = '';
