@@ -1761,10 +1761,7 @@ customModule.adminProducts = {
                 placeholder: "movable-placeholder",
                 forcePlaceholderSize: true,
                 start: function() {
-                    $(this).addClass('sorting').sortable('refreshPositions');
-                },
-                stop: function() {
-                    $(this).removeClass('sorting');
+                    $(this).sortable('refreshPositions');
                 }
             });
 
