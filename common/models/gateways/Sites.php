@@ -4,6 +4,8 @@ namespace common\models\gateways;
 
 
 use common\components\behaviors\CustomersCountersBehavior;
+use common\components\traits\SiteTrait;
+use common\components\traits\UnixTimeFormatTrait;
 use common\helpers\DbHelper;
 use common\helpers\DnsHelper;
 use common\helpers\NginxHelper;
@@ -54,13 +56,16 @@ use yii\base\Exception;
  */
 class Sites extends ActiveRecord implements ProjectInterface
 {
-    const GATEWAY_DB_NAME_PREFIX = 'gateway_';
+    const DB_NAME_PREFIX = 'gateway_';
 
     const STATUS_ACTIVE = 1;
     const STATUS_FROZEN = 2;
     const STATUS_TERMINATED = 3;
 
     const CAN_DASHBOARD = 1;
+
+    use SiteTrait;
+    use UnixTimeFormatTrait;
 
     /**
      * @inheritdoc
@@ -184,30 +189,6 @@ class Sites extends ActiveRecord implements ProjectInterface
     public static function find()
     {
         return new SitesQuery(get_called_class());
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getBaseDomain()
-    {
-        return DomainsHelper::idnToUtf8($this->domain);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getBaseSite()
-    {
-        return ($this->ssl == ProjectInterface::SSL_MODE_ON ? 'https://' : 'http://') . $this->getBaseDomain();
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function setSslMode($isActive)
-    {
-        $this->ssl = $isActive;
     }
 
     /**
@@ -354,25 +335,6 @@ class Sites extends ActiveRecord implements ProjectInterface
         $oldDbName = $this->db_name;
         $this->generateDbName();
         DbHelper::renameDatabase($oldDbName, $this->db_name);
-    }
-
-    /**
-     * Create gateway db name
-     */
-    public function generateDbName()
-    {
-        $domain = Yii::$app->params['gatewayDomain'];
-
-        $baseDbName = static::GATEWAY_DB_NAME_PREFIX . $this->id . "_" . strtolower(str_replace([$domain, '.', '-'], '', DomainsHelper::idnToAscii($this->domain)));
-
-        $postfix = null;
-
-        do {
-            $dbName = $baseDbName .  ($postfix ? '_' . $postfix : '');
-            $postfix ++;
-        } while(DbHelper::existDatabase($dbName));
-
-        $this->db_name = $dbName;
     }
 
     /**
@@ -577,5 +539,37 @@ class Sites extends ActiveRecord implements ProjectInterface
         }
 
         return true;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setDbName($name)
+    {
+        $this->db_name = $name;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getDomain()
+    {
+        return $this->domain;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getMainDomain()
+    {
+        return Yii::$app->params['gatewayDomain'];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getDbNamePrefix()
+    {
+        return static::DB_NAME_PREFIX . $this->id;
     }
 }

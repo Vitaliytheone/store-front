@@ -249,7 +249,11 @@ customModule.adminProducts = {
                 revert: 300,
                 delay: 150,
                 dropOnEmpty: true,
-                placeholder: "movable-placeholder"
+                placeholder: "movable-placeholder",
+                forcePlaceholderSize: true,
+                start: function() {
+                    $(this).sortable('refreshPositions');
+                }
             });
 
             // Sort the children

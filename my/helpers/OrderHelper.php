@@ -439,7 +439,7 @@ class OrderHelper {
         }
 
         $sqlPanelPath = Yii::$app->params['panelSqlPath'];
-
+var_dump($sqlPanelPath);
         // Make Sql dump from panel template db
         if (!DbHelper::makeSqlDump(Yii::$app->params['panelDefaultDatabase'], $sqlPanelPath)) {
             $order->status = Orders::STATUS_ERROR;
@@ -465,6 +465,13 @@ class OrderHelper {
                     ])->execute();
             }
 
+        }
+
+        if ($child) {
+            if (!ChildHelper::setChildLanguages($project)) {
+                $order->status = Orders::STATUS_ERROR;
+                ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_PANEL, $project->id, $project->getErrors(), 'cron.order.add_child_panel_lang');
+            }
         }
 
         $project->setForeignSubdomain((bool)$subdomain);
