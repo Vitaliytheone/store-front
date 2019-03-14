@@ -2,6 +2,7 @@
 
 namespace console\controllers\sommerce;
 
+use common\components\behaviors\PaymentHashBehavior;
 use common\models\sommerce\Payments;
 use common\models\sommerces\Integrations;
 use common\models\sommerces\PaymentMethods;
@@ -813,22 +814,6 @@ class SystemController extends CustomController
      */
     public function actionFillPaymentHash()
     {
-        /**
-         * Random string generator
-         * @param int $length
-         * @return string
-         */
-        $generateRandomString = function ($length = 10) {
-            $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-
-            $charactersLength = strlen($characters);
-            $randomString = '';
-            for ($i = 0; $i < $length; $i++) {
-                $randomString .= $characters[rand(0, $charactersLength - 1)];
-            }
-            return $randomString;
-        };
-
         $stores = Stores::find()->all();
 
         foreach ($stores as $store) {
@@ -842,7 +827,7 @@ class SystemController extends CustomController
             foreach (Payments::find()->select(['id'])->andWhere('hash IS NULL')->from($table)->column() as $paymentId) {
 
                 do {
-                    $hash = $generateRandomString() . '-' . $generateRandomString() . '-' . $generateRandomString();
+                    $hash = PaymentHashBehavior::generateRandomString() . '-' . PaymentHashBehavior::generateRandomString() . '-' . PaymentHashBehavior::generateRandomString();
 
                 } while (Payments::find()->andWhere(['hash' => $hash])->from($table)->one());
 
