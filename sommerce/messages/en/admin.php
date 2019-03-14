@@ -141,8 +141,8 @@ return [
     'products.create_package.link' => 'Link Type',
     'products.create_package.availability' => 'Availability',
     'products.create_package.mode' => 'Mode',
-    'products.create_package.provider_service' => 'Provider service *',
-    'products.create_package.provider' => 'Provider *',
+    'products.create_package.provider_service' => 'Provider service',
+    'products.create_package.provider' => 'Provider',
 
     'products.create_package.availability_enabled' => 'Enabled',
     'products.create_package.availability_disabled' => 'Disabled',
