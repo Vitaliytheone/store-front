@@ -9,8 +9,6 @@
         background: #f8f9fa;
         width: 100%;
         height: 100%;
-        font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
-        font-size: 1rem;
         font-weight: 400;
         line-height: 1.5;
         margin: 0px;

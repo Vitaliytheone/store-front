@@ -38,16 +38,16 @@ $model->setStore($store);
                     'id' => 'createPackageError'
                 ]); ?>
 
-                <?= $form->field($model, 'name') ?>
+                <?= $form->field($model, 'name')->label($model->getAttributeLabel('name') . ' *') ?>
 
                 <?= $form->field($model, 'price')->textInput([
                     'type' => 'number',
                     'min' => '0.01',
                     'max' => MAX_MYSQL_INT,
                     'step' => '0.01',
-                ]) ?>
+                ])->label($model->getAttributeLabel('price') . ' *') ?>
 
-                <?= $form->field($model, 'quantity') ?>
+                <?= $form->field($model, 'quantity')->label($model->getAttributeLabel('quantity') . ' *') ?>
 
                 <?= $form->field($model, 'link_type')->dropDownList($model->getLinkTypes()) ?>
 
@@ -63,11 +63,11 @@ $model->setStore($store);
                         'prompt' => ['text' => Yii::t('admin', 'products.package_provider_default'),
                             'options' => ['disabled' => true, 'selected' => true,]],
                         'class' => 'form-control provider-id',
-                    ]) ?>
+                    ])->label($model->getAttributeLabel('provider_id') . ' *') ?>
 
                     <?= $form->field($model, 'provider_service')->dropDownList($model->getProviderServices(), [
                         'class' => 'form-control provider-service',
-                    ]) ?>
+                    ])->label($model->getAttributeLabel('provider_service') . ' *') ?>
 
                     <span class="api-error m--font-danger hidden"></span>
                 </div>
