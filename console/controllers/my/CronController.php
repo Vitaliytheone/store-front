@@ -86,53 +86,47 @@ class CronController extends CustomController
                 switch ($order->item) {
                     case Orders::ITEM_BUY_SSL:
                         OrderHelper::ssl($order);
-                        break;
+                    break;
 
                     case Orders::ITEM_BUY_PANEL:
                         OrderHelper::panel($order);
-                        break;
+                    break;
 
                     case Orders::ITEM_BUY_DOMAIN:
                         OrderHelper::domain($order);
-                        break;
+                    break;
 
                     case Orders::ITEM_BUY_CHILD_PANEL:
                         OrderHelper::panel($order, true);
-                        break;
+                    break;
 
                     case Orders::ITEM_BUY_STORE:
-                        // Создаем триальный магазин сразу
-                        $isTrial = (bool)ArrayHelper::getValue($orderDetails, 'trial', false);
-                        if ($isTrial) {
-                            continue;
-                        }
-
                         OrderHelper::store($order);
-                        break;
+                    break;
 
                     case Orders::ITEM_PROLONGATION_SSL:
                         OrderHelper::prolongationSsl($order);
-                        break;
+                    break;
 
                     case Orders::ITEM_PROLONGATION_DOMAIN:
                         OrderHelper::prolongationDomain($order);
-                        break;
+                    break;
 
                     case Orders::ITEM_FREE_SSL:
                         if (Yii::$app->params['free_ssl.create']) {
                             OrderHelper::freeSsl($order);
                         }
-                        break;
+                    break;
 
                     case Orders::ITEM_PROLONGATION_FREE_SSL:
                         if (Yii::$app->params['free_ssl.prolong']) {
                             OrderHelper::prolongationFreeSsl($order);
                         }
-                        break;
+                    break;
 
                     case Orders::ITEM_BUY_GATEWAY:
                         OrderHelper::gateway($order);
-                        break;
+                    break;
                 }
             } catch (Exception $e) {
                 ThirdPartyLog::log(ThirdPartyLog::ITEM_ORDER, $order->id, $e->getMessage() . $e->getTraceAsString(), 'cron.order.exception');
