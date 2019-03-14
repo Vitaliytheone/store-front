@@ -179,7 +179,6 @@ class OrderDomainValidator extends BaseDomainValidator
             'status' => [
                 Orders::STATUS_PENDING,
                 Orders::STATUS_PAID,
-                Orders::STATUS_ADDED,
                 Orders::STATUS_ERROR
             ]
         ])->exists();

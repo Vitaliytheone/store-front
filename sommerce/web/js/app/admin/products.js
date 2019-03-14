@@ -33,6 +33,10 @@ customModule.adminProducts = {
             urlInput.val(generatedUrl);
         });
 
+        $("input[type=number]").on('change',function(){
+            this.value = parseFloat(this.value).toFixed(2);
+        });
+
         $(document).on('click', '#createProduct', function(e) {
             e.preventDefault();
 
@@ -117,11 +121,15 @@ customModule.adminProducts = {
             errorBlock.addClass('hidden');
             errorBlock.html('');
 
-            $('#create-package-auto', form).addClass('hidden');
             $('input[type="text"]', form).val('');
             $('input[type="checkbox"]', form).prop('checked', false);
             $('input[type="checkbox"]', form).prop('checked', false);
             $('select', form).prop('selectedIndex',0);
+
+            var container = $('#create-package-auto', form);
+            container.prop('selectedIndex', 1);
+            container.removeClass('hidden');
+            $('.field-createpackageform-provider_service').addClass('hidden');
 
             modal.modal('show');
 
@@ -166,6 +174,9 @@ customModule.adminProducts = {
             $('#editpackageform-quantity', modal).val(details.quantity);
             $('#editpackageform-link_type', modal).val(details.link_type);
             $('#editpackageform-visibility', modal).val(details.visibility);
+            if (!details.provider_id) {
+                $('#editpackageform-provider_id select option[value=""]').prop('selected', true);
+            }
             $('#editpackageform-provider_id', modal).val(details.provider_id);
             $('#editpackageform-provider_service', modal).val(details.provider_service);
             $('#editpackageform-id', modal).val(details.id);
@@ -245,7 +256,11 @@ customModule.adminProducts = {
                 revert: 300,
                 delay: 150,
                 dropOnEmpty: true,
-                placeholder: "movable-placeholder"
+                placeholder: "movable-placeholder",
+                forcePlaceholderSize: true,
+                start: function() {
+                    $(this).sortable('refreshPositions');
+                }
             });
 
             // Sort the children
@@ -326,6 +341,12 @@ customModule.adminProducts = {
                 return;
             }
 
+            if (optionSelected.val() == null || optionSelected.val() == '') {
+                apiErrorBlock.addClass('hidden');
+                $('.field-createpackageform-provider_service').addClass('hidden');
+                return;
+            }
+
             $.ajax({
                 url: actionUrl,
                 data: {id: optionSelected.val()},
@@ -333,6 +354,7 @@ customModule.adminProducts = {
                 timeout: 15000,
                 success: function(data, textStatus, jqXHR) {
                     if (data.hasOwnProperty('error')) {
+                        $('.provider-service').addClass('hidden');
                         apiErrorBlock.removeClass('hidden').text(data.message);
                     } else {
                         apiErrorBlock.addClass('hidden');
@@ -346,6 +368,7 @@ customModule.adminProducts = {
                         errorMessage = jqXHR.responseJSON.message;
                     }
 
+                    $('.field-createpackageform-provider_service').addClass('hidden');
                     console.log('Something was wrong...', textStatus, errorThrown, jqXHR);
                     apiErrorBlock.removeClass('hidden').text(errorMessage);
                 }

@@ -70,6 +70,7 @@ CREATE TABLE `checkouts` (
   `status` tinyint(1) DEFAULT NULL COMMENT '0 - pending\n1 - paid\n',
   `method_status` varchar(255) DEFAULT NULL,
   `method_id` int(11) DEFAULT NULL,
+  `currency_id` int(11) UNSIGNED DEFAULT NULL,
   `ip` varchar(255) DEFAULT NULL,
   `details` mediumtext COMMENT 'json\nlink\nquantity\npackage_id',
   `redirect_url` varchar(300) DEFAULT NULL,

@@ -2,12 +2,12 @@
 
 namespace common\models\store;
 
-use sommerce\components\validators\product\UrlValidator;
+use common\models\store\queries\ProductsQuery;
+use store\components\validators\product\UrlValidator;
 use Yii;
 use yii\behaviors\AttributeBehavior;
-use yii\db\Query;
-use common\models\store\queries\ProductsQuery;
 use yii\db\ActiveRecord;
+use yii\db\Query;
 use yii\helpers\ArrayHelper;
 
 /**

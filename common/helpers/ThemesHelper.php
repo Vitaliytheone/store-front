@@ -1,9 +1,8 @@
 <?php
-
 namespace common\helpers;
 
-use common\models\stores\Stores;
 use Yii;
+use common\models\stores\Stores;
 
 /**
  * Class ThemesHelper
@@ -17,15 +16,31 @@ class ThemesHelper {
      * @param string $defaultExtension
      * @return string|null
      */
-    public static function getView($view, $defaultExtension = 'twig')
+    public static function getView($view, $defaultExtension = 'php')
     {
         $view = ltrim($view, '/');
-        $sp = DIRECTORY_SEPARATOR;
-        $viewsPath = Yii::getAlias('@store' . DIRECTORY_SEPARATOR . 'views');
-        $rootPath = $viewsPath . $sp . $view;
 
-        if (is_file($rootPath) || is_file($rootPath . '.' . $defaultExtension) || is_file($rootPath . '.php')) {
-            return $rootPath;
+        $sp = DIRECTORY_SEPARATOR;
+
+        /**
+         * @var $store Stores
+         */
+        $store = Yii::$app->store->getInstance();
+
+        $themeFolder = $store->getThemeFolder();
+
+        $viewsPath = Yii::getAlias('@store' . DIRECTORY_SEPARATOR . 'views');
+
+        $custom = $sp . 'themes' . $sp . 'custom' . $sp . $store->id . $sp . $themeFolder . $sp . $view;
+        $standard = $sp . 'themes' . $sp . 'default' . $sp . $themeFolder . $sp . $view;
+
+        $customPath = $viewsPath . $custom;
+        $standardPath = $viewsPath . $standard;
+
+        if (is_file($customPath) || is_file($customPath . '.' . $defaultExtension) || is_file($customPath . '.php')) {
+            return $custom;
+        } else if (is_file($standardPath) || is_file($standardPath . '.' . $defaultExtension) || is_file($standardPath . '.php')) {
+            return $standard;
         }
 
         return null;

@@ -109,4 +109,8 @@ return [
         'name' => 'New Taiwan Dollars',
         'money_format' => '${{value}}',
     ],
+    'AZN' => [
+        'name' => 'Azerbaijani manat',
+        'money_format' => '₼{{value}}',
+    ],
 ];

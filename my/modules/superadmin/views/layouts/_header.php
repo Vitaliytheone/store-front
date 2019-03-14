@@ -109,6 +109,7 @@
                 ['label' => Yii::t('app/superadmin', 'header.nav.rentalpanel_scanner'), 'linkOptions' => ['class' => 'dropdown-item'], 'url' => Url::toRoute('/tools/rentalpanel')],
                 ['label' => Yii::t('app/superadmin', 'header.nav.db_helper'), 'linkOptions' => ['class' => 'dropdown-item'], 'url' => Url::toRoute('/tools/db-helper')],
                 ['label' => Yii::t('app/superadmin', 'header.nav.fraud_reports'), 'linkOptions' => ['class' => 'dropdown-item'], 'url' => Url::toRoute('/tools/fraud-reports')],
+                ['label' => Yii::t('app/superadmin', 'header.nav.exchange_rates'), 'linkOptions' => ['class' => 'dropdown-item'], 'url' => Url::toRoute('/tools/exchange-rate')],
             ]
         ];
     }

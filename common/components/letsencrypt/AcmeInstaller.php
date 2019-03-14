@@ -2,16 +2,14 @@
 
 namespace common\components\letsencrypt;
 
-use common\components\models\SslCertLetsencrypt;
+use common\models\panels\SslCertLetsencrypt;
 use common\models\panels\Customers;
 use common\models\panels\Project;
-use common\models\panels\SslCert;
 use common\models\panels\SslCertItem;
-use console\controllers\my\SystemController;
+use console\controllers\SystemController;
 use yii\base\Component;
 use Yii;
 use yii\base\Exception;
-use yii\base\ExitException;
 use yii\helpers\Console;
 use yii\console\ExitCode;
 
@@ -21,6 +19,12 @@ use yii\console\ExitCode;
  */
 class AcmeInstaller extends Component
 {
+    public $customersClass = Customers::class;
+    public $projectClass = Project::class;
+    public $sslCertItemClass = SslCertItem::class;
+    public $sslCertLetsencryptClass = SslCertLetsencrypt::class;
+    public $letsencryptClass = Letsencrypt::class;
+
     /**
      * Current console
      * @var SystemController
@@ -34,7 +38,8 @@ class AcmeInstaller extends Component
      */
     public function run()
     {
-        $letsencrypt = new Letsencrypt();
+        /** @var Letsencrypt $letsencrypt */
+        $letsencrypt = new $this->letsencryptClass();
         $letsencrypt->setPaths(Yii::$app->params['letsencrypt']['paths']);
 
         if ($this->console->confirm('Use stage (test) mode?')) {
@@ -162,42 +167,42 @@ class AcmeInstaller extends Component
 
             $domain = trim($domain);
 
-            if (SslCertLetsencrypt::findOne(['domain' => $domain])) {
+            if ($this->sslCertLetsencryptClass::findOne(['domain' => $domain])) {
                 throw new Exception('SslCert already exist! Use "Renew certificate" menu item!');
             }
 
-            $panel = Project::findOne(['site' => $domain]);
+            $panel = $this->projectClass::findOne(['site' => $domain]);
 
             if (!$panel) {
                 throw new Exception('Panel [' . $domain . '] not exist!');
             }
 
-            $customer = Customers::findOne(['id' => $panel->cid]);
+            $customer = $this->customersClass::findOne(['id' => $panel->cid]);
 
             if (!$customer) {
                 throw new Exception('Panel [' . $domain . '] customer [' . $customer->id . '] not exist!');
             }
 
-            $sslCertItem = SslCertItem::findOne(['provider' => SslCertItem::PROVIDER_LETSENCRYPT]);
+            $sslCertItem = $this->sslCertItemClass::findOne(['provider' => $this->sslCertItemClass::PROVIDER_LETSENCRYPT]);
 
             if (!$sslCertItem) {
                 throw new Exception('Cannot find PROVIDER_LETSENCRYPT SslCertItem');
             }
 
-            $ssl = new SslCertLetsencrypt();
-            $ssl->cid = $panel->id;
-            $ssl->pid = $customer->id;
-            $ssl->project_type = SslCert::PROJECT_TYPE_PANEL;
+            $ssl = new $this->sslCertLetsencryptClass();
+            $ssl->cid = $customer->id;
+            $ssl->pid = $panel->id;
+            $ssl->project_type = $this->sslCertLetsencryptClass::PROJECT_TYPE_PANEL;
             $ssl->item_id = $sslCertItem->id;
-            $ssl->status = SslCert::STATUS_PENDING;
-            $ssl->checked = SslCert::CHECKED_NO;
+            $ssl->status = $this->sslCertLetsencryptClass::STATUS_PENDING;
+            $ssl->checked = $this->sslCertLetsencryptClass::CHECKED_NO;
             $ssl->domain = trim($domain);
 
             $letsencrypt->setSsl($ssl);
-            $letsencrypt->issueCert(!(bool)$panel->subdomain);
+            $letsencrypt->issueCert(false);
 
-            $ssl->status = SslCertLetsencrypt::STATUS_ACTIVE;
-            $ssl->checked = SslCertLetsencrypt::CHECKED_YES;
+            $ssl->status = $this->sslCertLetsencryptClass::STATUS_ACTIVE;
+            $ssl->checked = $this->sslCertLetsencryptClass::CHECKED_YES;
 
             if (!$ssl->save(false)) {
                 throw new Exception('Cannot create SslCertLetsencrypt [' . $domain . ']');
@@ -224,7 +229,7 @@ class AcmeInstaller extends Component
 
             $domain = trim($domain);
 
-            $ssl = SslCertLetsencrypt::findOne([
+            $ssl = $this->sslCertLetsencryptClass::findOne([
                 'domain' => $domain,
             ]);
 
@@ -232,14 +237,14 @@ class AcmeInstaller extends Component
                 throw new Exception('SslCertLetsencrypt does not exist for domain [' . $domain . ']!');
             }
 
-            $ssl->status = SslCertLetsencrypt::STATUS_INCOMPLETE;
-            $ssl->checked = SslCertLetsencrypt::CHECKED_NO;
+            $ssl->status = $this->sslCertLetsencryptClass::STATUS_INCOMPLETE;
+            $ssl->checked = $this->sslCertLetsencryptClass::CHECKED_NO;
 
             if (!$ssl->save(false)) {
                 throw new Exception('Cannot update SslCertLetsencrypt item [sslId=' . $ssl->id . ']');
             }
 
-            $panel = Project::findOne($ssl->pid);
+            $panel = $this->projectClass::findOne($ssl->pid);
 
             if (!$panel) {
                 throw new Exception('Panel [' . $ssl->pid . '] not found!');
@@ -249,8 +254,8 @@ class AcmeInstaller extends Component
 
             $letsencrypt->renewCert(!(bool)$panel->subdomain);
 
-            $ssl->status = SslCertLetsencrypt::STATUS_ACTIVE;
-            $ssl->checked = SslCertLetsencrypt::CHECKED_YES;
+            $ssl->status = $this->sslCertLetsencryptClass::STATUS_ACTIVE;
+            $ssl->checked = $this->sslCertLetsencryptClass::CHECKED_YES;
 
             if (!$ssl->save(false)) {
                 throw new Exception('Cannot update SslCertLetsencrypt item [sslId=' . $ssl->id . ']');
@@ -274,7 +279,7 @@ class AcmeInstaller extends Component
 
             $domain = trim($domain);
 
-            $ssl = SslCertLetsencrypt::findOne([
+            $ssl = $this->sslCertLetsencryptClass::findOne([
                 'domain' => $domain,
             ]);
 

@@ -28,9 +28,11 @@ return [
     'sommerceDefaultDatabase' => 'sommerce_template', // Шаблонная база данных создаваемых sommerce
 
     'myUrl' => 'http://sommerce.my/', // Полный url раздела My
-    'panelDomain' => 'myperfectpanel.com', // Домен нашего сайта
-    'storeDomain' => 'sommerce.net', // Домен нашего сайта
-    'gatewayDomain' => 'gateway.net',
+
+    'panelDomain' => 'mypanel.link', // Домен нашего сайта - panel
+    'storeDomain' => 'mysmmstore.com', // Домен нашего сайта - store
+    'sommerceDomain' => 'sommerce.link', // Домен нашего сайта - sommerce
+    'gatewayDomain' => 'gateway.net', // Домен нашего сайта - gateway
 
     'nginx_restart' => '/etc/init.d/nginx restart',
 
@@ -64,7 +66,7 @@ return [
     'ahnames.my.ns' => [
         'ns_1' => 'ns1.perfectdns.com',
         'ns_2' => 'ns2.perfectdns.com',
-        'ns_3' => 'ns3.perfectdns.com',
+        'ns_3' => null,
         'ns_4' => null,
     ],
 
@@ -85,7 +87,7 @@ return [
     'namesilo.my.ns' => [
         'ns1' => 'ns1.perfectdns.com',
         'ns2' => 'ns2.perfectdns.com',
-        'ns3' => 'ns3.perfectdns.com',
+        'ns3' => null,
         'ns4' => null,
     ],
 
@@ -181,6 +183,7 @@ return [
             'target' => [
                 'perfectpanel.com',
                 'managerdns.com',
+                'sommerce.com',
             ],
         ],
     ],

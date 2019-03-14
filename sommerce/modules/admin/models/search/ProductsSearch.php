@@ -3,13 +3,13 @@
 namespace sommerce\modules\admin\models\search;
 
 use common\models\panels\AdditionalServices;
+use common\models\sommerce\Packages;
+use common\models\sommerce\Products;
 use common\models\sommerces\StoreProviders;
 use common\models\sommerces\Stores;
 use yii;
-use yii\db\Query;
 use yii\base\Model;
-use common\models\sommerce\Products;
-use common\models\sommerce\Packages;
+use yii\db\Query;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -99,12 +99,15 @@ class ProductsSearch extends Model
         foreach ($productIds as $productId) {
 
             // Make product`s packages
-            $productPackages = array_filter($productsRows, function($productRow) use ($productId){
+            $productPackages = array_filter($productsRows, function ($productRow) use ($productId) {
                 return $productId == $productRow['pk_pr_id'];
             });
             array_walk($productPackages, function (&$package, $key) use ($providers) {
-
                 $provider = ArrayHelper::getValue($providers, $package['provider_id'] . '.site', '');
+                if (empty($provider)) {
+                    $package['provider_id'] = null;
+                }
+
 
                 $package = [
                     'id' => $package['pk_id'],

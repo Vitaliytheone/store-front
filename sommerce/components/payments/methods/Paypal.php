@@ -291,9 +291,6 @@ class Paypal extends BasePayment
             $GetTransactionDetails['EMAIL'] = '';
         }
 
-        $paymentsHelper = new PaymentsModalHelper();
-        $paymentsHelper->addModal(PaymentsModalHelper::AWAITING_MODAL);
-
         return [
             'result' => 1,
             'transaction_id' => $transactionId,

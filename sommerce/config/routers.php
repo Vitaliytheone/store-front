@@ -4,7 +4,7 @@ return [
     '/checkout' => 'payments/checkout',
     '/' => 'page/index',
     '/index' => 'page/index',
-    '/cart' => 'cart/index',
+    '/order' => 'order/index',
     '/delete/<key:[\w\d-]+>' => 'cart/delete',
     '/frozen' => 'site/frozen',
 

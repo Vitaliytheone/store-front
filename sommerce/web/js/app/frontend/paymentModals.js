@@ -18,6 +18,8 @@ customModule.paymentResultModal = {
                 break;
         }
 
+        history.pushState({}, document.title, params.url);
+
         $('body').append(modal);
         $(selector).modal('show');
     }

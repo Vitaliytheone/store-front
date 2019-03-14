@@ -2,6 +2,8 @@
 
 namespace console\controllers\sommerce;
 
+use common\components\behaviors\PaymentHashBehavior;
+use common\models\sommerce\Payments;
 use common\models\sommerces\Integrations;
 use common\models\sommerces\PaymentMethods;
 use common\models\sommerces\PaymentMethodsCurrency;
@@ -803,6 +805,36 @@ class SystemController extends CustomController
                 } else {
                     $this->stderr('Integration saved: ' . $integration->name . "\n", Console::FG_GREEN);
                 }
+            }
+        }
+    }
+
+    /**
+     * Fill payment hash for each payment of each store
+     */
+    public function actionFillPaymentHash()
+    {
+        $stores = Stores::find()->all();
+
+        foreach ($stores as $store) {
+
+            $table = Yii::$app->db->quoteTableName($store->db_name) . '.' . Payments::tableName();
+
+            if (!Yii::$app->db->schema->getTableSchema($table)) {
+                continue;
+            }
+
+            foreach (Payments::find()->select(['id'])->andWhere('hash IS NULL')->from($table)->column() as $paymentId) {
+
+                do {
+                    $hash = PaymentHashBehavior::generateRandomString() . '-' . PaymentHashBehavior::generateRandomString() . '-' . PaymentHashBehavior::generateRandomString();
+
+                } while (Payments::find()->andWhere(['hash' => $hash])->from($table)->one());
+
+                Yii::$app->db->createCommand()->update($table,
+                    ['hash' => $hash],
+                    ['id' => $paymentId]
+                )->execute();
             }
         }
     }

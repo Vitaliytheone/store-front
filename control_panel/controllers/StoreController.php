@@ -8,7 +8,6 @@ use common\models\sommerces\Customers;
 use common\models\sommerces\Orders;
 use common\models\sommerces\StoreAdminAuth;
 use common\models\sommerces\StoreAdmins;
-use common\models\sommerces\StoreDomains;
 use common\models\sommerces\Stores;
 use control_panel\components\ActiveForm;
 use control_panel\models\forms\CreateStoreStaffForm;
@@ -19,12 +18,12 @@ use control_panel\models\forms\SetStoreStaffPasswordForm;
 use control_panel\models\search\StoresSearch;
 use Yii;
 use yii\filters\AccessControl;
+use yii\filters\AjaxFilter;
+use yii\filters\ContentNegotiator;
+use yii\filters\VerbFilter;
 use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
-use yii\filters\VerbFilter;
-use yii\filters\ContentNegotiator;
-use yii\filters\AjaxFilter;
 
 /**
  * Class StoreController
@@ -144,70 +143,6 @@ class StoreController extends CustomController
         }
 
         return $this->redirect('/invoices/' . $model->getInvoiceCode());
-    }
-
-    /**
-     * Edit store domain
-     * @param int $id
-     * @return array
-     * @throws NotFoundHttpException
-     * @throws \Throwable
-     * @throws \yii\base\Exception
-     */
-    public function actionEditDomain($id)
-    {
-        $store = $this->_findStore($id);
-
-        /**
-         * @var Customers $user
-         */
-        $user = Yii::$app->user->getIdentity();
-        $storeDomain = StoreDomains::findOne([
-            'store_id' => $store->id,
-            'type' => [
-                StoreDomains::DOMAIN_TYPE_DEFAULT,
-                StoreDomains::DOMAIN_TYPE_SUBDOMAIN,
-                StoreDomains::DOMAIN_TYPE_SOMMERCE,
-            ]
-        ]);
-
-        if (!Stores::hasAccess($store, Stores::CAN_DOMAIN_CONNECT, [
-            'customer' => $user,
-            'last_update' => $storeDomain ? $storeDomain->updated_at : null
-        ])) {
-            return [
-                'status' => 'error',
-                'message' => Yii::t('app', 'error.store.can_not_change_domain')
-            ];
-        }
-
-        /**
-         * @var Auth $user
-         */
-        $user = Yii::$app->user->getIdentity();
-
-        $model = new EditStoreDomainForm();
-        $model->setStore($store);
-        $model->setUser($user);
-
-        if ($model->load(Yii::$app->request->post())) {
-
-            if (!$model->save()) {
-                return [
-                    'status' => 'error',
-                    'message' => ActiveForm::firstError($model)
-                ];
-            }
-
-            return [
-                'status' => 'success'
-            ];
-        }
-
-        return [
-            'status' => 'error',
-            'message' => Yii::t('app', 'error.store.can_not_change_domain')
-        ];
     }
 
     /**
