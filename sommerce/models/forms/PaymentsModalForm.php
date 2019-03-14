@@ -103,9 +103,7 @@ class PaymentsModalForm
 
         $details = $checkout->getDetails();
 
-        $package = Packages::find()
-            ->where(['id' => $details['package_id']])
-            ->one();
+        $package = Packages::findOne(['id' => $details['package_id']]);
 
         if (!$package) {
             throw new Exception('Package not found!');
