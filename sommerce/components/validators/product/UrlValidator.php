@@ -26,6 +26,7 @@ class UrlValidator extends Validator
     {
         /** @var Products|Pages $model */
         if (empty($attribute) || empty($model->$attribute) || $model->hasErrors()) {
+            $this->addError($model, $attribute, Yii::t('admin', 'pages.link_invalid'));
             return false;
         }
 
