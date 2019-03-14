@@ -101,11 +101,9 @@ class PaymentsModalForm
             throw new Exception('Checkout not found!');
         }
 
-        $details = $checkout->getDetails();
+        $details = $checkout->getDetails()[0];
 
-        $package = Packages::find()
-            ->where(['id' => $details['package_id']])
-            ->one();
+        $package = Packages::findOne(['id' => $details['package_id']]);
 
         if (!$package) {
             throw new Exception('Package not found!');
