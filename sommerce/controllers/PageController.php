@@ -2,7 +2,9 @@
 
 namespace sommerce\controllers;
 
+use common\models\sommerce\Payments;
 use my\helpers\Url;
+use sommerce\models\forms\PaymentsModalForm;
 use sommerce\helpers\PageFilesHelper;
 use sommerce\helpers\PagesHelper;
 use sommerce\models\forms\OrderForm;
@@ -29,16 +31,30 @@ class PageController extends CustomController
     /**
      * Render page by url
      * @param string $url
+     * @param string $hash
      * @return string
      * @throws NotFoundHttpException
      * @throws \yii\base\Exception
      */
-    public function actionIndex($url = 'index')
+    public function actionIndex($url = 'index', $hash = null)
     {
         $page = PagesHelper::getPage($url);
 
         if (!$page) {
             throw new NotFoundHttpException("Page by url '{$url}' not found");
+        }
+
+        if ($hash) {
+            $payment = Payments::findOne(['hash' => $hash]);
+
+            if (!$payment) {
+                throw new NotFoundHttpException("Payment not found!");
+            }
+
+            $modal = new PaymentsModalForm();
+            $modal->setStore($this->store);
+
+            $this->addModule('paymentResultModal',  $modal->getModalData($payment));
         }
 
         Url::remember();
@@ -52,33 +68,20 @@ class PageController extends CustomController
         $this->addModule('contactsForm', [
             'contact_action_url' => Url::toRoute(['/system/contacts']),
         ]);
-        $this->addPaymentModal();
+
         $orderForm = new OrderForm();
         $orderForm->setStore($this->store);
 
         $this->addModule('orderFormFrontend', [
-            'order_data_url' => Url::toRoute(['/cart/get-order-data', 'id' => '_id_']),
-            'form_action_url' => Url::toRoute(['/cart']),
-            'form_validate_ulr' => Url::toRoute(['/cart/validate']),
+            'order_data_url' => Url::toRoute(['/order/get-order-data', 'id' => '_id_']),
+            'form_action_url' => Url::toRoute(['/order']),
+            'form_validate_ulr' => Url::toRoute(['/order/validate']),
             'payment_methods' =>  $orderForm->getPaymentsMethodsForView(),
             'fieldOptions' => $orderForm->getPaymentsFields(),
             'options' => $orderForm->getJsOptions(),
         ]);
 
         return $this->renderTwigContent($content);
-    }
-
-    /**
-     * Add payment modal
-     */
-    protected function addPaymentModal()
-    {
-        $cookies = Yii::$app->request->cookies;
-        if (($cookie = $cookies->get('modal')) !== null) {
-            $this->addModule('paymentResultModal', $cookie->value);
-            $cookies = Yii::$app->response->cookies;
-            $cookies->remove('modal');
-        }
     }
 
     /**

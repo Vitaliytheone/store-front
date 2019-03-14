@@ -85,8 +85,12 @@ class RouteHelper {
             $url = trim($page['url']);
             $url = !empty($url) ? $url : '/';
             $url = str_replace('/', '\/', $url);
-            $urls[$page['url']] = [
-                'rule' => "/^\/?{$url}$/i",
+
+            $urls[] = [
+                'rule' => "/^\/?{$url}(?:\/(?<hash>[a-z0-9]{10}-[a-z0-9]{10}-[a-z0-9]{10}))?$/i",
+                'match' => [
+                    'hash'
+                ],
                 'options' => [
                     'url' => $page['url'],
                 ],

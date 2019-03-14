@@ -71,46 +71,6 @@ class PaymentsController extends CustomController
         return $this->renderPartial('checkout');
     }
 
-
-    /**
-     * Displays success modal
-     * @param int $checkoutId
-     * @return string
-     */
-    public function actionSuccessPayment($checkoutId)
-    {
-        $checkout = $this->findCheckout($checkoutId);
-
-        $paymentsHelper = new PaymentsModalHelper();
-        $paymentsHelper->setStore($this->store);
-        $paymentsHelper->addModal(PaymentsModalHelper::SUCCESS_MODAL, $checkout);
-
-
-        if (Pages::existUrl($checkout->redirect_url)) {
-            return $this->redirect($checkout->redirect_url);
-        }
-
-        return $this->redirect(Url::home());
-
-    }
-
-    /**
-     * Displays success modal
-     * @param int $checkoutId
-     * @return string
-     */
-    public function actionFailPayment($checkoutId)
-    {
-        $checkout = $this->findCheckout($checkoutId);
-        $paymentsHelper = new PaymentsModalHelper();
-        $paymentsHelper->addModal(PaymentsModalHelper::FAILED_MODAL);
-        if (Pages::existUrl($checkout->redirect_url)) {
-            return $this->redirect($checkout->redirect_url);
-        }
-
-        return $this->redirect(Url::home());
-    }
-
     /**
      * @param $checkoutId
      * @return Checkouts
