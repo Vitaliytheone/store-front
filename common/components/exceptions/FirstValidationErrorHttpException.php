@@ -18,7 +18,7 @@ class FirstValidationErrorHttpException extends HttpException
 
         if ($form->hasErrors()) {
             $validationErrors = $form->getFirstErrors();
-            $message = reset($validationErrors);
+            $message = trim(reset($validationErrors),'.');
         }
 
         parent::__construct(400, $message, 400, $previous);

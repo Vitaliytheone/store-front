@@ -45,6 +45,8 @@ $storeUrl = $store->getBaseSite();
                     <?= Html::beginForm(); ?>
 
                     <div class="row">
+
+                        <?php if (false) : ?>
                         <div class="col-lg-7 order-2 order-lg-1">
                             <div class="form-group">
                                 <div>
@@ -72,6 +74,7 @@ $storeUrl = $store->getBaseSite();
                             </div>
                         <?php endif; ?>
                         </div>
+                        <?php endif; ?>
 
                         <div class="col-lg-7 order-4 order-lg-4">
                             <div class="form-group">
