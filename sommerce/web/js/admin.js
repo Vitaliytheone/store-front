@@ -1630,11 +1630,15 @@ customModule.adminProducts = {
             errorBlock.addClass('hidden');
             errorBlock.html('');
 
-            $('#create-package-auto', form).addClass('hidden');
             $('input[type="text"]', form).val('');
             $('input[type="checkbox"]', form).prop('checked', false);
             $('input[type="checkbox"]', form).prop('checked', false);
             $('select', form).prop('selectedIndex',0);
+
+            var container = $('#create-package-auto', form);
+            container.prop('selectedIndex', 1);
+            container.removeClass('hidden');
+            $('.field-createpackageform-provider_service').addClass('hidden');
 
             modal.modal('show');
 
@@ -1839,6 +1843,12 @@ customModule.adminProducts = {
                 return;
             }
 
+            if (optionSelected.val() == null || optionSelected.val() == '') {
+                apiErrorBlock.addClass('hidden');
+                $('.field-createpackageform-provider_service').addClass('hidden');
+                return;
+            }
+
             $.ajax({
                 url: actionUrl,
                 data: {id: optionSelected.val()},
@@ -1846,6 +1856,7 @@ customModule.adminProducts = {
                 timeout: 15000,
                 success: function(data, textStatus, jqXHR) {
                     if (data.hasOwnProperty('error')) {
+                        $('.provider-service').addClass('hidden');
                         apiErrorBlock.removeClass('hidden').text(data.message);
                     } else {
                         apiErrorBlock.addClass('hidden');
@@ -1859,6 +1870,7 @@ customModule.adminProducts = {
                         errorMessage = jqXHR.responseJSON.message;
                     }
 
+                    $('.field-createpackageform-provider_service').addClass('hidden');
                     console.log('Something was wrong...', textStatus, errorThrown, jqXHR);
                     apiErrorBlock.removeClass('hidden').text(errorMessage);
                 }
