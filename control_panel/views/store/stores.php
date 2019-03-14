@@ -4,12 +4,12 @@
     /* @var \common\models\sommerces\Stores $store */
     /* @var $accesses */
 
-    use control_panel\helpers\Url;
-    use common\models\sommerces\Stores;
-    use common\models\sommerces\Orders;
-    use yii\bootstrap\Html;
+use common\models\sommerces\Orders;
+use common\models\sommerces\Stores;
+use control_panel\helpers\Url;
+use yii\bootstrap\Html;
 
-    $storeColors = [
+$storeColors = [
         Stores::STATUS_FROZEN => 'text-danger',
         Stores::STATUS_ACTIVE => 'text-success',
         Stores::STATUS_TERMINATED => 'text-muted',
@@ -93,20 +93,6 @@
                                                 'class' => 'btn btn-outline btn-info btn-xs',
                                             ])?>
                                         <?php endif; ?>
-
-                                        <?php if ($store['access']['canDomainConnect']) : ?>
-                                            <?= Html::a('<i class="fa fa-globe fa-fw"></i> ' . Yii::t('app', 'stores.list.action_domain_connect'), [
-                                                '/store/edit-domain',
-                                                'id' => $store['id']
-                                            ], [
-                                                'class' => 'btn btn-outline btn-purple btn-xs edit-store-domain',
-                                                'data-domain' => $store['store_domain']
-                                            ])?>
-                                        <?php else : ?>
-                                            <?= Html::tag('span', '<i class="fa fa-globe fa-fw"></i> ' . Yii::t('app', 'stores.list.action_domain_connect'), [
-                                                'class' => 'btn btn-outline btn-default btn-xs disabled',
-                                            ])?>
-                                        <?php endif; ?>
                                         
                                     <?php endif; ?>
                                 </td>
@@ -118,5 +104,3 @@
         </div>
     </div>
 <?php endif; ?>
-
-<?= $this->render('layouts/_edit_domain_modal'); ?>

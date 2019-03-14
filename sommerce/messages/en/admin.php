@@ -134,9 +134,9 @@ return [
     'products.edit_product.submit_btn' => 'Save changes',
 
     'products.create_package.header' => 'Create package',
-    'products.create_package.name' => 'Package name *',
-    'products.create_package.price' => 'Price *',
-    'products.create_package.quantity' => 'Quantity *',
+    'products.create_package.name' => 'Package name',
+    'products.create_package.price' => 'Price',
+    'products.create_package.quantity' => 'Quantity',
     'products.create_package.best' => 'Best package',
     'products.create_package.link' => 'Link Type',
     'products.create_package.availability' => 'Availability',
