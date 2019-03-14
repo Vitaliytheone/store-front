@@ -60,8 +60,10 @@ $model->setStore($store);
                 <div id="edit-package-auto" class="hidden">
                     <hr>
                     <?= $form->field($model, 'provider_id')->dropDownList($model->getStoreProviders(), [
-                        'prompt' => ['text' => Yii::t('admin', 'products.package_provider_default'),
-                            'options' => ['disabled' => true, 'selected' => true,]],
+                        'prompt' => [
+                            'text' => Yii::t('admin', 'products.package_provider_default'),
+                            'options' => ['disabled' => true, 'selected' => true,]
+                        ],
                         'class' => 'form-control provider-id',
                     ])->label($model->getAttributeLabel('provider_id') . ' *') ?>
 
