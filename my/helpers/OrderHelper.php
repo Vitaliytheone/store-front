@@ -467,6 +467,13 @@ var_dump($sqlPanelPath);
 
         }
 
+        if ($child) {
+            if (!ChildHelper::setChildLanguages($project)) {
+                $order->status = Orders::STATUS_ERROR;
+                ThirdPartyLog::log(ThirdPartyLog::ITEM_BUY_PANEL, $project->id, $project->getErrors(), 'cron.order.add_child_panel_lang');
+            }
+        }
+
         $project->setForeignSubdomain((bool)$subdomain);
 
         if (!$project->enableDomain()) {
