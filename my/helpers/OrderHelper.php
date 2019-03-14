@@ -439,7 +439,7 @@ class OrderHelper {
         }
 
         $sqlPanelPath = Yii::$app->params['panelSqlPath'];
-
+var_dump($sqlPanelPath);
         // Make Sql dump from panel template db
         if (!DbHelper::makeSqlDump(Yii::$app->params['panelDefaultDatabase'], $sqlPanelPath)) {
             $order->status = Orders::STATUS_ERROR;
