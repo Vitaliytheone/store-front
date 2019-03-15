@@ -131,7 +131,11 @@ a:focus{
 
 .arrow-login {
 	padding-left: 5px;
-	padding-right: 30px;
+	/* padding-right: 30px; */
+}
+
+.login-links {
+	margin-right: 30px;
 }
 
 .navbar {
@@ -208,7 +212,7 @@ a:focus{
 
 .notify-button {
 	font-size: 14px;
-	font-weight: 600;
+	font-weight: 500;
 	color: white;
 }
 
@@ -576,7 +580,7 @@ a:hover .hello {
 	height: 38px;
 	border: 0px;
 	cursor: pointer;
-	padding: 10px;
+    padding: 11px 23px 11px 23px;
 }
 
 
@@ -980,7 +984,8 @@ button::after {
 }
 
 
-/*  */
+/* TERMS AND PRIVACY PAGES */
+
 @font-face {
     font-family: 'Open Sans';
     font-style: normal;
