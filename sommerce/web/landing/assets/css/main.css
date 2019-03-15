@@ -18,6 +18,12 @@ body {
 	position: relative;
 	bottom: 5px;
 } */
+
+.arrow-new {
+	position: relative;
+	bottom: 2px;
+}
+
 .nav-scroll {
   box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.04);
   background-color: #ffffff;
@@ -461,6 +467,10 @@ a:focus{
 
 .faq-about {
 	width: 240px;
+}
+
+#faq .feature-title {
+	padding-top: 8px;
 }
 
 .hello-sommerce {

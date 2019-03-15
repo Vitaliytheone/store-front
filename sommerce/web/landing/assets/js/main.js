@@ -29,7 +29,9 @@ $(document).ready(function () {
 	// 	$('[data-toggle="popover"]').popover()
 	// })
 	$(document).ready(function () {
-		$(document).scrollTop();
+		if ($(window).scrollTop) {
+			$(".navbar").toggleClass("nav-scroll");
+		}
 	});
 
 	$(window).scroll(function () {
