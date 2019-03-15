@@ -28,6 +28,9 @@ $(document).ready(function () {
 	// $(function () {
 	// 	$('[data-toggle="popover"]').popover()
 	// })
+	$(document).ready(function () {
+		$(document).scrollTop();
+	});
 
 	$(window).scroll(function () {
 		$(".navbar").toggleClass("nav-scroll", $(this).scrollTop() > 0);
