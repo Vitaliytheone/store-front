@@ -3,7 +3,7 @@ $(document).ready(function () {
 	$(document).ready(function () {
 		$('#navbar-scrolling').on('click', 'a', function (event) {
 			var navbarHeight = $('nav').height();
-			event.preventDefault();
+			// event.preventDefault();
 			var id = $(this).attr('href'),
 				top = $(id).offset().top;
 			var scrollTopHeigt = top - navbarHeight - 50;
@@ -21,10 +21,13 @@ $(document).ready(function () {
 	// 		$('body,html').animate({ scrollTop: scrollTopHeigt }, 1000);
 	// 	});
 	// });
+	$(".navbar-link").click(function (event) {
+		event.preventDefault();
+	});
 
-	$(function () {
-		$('[data-toggle="popover"]').popover()
-	})
+	// $(function () {
+	// 	$('[data-toggle="popover"]').popover()
+	// })
 
 	$(window).scroll(function () {
 		$(".navbar").toggleClass("nav-scroll", $(this).scrollTop() > 0);
