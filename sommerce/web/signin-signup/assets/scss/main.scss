@@ -2,48 +2,57 @@
 
 
 
-
-.card-body {
-    border: 0px;
-}
-
 .card {
     @extend %card;
-}
 
-.error-text {
-    @extend %error-text;
-}
+    .card-body {
+        border: 0px;
+        padding: 24px;
 
-.alert {
-   padding: 7px;
-}
+        h3 {
+            @extend %h3;
+        }
 
-Input::placeholder {
-    @extend %placeholder-input-normal;
-    padding: 8px 12px 8px 12px;
-}
+        p {
+            @extend %text-under;
+            margin-bottom: 24px;
+        }
 
-// Input {
-//     @extend %normal-input;
-//     height: 40px;
-// }
+        .card-title {
+            padding-bottom: 12px;
+        }
+
+        .alert {
+             padding: 7px 8px;
+        }
+
+        .error-text {
+            @extend %error-text;
+        }
+
+        .forgot {
+            @extend %forgot;
+        }
+
+        .btn {
+            height: 40px;
+        }
+
+        .terms {
+            @extend %forgot;
+            color: #6e6c88;
+        }
+
+    }
+}
 
 .text-under {
     @extend %text-under;
 }
 
-h3 {
-    @extend %h3;
-}
-
-.text-center a {
+.text-under a {
     @extend %a-under;
+    text-decoration: underline;
 }
 
-.forgot {
-    font-size: 12px;
-    font-weight: 500;
-    line-height: 20px;
-    color: #7765d6;
-}
+

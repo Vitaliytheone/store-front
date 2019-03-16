@@ -10,6 +10,26 @@ body {
 
 // INPUT'S DEFAULT STYLES
 
+textarea:focus,
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="datetime"]:focus,
+input[type="datetime-local"]:focus,
+input[type="date"]:focus,
+input[type="month"]:focus,
+input[type="time"]:focus,
+input[type="week"]:focus,
+input[type="number"]:focus,
+input[type="email"]:focus,
+input[type="url"]:focus,
+input[type="search"]:focus,
+input[type="tel"]:focus,
+input[type="color"]:focus,
+.uneditable-input:focus {   
+	@extend %active-input;
+	outline: none;
+}
+
 label {
 	font-size: 12px;
 	font-weight: 600;
@@ -17,13 +37,24 @@ label {
 	color: #6e6c88;
 }
 
+
+
 Input {
+	padding: 8px 12px 8px 12px;
 	@extend %normal-input;
+	font-size: 14px;
+	font-weight: 500;
+	line-height: 14px;
 }
- 
-Input:active {
-	@extend %active-input;
+
+Input::placeholder {
+    @extend %placeholder-input-normal;
 }
+
+Input:hover {
+	@extend %focus-input;
+}
+
 
 // CARD 
 
@@ -41,7 +72,7 @@ Input:active {
 	font-weight: 500;
 	line-height: 20px;
 	text-align: center;
-	color: #d12121;
+	color: #721c24;
 }
 
 %h3 {
@@ -59,13 +90,41 @@ Input:active {
 }
 
 %a-under {
-	 font-size: 14px;
+	font-size: 14px;
   font-weight: 500;
   line-height: 24px;
   color: #7765d6;
 }
 
-// COLORS
+%forgot {
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 20px;
+    color: #7765d6;
+}
+
+// BUTTONS DEFAULT SETTINGS 
+
+.purple-button {
+	@extend %normal-purple-button;
+	 font-size: 14px;
+  font-weight: 600;
+  line-height: 24px;
+  text-align: center;
+  color: #ffffff;
+}
+
+.purple-button:hover {
+	@extend %focused-purple-button;
+	font-size: 14px;
+  	color: #ffffff;
+}
+
+.purple-button:active {
+	@extend %pressed-purple-button;
+}
+
+// COLORS PATTERNS
 
 $purple: #7765d6;
 $red: #ff5c86;
@@ -137,12 +196,6 @@ $opacitgrey: #e5e5e9;
 	box-shadow: 0 2px 4px 0 rgba(123, 98, 221, 0.1) !important;
 	border: solid 1px #7765d6 !important;
 	background-color: #ffffff;
-	height: 40px;
-}
-
-%filled-input {
-	border-radius: 2px;
-	border: solid 1px #bdbcc8;
 	height: 40px;
 }
 

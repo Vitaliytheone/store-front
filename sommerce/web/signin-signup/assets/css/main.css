@@ -7,11 +7,35 @@ body {
   -ms-backface-visibility: hidden;
   /* padding-top: 30px; */ }
 
+textarea:focus,
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="datetime"]:focus,
+input[type="datetime-local"]:focus,
+input[type="date"]:focus,
+input[type="month"]:focus,
+input[type="time"]:focus,
+input[type="week"]:focus,
+input[type="number"]:focus,
+input[type="email"]:focus,
+input[type="url"]:focus,
+input[type="search"]:focus,
+input[type="tel"]:focus,
+input[type="color"]:focus,
+.uneditable-input:focus {
+  outline: none; }
+
 label {
   font-size: 12px;
   font-weight: 600;
   line-height: 20px;
   color: #6e6c88; }
+
+Input {
+  padding: 8px 12px 8px 12px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 14px; }
 
 .card {
   border-radius: 3px;
@@ -19,30 +43,62 @@ label {
   border: solid 1px #e5e5e9;
   background-color: #ffffff; }
 
-.error-text {
+.card .card-body .error-text {
   font-size: 12px;
   font-weight: 500;
   line-height: 20px;
   text-align: center;
-  color: #d12121; }
+  color: #721c24; }
 
-h3 {
+.card .card-body h3 {
   font-size: 16px;
   font-weight: bold;
   line-height: 24px;
   color: #312e55; }
 
-.text-under {
+.card .card-body p, .text-under {
   font-size: 14px;
   font-weight: 500;
   line-height: 24px;
   color: #6e6c88; }
 
-.text-center a {
+.text-under a {
   font-size: 14px;
   font-weight: 500;
   line-height: 24px;
   color: #7765d6; }
+
+.card .card-body .forgot, .card .card-body .terms {
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 20px;
+  color: #7765d6; }
+
+.purple-button {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 24px;
+  text-align: center;
+  color: #ffffff; }
+
+.purple-button:hover {
+  font-size: 14px;
+  color: #ffffff; }
+
+.purple-button {
+  border-radius: 2px;
+  box-shadow: 0 2px 4px 0 rgba(119, 101, 214, 0.21);
+  background-color: #7765d6; }
+
+.purple-button:hover {
+  border-radius: 2px;
+  box-shadow: 0 2px 4px 0 rgba(119, 101, 214, 0.21);
+  background-color: #7765d6; }
+
+.purple-button:active {
+  border-radius: 2px;
+  box-shadow: 0 2px 4px 0 rgba(119, 101, 214, 0.21);
+  background-color: #7765d6; }
 
 Input {
   width: 100%;
@@ -50,7 +106,28 @@ Input {
   border: solid 1px #bdbcc8;
   height: 40px; }
 
-Input:active {
+Input:hover {
+  border-radius: 2px;
+  border: solid 1px #6e6c88;
+  background-color: #ffffff;
+  height: 40px; }
+
+textarea:focus,
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="datetime"]:focus,
+input[type="datetime-local"]:focus,
+input[type="date"]:focus,
+input[type="month"]:focus,
+input[type="time"]:focus,
+input[type="week"]:focus,
+input[type="number"]:focus,
+input[type="email"]:focus,
+input[type="url"]:focus,
+input[type="search"]:focus,
+input[type="tel"]:focus,
+input[type="color"]:focus,
+.uneditable-input:focus {
   box-shadow: 0 2px 4px 0 rgba(123, 98, 221, 0.1) !important;
   border: solid 1px #7765d6 !important;
   background-color: #ffffff;
@@ -63,19 +140,21 @@ Input::placeholder {
   line-height: 24px;
   color: #bdbcc8; }
 
-.card-body {
-  border: 0px; }
+.card .card-body {
+  border: 0px;
+  padding: 24px; }
+  .card .card-body p {
+    margin-bottom: 24px; }
+  .card .card-body .card-title {
+    padding-bottom: 12px; }
+  .card .card-body .alert {
+    padding: 7px 8px; }
+  .card .card-body .btn {
+    height: 40px; }
+  .card .card-body .terms {
+    color: #6e6c88; }
 
-.alert {
-  padding: 7px; }
-
-Input::placeholder {
-  padding: 8px 12px 8px 12px; }
-
-.forgot {
-  font-size: 12px;
-  font-weight: 500;
-  line-height: 20px;
-  color: #7765d6; }
+.text-under a {
+  text-decoration: underline; }
 
 /*# sourceMappingURL=main.css.map */

@@ -18,14 +18,79 @@
 </head>
 
 <body>
-    <h1>Hello, world!</h1>
+
+    <div class="container-fluid mt-5">
+        <div class="row d-flex justify-content-center pt-5">
+            <div class="col-md-4 col-lg-3">
+                <div class="text-center pb-4">
+                    <img src="assets/img/Full.svg" alt="">
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="card-title">Create an account</h3>
+
+                        <form id="login-form" action="/signin" method="post">
+                            <!-- <input type="hidden" name="_csrf"
+                                value="C5UyfN9UyenUnyoay5guCQN3IjhERKshtaxnWdy0uMJOoX07jBjxp-LIEn2Ezn5GWzVSXjwxw0zf_D875OXhmg=="> -->
+                            <fieldset>
+                                <!-- <div class="alert alert-danger hidden error-text">Incorrect email or
+                                    password</div> -->
+                                    <div class="form-group">
+                                        <div class="form-group field-signupform-first_name required">
+                                            <label for="signupform-first_name">First name</label>
+                                            <input class="input" type="text" id="signupform-first_name" class="form-control" name="SignupForm[first_name]" placeholder="First name" autofocus="" aria-required="true">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="form-group field-signupform-last_name required">
+                                            <label for="signupform-last_name">Last name</label>
+                                            <input class="input" type="text" id="signupform-last_name" class="form-control" name="SignupForm[last_name]"
+                                                placeholder="Last name" autofocus="" aria-required="true">
+                                        </div>
+                                    </div>
+                                <div class="form-group">
+                                    <div class="form-group field-signupform-email required">
+                                        <label for="signupform-email">Email</label>
+                                        <input class="input" type="text" id="signupform-email" class="form-control"
+                                            name="SignupForm[email]" placeholder="Email" autofocus="" aria-required="true">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="form-group field-signupform-password required">
+                                        <label for="signupform-password">Password</label>
+                                        <input class="input" type="password" id="signupform-password" class="form-control"
+                                            name="SignupForm[password]" placeholder="Password" aria-required="true">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="form-group field-signupform-password_confirm required">
+                                        <label for="signupform-password_confirm">Confirm password</label>
+                                        <input class="input" type="password" id="signupform-password_confirm" class="form-control" name="SignupForm[password_confirm]"
+                                            placeholder="Confirm password" aria-required="true">
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn purple-button btn-block">Create an account</button>
+                                <div class="text-center terms pt-3">
+                                    <span>By creating an account, you agree to the Sommerce</span>
+                                    <a class="forgot" href="#">Terms of Service</a>
+                                </div>
+                            </fieldset>
+                        </form>
+                    </div>
+                </div>
+                <div class="text-center text-under pt-3">
+                    <span>Already have an account?</span>
+                    <a class="a-under" href="signin.html">Sign in here</a>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.3.1.js"
-        integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
         crossorigin="anonymous"></script>
     <!-- <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script> -->
     <script src="assets/js/main.js"></script>
