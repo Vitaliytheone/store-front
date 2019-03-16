@@ -27,25 +27,30 @@
                 </div>
                 <div class="card">
                     <div class="card-body">
-                        <span class="card-title"><h3>Set new password</h3>
+                        <div class="card-title">
+                            <h3>Set new password</h3>
                             <p>Enter a new password in the fields below.</p>
-                        </span>
-    
+                        </div>
+
                         <form id="login-form" action="/signin" method="post">
                             <!-- <input type="hidden" name="_csrf"
                                     value="C5UyfN9UyenUnyoay5guCQN3IjhERKshtaxnWdy0uMJOoX07jBjxp-LIEn2Ezn5GWzVSXjwxw0zf_D875OXhmg=="> -->
                             <fieldset>
+                                <div class="alert alert-danger hidden error-text" style="display: none">Incorrect email
+                                    or
+                                    password</div>
                                 <div class="form-group">
                                     <div class="form-group field-signupform-password required">
                                         <label for="set-password">New password</label>
-                                        <input class="input" type="password" id="set-password" class="form-control" name="SetForm[password]"
-                                            placeholder="Password" aria-required="true">
+                                        <input class="input" type="password" id="set-password" class="form-control"
+                                            name="SetForm[password]" placeholder="Password" aria-required="true">
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <div class="form-group field-signupform-password_confirm required">
                                         <label for="set-password_confirm">Confirm new password</label>
-                                        <input class="input" type="password" id="set-password_confirm" class="form-control" name="SetForm[password_confirm]"
+                                        <input class="input" type="password" id="set-password_confirm"
+                                            class="form-control" name="SetForm[password_confirm]"
                                             placeholder="Confirm password" aria-required="true">
                                     </div>
                                 </div>

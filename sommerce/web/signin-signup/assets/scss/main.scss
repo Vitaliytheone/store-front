@@ -15,7 +15,7 @@
 
         p {
             @extend %text-under;
-            margin-bottom: 24px;
+            margin-bottom: 0px;
         }
 
         .card-title {
@@ -50,9 +50,14 @@
     @extend %text-under;
 }
 
-.text-under a {
+.text-under a, .svg-button {
     @extend %a-under;
     text-decoration: underline;
 }
+
+svg {
+    margin-right: 10px;
+}
+
 
 

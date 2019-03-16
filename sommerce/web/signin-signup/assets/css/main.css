@@ -62,7 +62,7 @@ Input {
   line-height: 24px;
   color: #6e6c88; }
 
-.text-under a {
+.text-under a, .svg-button {
   font-size: 14px;
   font-weight: 500;
   line-height: 24px;
@@ -84,6 +84,18 @@ Input {
 .purple-button:hover {
   font-size: 14px;
   color: #ffffff; }
+
+.arrow-left-button:hover {
+  color: #8672ed; }
+
+.arrow-left-button:hover svg use {
+  fill: #8672ed; }
+
+.arrow-left-button:active {
+  color: #6857c1; }
+
+.arrow-left-button:active svg use {
+  fill: #6857c1; }
 
 .purple-button {
   border-radius: 2px;
@@ -144,7 +156,7 @@ Input::placeholder {
   border: 0px;
   padding: 24px; }
   .card .card-body p {
-    margin-bottom: 24px; }
+    margin-bottom: 0px; }
   .card .card-body .card-title {
     padding-bottom: 12px; }
   .card .card-body .alert {
@@ -154,7 +166,10 @@ Input::placeholder {
   .card .card-body .terms {
     color: #6e6c88; }
 
-.text-under a {
+.text-under a, .svg-button {
   text-decoration: underline; }
+
+svg {
+  margin-right: 10px; }
 
 /*# sourceMappingURL=main.css.map */

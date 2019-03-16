@@ -124,6 +124,25 @@ Input:hover {
 	@extend %pressed-purple-button;
 }
 
+
+//ARROW BUTTON SETTINGS 
+
+.arrow-left-button:hover {
+		color: #8672ed;
+}
+
+.arrow-left-button:hover svg use{
+	fill: #8672ed;
+}
+
+.arrow-left-button:active {
+	color: #6857c1;
+}
+
+.arrow-left-button:active svg use{
+	fill: #6857c1;
+}
+
 // COLORS PATTERNS
 
 $purple: #7765d6;
