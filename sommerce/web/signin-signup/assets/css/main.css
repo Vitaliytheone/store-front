@@ -84,6 +84,12 @@ body .card .card-body .forgot, body .card .card-body .terms {
   line-height: 20px;
   color: #7765d6; }
 
+.nav-links {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 24px;
+  color: #6e6c88; }
+
 html,
 body {
   font-family: 'Montserrat', sans-serif;
@@ -129,6 +135,15 @@ body .card {
   border: solid 1px #e5e5e9;
   background-color: #ffffff; }
 
+.navbar {
+  background-color: #ffffff;
+  box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.04); }
+
+.nav-link:hover,
+.nav-link:active {
+  color: #312e55 !important; }
+
+a
 .nav-button {
   display: inline-block;
   padding: 8px;
@@ -137,9 +152,12 @@ body .card {
   font-size: 14px;
   font-weight: bold;
   line-height: 24px;
-  font-weight: bold;
   color: #7765d6;
-  text-align: center; }
+  text-align: center;
+  cursor: pointer; }
+
+.nav-button:hover {
+  border: 1px solid #7765d6; }
 
 .navbar-toggler {
   display: block;
@@ -148,8 +166,7 @@ body .card {
   height: 40px;
   text-decoration: none;
   border: 0px;
-  background-color: white;
-  position: relative; }
+  background-color: white; }
 
 .navbar-toggler.collapsed {
   display: block;
@@ -158,9 +175,11 @@ body .card {
   height: 40px;
   text-decoration: none;
   border: 0px;
-  background-color: white;
-  position: relative; }
+  background-color: white; }
 
+@media screen and (min-width: 992px) {
+  .navbar-toggler.collapsed {
+    display: none; } }
 .purple-button {
   font-size: 14px;
   font-weight: 600;
