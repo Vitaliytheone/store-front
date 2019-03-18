@@ -37,38 +37,38 @@ Input {
   font-weight: 500;
   line-height: 14px; }
 
-.card {
+body .card {
   border-radius: 3px;
   box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.04);
   border: solid 1px #e5e5e9;
   background-color: #ffffff; }
 
-.card .card-body .error-text {
+body .card .card-body .error-text {
   font-size: 12px;
   font-weight: 500;
   line-height: 20px;
   text-align: center;
   color: #721c24; }
 
-.card .card-body h3 {
+body .card .card-body h3 {
   font-size: 16px;
   font-weight: bold;
   line-height: 24px;
   color: #312e55; }
 
-.card .card-body p, .text-under {
+body .card .card-body p, body .text-under {
   font-size: 14px;
   font-weight: 500;
   line-height: 24px;
   color: #6e6c88; }
 
-.text-under a, .svg-button {
+body .text-under a, body .svg-button {
   font-size: 14px;
   font-weight: 500;
   line-height: 24px;
   color: #7765d6; }
 
-.card .card-body .forgot, .card .card-body .terms {
+body .card .card-body .forgot, body .card .card-body .terms {
   font-size: 12px;
   font-weight: 500;
   line-height: 20px;
@@ -152,24 +152,22 @@ Input::placeholder {
   line-height: 24px;
   color: #bdbcc8; }
 
-.card .card-body {
-  border: 0px;
-  padding: 24px; }
-  .card .card-body p {
-    margin-bottom: 0px; }
-  .card .card-body .card-title {
-    padding-bottom: 12px; }
-  .card .card-body .alert {
-    padding: 7px 8px; }
-  .card .card-body .btn {
-    height: 40px; }
-  .card .card-body .terms {
-    color: #6e6c88; }
-
-.text-under a, .svg-button {
-  text-decoration: underline; }
-
-svg {
-  margin-right: 10px; }
+body {
+  background-color: #fbfcfc; }
+  body .card .card-body {
+    border: 0px;
+    padding: 24px; }
+    body .card .card-body p {
+      margin-bottom: 0px; }
+    body .card .card-body .card-title {
+      padding-bottom: 12px; }
+    body .card .card-body .alert {
+      padding: 7px 8px; }
+    body .card .card-body .btn {
+      height: 40px; }
+    body .card .card-body .terms {
+      color: #6e6c88; }
+  body svg {
+    margin-right: 10px; }
 
 /*# sourceMappingURL=main.css.map */

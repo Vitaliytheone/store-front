@@ -1,63 +1,65 @@
 @import "settings";
 
 
+body {
+    background-color: #fbfcfc;
 
-.card {
-    @extend %card;
+    .card {
+        @extend %card;
 
-    .card-body {
-        border: 0px;
-        padding: 24px;
+        .card-body {
+            border: 0px;
+            padding: 24px;
 
-        h3 {
-            @extend %h3;
+            h3 {
+                @extend %h3;
+            }
+
+            p {
+                @extend %text-under;
+                margin-bottom: 0px;
+            }
+
+            .card-title {
+                padding-bottom: 12px;
+            }
+
+            .alert {
+                padding: 7px 8px;
+            }
+
+            .error-text {
+                @extend %error-text;
+            }
+
+            .forgot {
+                @extend %forgot;
+            }
+
+            .btn {
+                height: 40px;
+            }
+
+            .terms {
+                @extend %forgot;
+                color: #6e6c88;
+            }
+
         }
-
-        p {
-            @extend %text-under;
-            margin-bottom: 0px;
-        }
-
-        .card-title {
-            padding-bottom: 12px;
-        }
-
-        .alert {
-             padding: 7px 8px;
-        }
-
-        .error-text {
-            @extend %error-text;
-        }
-
-        .forgot {
-            @extend %forgot;
-        }
-
-        .btn {
-            height: 40px;
-        }
-
-        .terms {
-            @extend %forgot;
-            color: #6e6c88;
-        }
-
     }
-}
 
-.text-under {
-    @extend %text-under;
-}
+    .text-under {
+        @extend %text-under;
+    }
 
-.text-under a, .svg-button {
-    @extend %a-under;
-    text-decoration: underline;
-}
+    .text-under a, .svg-button {
+        @extend %a-under;
+    }
 
-svg {
-    margin-right: 10px;
-}
+    svg {
+        margin-right: 10px;
+    }
 
+}
 
 
