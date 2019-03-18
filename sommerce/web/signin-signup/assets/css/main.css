@@ -1,102 +1,3 @@
-html,
-body {
-  font-family: 'Montserrat', sans-serif;
-  -webkit-font-smoothing: subpixel-antialiased !important;
-  -webkit-backface-visibility: hidden;
-  -moz-backface-visibility: hidden;
-  -ms-backface-visibility: hidden;
-  /* padding-top: 30px; */ }
-
-textarea:focus,
-input[type="text"]:focus,
-input[type="password"]:focus,
-input[type="datetime"]:focus,
-input[type="datetime-local"]:focus,
-input[type="date"]:focus,
-input[type="month"]:focus,
-input[type="time"]:focus,
-input[type="week"]:focus,
-input[type="number"]:focus,
-input[type="email"]:focus,
-input[type="url"]:focus,
-input[type="search"]:focus,
-input[type="tel"]:focus,
-input[type="color"]:focus,
-.uneditable-input:focus {
-  outline: none; }
-
-label {
-  font-size: 12px;
-  font-weight: 600;
-  line-height: 20px;
-  color: #6e6c88; }
-
-Input {
-  padding: 8px 12px 8px 12px;
-  font-size: 14px;
-  font-weight: 500;
-  line-height: 14px; }
-
-body .card {
-  border-radius: 3px;
-  box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.04);
-  border: solid 1px #e5e5e9;
-  background-color: #ffffff; }
-
-body .card .card-body .error-text {
-  font-size: 12px;
-  font-weight: 500;
-  line-height: 20px;
-  text-align: center;
-  color: #721c24; }
-
-body .card .card-body h3 {
-  font-size: 16px;
-  font-weight: bold;
-  line-height: 24px;
-  color: #312e55; }
-
-body .card .card-body p, body .text-under {
-  font-size: 14px;
-  font-weight: 500;
-  line-height: 24px;
-  color: #6e6c88; }
-
-body .text-under a, body .svg-button {
-  font-size: 14px;
-  font-weight: 500;
-  line-height: 24px;
-  color: #7765d6; }
-
-body .card .card-body .forgot, body .card .card-body .terms {
-  font-size: 12px;
-  font-weight: 500;
-  line-height: 20px;
-  color: #7765d6; }
-
-.purple-button {
-  font-size: 14px;
-  font-weight: 600;
-  line-height: 24px;
-  text-align: center;
-  color: #ffffff; }
-
-.purple-button:hover {
-  font-size: 14px;
-  color: #ffffff; }
-
-.arrow-left-button:hover {
-  color: #8672ed; }
-
-.arrow-left-button:hover svg use {
-  fill: #8672ed; }
-
-.arrow-left-button:active {
-  color: #6857c1; }
-
-.arrow-left-button:active svg use {
-  fill: #6857c1; }
-
 .purple-button {
   border-radius: 2px;
   box-shadow: 0 2px 4px 0 rgba(119, 101, 214, 0.21);
@@ -151,6 +52,137 @@ Input::placeholder {
   font-weight: 500;
   line-height: 24px;
   color: #bdbcc8; }
+
+body .card .card-body .error-text {
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 20px;
+  text-align: center;
+  color: #721c24; }
+
+body .card .card-body h3 {
+  font-size: 16px;
+  font-weight: bold;
+  line-height: 24px;
+  color: #312e55; }
+
+body .card .card-body p, body .text-under {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 24px;
+  color: #6e6c88; }
+
+body .text-under a, body .svg-button {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 24px;
+  color: #7765d6; }
+
+body .card .card-body .forgot, body .card .card-body .terms {
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 20px;
+  color: #7765d6; }
+
+html,
+body {
+  font-family: 'Montserrat', sans-serif;
+  -webkit-font-smoothing: subpixel-antialiased !important;
+  -webkit-backface-visibility: hidden;
+  -moz-backface-visibility: hidden;
+  -ms-backface-visibility: hidden;
+  /* padding-top: 30px; */ }
+
+textarea:focus,
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="datetime"]:focus,
+input[type="datetime-local"]:focus,
+input[type="date"]:focus,
+input[type="month"]:focus,
+input[type="time"]:focus,
+input[type="week"]:focus,
+input[type="number"]:focus,
+input[type="email"]:focus,
+input[type="url"]:focus,
+input[type="search"]:focus,
+input[type="tel"]:focus,
+input[type="color"]:focus,
+.uneditable-input:focus {
+  outline: none; }
+
+label {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 20px;
+  color: #6e6c88; }
+
+Input {
+  padding: 8px 12px 8px 12px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 14px; }
+
+body .card {
+  border-radius: 3px;
+  box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.04);
+  border: solid 1px #e5e5e9;
+  background-color: #ffffff; }
+
+.nav-button {
+  display: inline-block;
+  padding: 8px;
+  background-color: #E4E0F7;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: bold;
+  line-height: 24px;
+  font-weight: bold;
+  color: #7765d6;
+  text-align: center; }
+
+.navbar-toggler {
+  display: block;
+  background-image: url("https://perfectcdn.com/2e0c8bd3-6875-439f-bf5d-de4721575f93/close.svg");
+  width: 40px;
+  height: 40px;
+  text-decoration: none;
+  border: 0px;
+  background-color: white;
+  position: relative; }
+
+.navbar-toggler.collapsed {
+  display: block;
+  background-image: url("https://perfectcdn.com/e251c6d3-4523-4072-bd9f-cd7ff63ab03c/burgermenu.svg");
+  width: 40px;
+  height: 40px;
+  text-decoration: none;
+  border: 0px;
+  background-color: white;
+  position: relative; }
+
+.purple-button {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 24px;
+  text-align: center;
+  color: #ffffff; }
+
+.purple-button:hover {
+  font-size: 14px;
+  color: #ffffff; }
+
+.arrow-left-button:hover {
+  color: #8672ed; }
+
+.arrow-left-button:hover svg use {
+  fill: #8672ed; }
+
+.arrow-left-button:active {
+  color: #6857c1; }
+
+.arrow-left-button:active svg use {
+  fill: #6857c1; }
 
 body {
   background-color: #fbfcfc; }
