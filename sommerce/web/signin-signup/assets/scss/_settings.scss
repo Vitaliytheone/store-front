@@ -72,8 +72,12 @@ Input:hover {
 	box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.04);
 }
 
-.nav-links {
+.nav-link {
 	@extend %nav-link;
+}
+
+.navbar-nav a{
+	display: flex;
 }
 
 .nav-link:hover,
@@ -81,7 +85,10 @@ Input:hover {
 	color: #312e55 !important;
 }
 
-a 
+.nav-link:hover svg use,
+.nav-link:active svg use {
+	fill: #7765d6;
+}
 
 .nav-button {
   display: inline-block;
