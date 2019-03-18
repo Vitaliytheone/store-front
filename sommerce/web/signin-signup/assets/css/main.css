@@ -53,6 +53,14 @@ Input::placeholder {
   line-height: 24px;
   color: #bdbcc8; }
 
+.dropdown-menu a,
+.dropdown-menu a:hover, .dropdown-menu a:last-child {
+  font-family: Montserrat;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 24px;
+  color: #6e6c88; }
+
 body .card .card-body .error-text {
   font-size: 12px;
   font-weight: 500;
@@ -137,7 +145,16 @@ body .card {
 
 .navbar {
   background-color: #ffffff;
-  box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.04); }
+  box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.04);
+  padding-top: 16px;
+  padding-bottom: 17px; }
+
+.nav-link {
+  margin-right: 25px;
+  position: relative; }
+
+.oval {
+  position: absolute; }
 
 .navbar-nav a {
   display: flex; }
@@ -182,6 +199,32 @@ body .card {
   text-decoration: none;
   border: 0px;
   background-color: white; }
+
+.dropdown-menu {
+  width: 131px;
+  border-radius: 2px;
+  box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.04);
+  border: solid 1px #e5e5e9;
+  background-color: #ffffff;
+  min-width: 0;
+  padding-top: 15px;
+  padding-bottom: 15px; }
+
+.dropdown-menu a,
+.dropdown-menu a:hover {
+  display: flex;
+  padding-left: 15px; }
+
+.dropdown-menu a:last-child {
+  color: #ff5c86; }
+
+.dropdown-item:hover svg use,
+.dropdown-item:active svg use {
+  fill: #7765d6; }
+
+.dropdown-item:active,
+.dropdown-item:hover {
+  background-color: #E4E0F7; }
 
 @media screen and (min-width: 992px) {
   .navbar-toggler.collapsed {
