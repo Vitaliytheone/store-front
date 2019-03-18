@@ -77,11 +77,26 @@ Input:hover {
 .nav-link {
 	@extend %nav-link;
 	margin-right: 25px;
+}
+
+.menu-link-container {
 	position: relative;
 }
 
 .oval {
-	position: absolute;
+		width: 16px;
+		height: 16px;
+    border-radius: 20px;
+    padding-top: 2px;
+    position: absolute;
+		top: 0px;
+		right: 15px;
+    background-color: #ff5c86;
+    font-family: Montserrat;
+    font-size: 8px;
+    font-weight: bold;
+    text-align: center;
+    color: #ffffff;
 }
 
 .navbar-nav a{
@@ -101,7 +116,8 @@ Input:hover {
 .nav-button {
   display: inline-block;
   padding: 8px;
-  background-color: #E4E0F7;
+	background-color: #E4E0F7;
+	border: 1px solid white;
   border-radius: 20px;
   font-size: 14px;
   font-weight: bold;
@@ -117,6 +133,8 @@ Input:hover {
 
 
 .navbar-toggler {
+	margin-left: auto;
+	margin-right: 25px;
 	display: block;
 	background-image: url("https://perfectcdn.com/2e0c8bd3-6875-439f-bf5d-de4721575f93/close.svg");
 	width: 40px;
@@ -126,10 +144,6 @@ Input:hover {
 	background-color: white;
 }
 
-// .navbar-collapse {
-//     padding-top: 10px;
-//     z-index: 2;
-// }
 
 .navbar-toggler.collapsed {
 	display: block;
@@ -142,21 +156,23 @@ Input:hover {
 }
 
 .dropdown-menu {
-	width: 131px;
   border-radius: 2px;
   box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.04);
   border: solid 1px #e5e5e9;
-  background-color: #ffffff;
-  min-width: 0;
-  padding-top: 15px;
-  padding-bottom: 15px;
+	background-color: #ffffff;
+	min-width: 0;
+	padding: 11px 7px 15px 7px;
+	margin-top: 7px;
+}
+
+.dropdown-item {
+	padding: 4px 16px 4px 8px;
 }
 
 .dropdown-menu a,
 .dropdown-menu a:hover {
 	@extend %placeholder-input-disable;
 	display: flex;
-	padding-left: 15px;
 }
 
 .dropdown-menu a:last-child {
@@ -177,7 +193,20 @@ Input:hover {
 @media screen and (min-width: 992px) {
     .navbar-toggler.collapsed {
         display: none;
-    }
+		}
+		
+		.dropdown {
+			position: absolute;
+			right: 100px;
+		}
+}
+
+@media screen and (max-width: 991px) {
+		.oval {
+			position: absolute;
+			right: 0px;
+			left: 95px;
+		}
 }
 
 // BUTTONS DEFAULT SETTINGS 
