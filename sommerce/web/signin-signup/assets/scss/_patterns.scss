@@ -91,7 +91,7 @@ $opacitgrey: #e5e5e9;
 %placeholder-input-normal {
 	font-family: Montserrat;
 	font-size: 14px;
-	font-weight: 500;
+	font-weight: 400;
 	line-height: 24px;
 	color: #bdbcc8;
 }
@@ -154,9 +154,23 @@ $opacitgrey: #e5e5e9;
 	color: #312e55;
 }
 
+%h2 {
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 32px;
+  color: #312e55;
+}
+
+%th {
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 20px;
+  color: #312e55;
+}
+
 %text-under {
 	font-size: 14px;
-  font-weight: 500;
+  font-weight: 400;
   line-height: 24px;
   color: #6e6c88;
 }
@@ -170,7 +184,7 @@ $opacitgrey: #e5e5e9;
 
 %forgot {
     font-size: 12px;
-    font-weight: 500;
+    font-weight: 400;
     line-height: 20px;
     color: #7765d6;
 }
@@ -180,4 +194,32 @@ $opacitgrey: #e5e5e9;
 	font-weight: 500;
 	line-height: 24px;
 	color: #6e6c88;
+}
+
+%status-text {
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 20px;
+  color: #6e6c88;
+}
+
+// MIXINS OF STATUS BUTTONS 
+
+@mixin status-button {
+	padding: 2px 8px 3px 8px;
+	border-radius: 6px;
+}
+
+@mixin status-oval {
+	display: inline-block;
+	width: 8px;
+	height: 8px;
+	border-radius: 20px;
+	margin-right: 6px;
+}
+
+@mixin status-text {
+	@extend %status-text;
+	isplay: inline-block;
+	text-align: center;
 }

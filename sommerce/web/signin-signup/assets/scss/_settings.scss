@@ -34,7 +34,7 @@ input[type="color"]:focus,
 
 label {
 	font-size: 12px;
-	font-weight: 600;
+	font-weight: 500;
 	line-height: 20px;
 	color: #6e6c88;
 }
@@ -212,9 +212,9 @@ Input:hover {
 // BUTTONS DEFAULT SETTINGS 
 
 .purple-button {
-	@extend %normal-purple-button;
-	 font-size: 14px;
-  font-weight: 600;
+  @extend %normal-purple-button;
+  font-size: 14px;
+  font-weight: 500;
   line-height: 24px;
   text-align: center;
   color: #ffffff;
@@ -223,18 +223,52 @@ Input:hover {
 .purple-button:hover {
 	@extend %focused-purple-button;
 	font-size: 14px;
-  	color: #ffffff;
+	  color: #ffffff;
 }
 
 .purple-button:active {
 	@extend %pressed-purple-button;
 }
 
+// TABLE SETTINGS 
 
-//ARROW BUTTON SETTINGS 
+ .store-table tbody {
+	   border-radius: 3px !important;
+		box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.04);
+		border: solid 1px #e5e5e9;
+		background-color: #ffffff;
+ }
+
+.col th {
+	padding-top: 8px;
+	padding-bottom: 8px; 
+	padding-left: 16px; 
+}
+
+td, tbody th {
+	padding: 16px !important;
+}
+
+.col tbody a {
+	text-decoration: none;
+	color: #6e6c88;
+	display: flex;
+}
+
+.col tbody a:hover {
+	color: #7765d6;
+}
+
+.col tbody a:hover svg use {
+	fill: #7765d6;
+}
+
+
+// ARROW BUTTON SETTINGS 
 
 .arrow-left-button:hover {
 		color: #8672ed;
+		text-decoration: none;
 }
 
 .arrow-left-button:hover svg use{
@@ -248,4 +282,63 @@ Input:hover {
 .arrow-left-button:active svg use{
 	fill: #6857c1;
 }
+
+// STATUS BUTTONS 
+
+.button-status-pending {
+	@include status-button;
+	background-color: #ffe4c2;
+
+	.button-status-oval {
+		@include status-oval;
+		background-color: #fd8e03;
+	}
+
+	.button-status-text {
+		@include status-text;
+	}
+}
+
+.button-status-active {
+	@include status-button;
+	background-color: #c6f7cd;
+
+	.button-status-oval {
+		@include status-oval;
+		background-color: #40c954;
+	}
+
+	.button-status-text {
+		@include status-text;
+	}
+}
+
+.button-status-frozen {
+	@include status-button;
+	background-color: #fcd9d9;
+
+	.button-status-oval {
+		@include status-oval;
+		background-color: #e94d4d;
+	}
+
+	.button-status-text {
+		@include status-text;
+	}
+}
+
+.button-status-cancel {
+	@include status-button;
+	background-color: #F5F5F7;
+
+	.button-status-oval {
+		@include status-oval;
+		background-color: #bdbcc8;
+	}
+
+	.button-status-text {
+		@include status-text;
+	}
+}
+
 

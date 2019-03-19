@@ -46,10 +46,10 @@ input[type="color"]:focus,
   background-color: #ffffff;
   height: 40px; }
 
-Input::placeholder {
+Input::placeholder, body .placeholder-text {
   font-family: Montserrat;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 400;
   line-height: 24px;
   color: #bdbcc8; }
 
@@ -74,9 +74,21 @@ body .card .card-body h3 {
   line-height: 24px;
   color: #312e55; }
 
-body .card .card-body p, body .text-under {
-  font-size: 14px;
+body .container-store .col h2 {
+  font-size: 24px;
   font-weight: 500;
+  line-height: 32px;
+  color: #312e55; }
+
+body .container-store .col th {
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 20px;
+  color: #312e55; }
+
+body .container-store .col tr td, body .card .card-body p, body .text-under {
+  font-size: 14px;
+  font-weight: 400;
   line-height: 24px;
   color: #6e6c88; }
 
@@ -88,14 +100,20 @@ body .text-under a, body .svg-button {
 
 body .card .card-body .forgot, body .card .card-body .terms {
   font-size: 12px;
-  font-weight: 500;
+  font-weight: 400;
   line-height: 20px;
   color: #7765d6; }
 
-.nav-link {
+.nav-link, body .container-store .col tbody tr th {
   font-size: 14px;
   font-weight: 500;
   line-height: 24px;
+  color: #6e6c88; }
+
+.button-status-pending .button-status-text, .button-status-active .button-status-text, .button-status-frozen .button-status-text, .button-status-cancel .button-status-text {
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 20px;
   color: #6e6c88; }
 
 html,
@@ -127,7 +145,7 @@ input[type="color"]:focus,
 
 label {
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 500;
   line-height: 20px;
   color: #6e6c88; }
 
@@ -258,7 +276,7 @@ body .card {
     left: 95px; } }
 .purple-button {
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 500;
   line-height: 24px;
   text-align: center;
   color: #ffffff; }
@@ -267,8 +285,34 @@ body .card {
   font-size: 14px;
   color: #ffffff; }
 
+.store-table tbody {
+  border-radius: 3px !important;
+  box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.04);
+  border: solid 1px #e5e5e9;
+  background-color: #ffffff; }
+
+.col th {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 16px; }
+
+td, tbody th {
+  padding: 16px !important; }
+
+.col tbody a {
+  text-decoration: none;
+  color: #6e6c88;
+  display: flex; }
+
+.col tbody a:hover {
+  color: #7765d6; }
+
+.col tbody a:hover svg use {
+  fill: #7765d6; }
+
 .arrow-left-button:hover {
-  color: #8672ed; }
+  color: #8672ed;
+  text-decoration: none; }
 
 .arrow-left-button:hover svg use {
   fill: #8672ed; }
@@ -279,8 +323,89 @@ body .card {
 .arrow-left-button:active svg use {
   fill: #6857c1; }
 
+.button-status-pending {
+  padding: 2px 8px 3px 8px;
+  border-radius: 6px;
+  background-color: #ffe4c2; }
+  .button-status-pending .button-status-oval {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 20px;
+    margin-right: 6px;
+    background-color: #fd8e03; }
+  .button-status-pending .button-status-text {
+    isplay: inline-block;
+    text-align: center; }
+
+.button-status-active {
+  padding: 2px 8px 3px 8px;
+  border-radius: 6px;
+  background-color: #c6f7cd; }
+  .button-status-active .button-status-oval {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 20px;
+    margin-right: 6px;
+    background-color: #40c954; }
+  .button-status-active .button-status-text {
+    isplay: inline-block;
+    text-align: center; }
+
+.button-status-frozen {
+  padding: 2px 8px 3px 8px;
+  border-radius: 6px;
+  background-color: #fcd9d9; }
+  .button-status-frozen .button-status-oval {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 20px;
+    margin-right: 6px;
+    background-color: #e94d4d; }
+  .button-status-frozen .button-status-text {
+    isplay: inline-block;
+    text-align: center; }
+
+.button-status-cancel {
+  padding: 2px 8px 3px 8px;
+  border-radius: 6px;
+  background-color: #F5F5F7; }
+  .button-status-cancel .button-status-oval {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 20px;
+    margin-right: 6px;
+    background-color: #bdbcc8; }
+  .button-status-cancel .button-status-text {
+    isplay: inline-block;
+    text-align: center; }
+
 body {
   background-color: #fbfcfc; }
+  body .container-store {
+    padding-top: 48px; }
+    body .container-store .col {
+      padding: 0px;
+      padding-bottom: 16px;
+      margin-bottom: 32px;
+      border-bottom: solid 1px #e5e5e9; }
+      body .container-store .col h2 {
+        margin: 0px; }
+      body .container-store .col .btn {
+        width: 160px; }
+  body .placeholder {
+    padding-top: 160px;
+    padding-bottom: 16px; }
+  body .placeholder-text {
+    margin-bottom: 0px;
+    text-align: center; }
+  body .new-order-button {
+    margin-top: 24px;
+    width: 160px;
+    height: 40px; }
   body .card .card-body {
     border: 0px;
     padding: 24px; }
@@ -295,6 +420,6 @@ body {
     body .card .card-body .terms {
       color: #6e6c88; }
   body svg {
-    margin-right: 10px; }
+    margin-right: 8px; }
 
 /*# sourceMappingURL=main.css.map */

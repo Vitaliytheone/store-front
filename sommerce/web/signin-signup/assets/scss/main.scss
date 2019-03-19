@@ -4,6 +4,62 @@
 body {
     background-color: #fbfcfc;
 
+    
+    .container-store {
+        padding-top: 48px;
+
+        // STORES 
+        .col {
+            padding: 0px;
+            padding-bottom: 16px;
+            margin-bottom: 32px;
+            border-bottom: solid 1px #e5e5e9;
+
+            h2 {
+                @extend %h2;
+                margin: 0px;
+            }
+
+            .btn {
+                width: 160px;
+            }
+
+            th {
+                @extend %th;
+            }
+
+            tbody tr th {
+                @extend %nav-link;
+            }
+
+            tr td {
+                @extend %text-under;
+            }
+        }
+
+    }
+
+    // STORES EMPTY
+    .placeholder {
+        padding-top: 160px;
+        padding-bottom: 16px;
+    }
+
+    .placeholder-text {
+        @extend %placeholder-input-normal;
+        margin-bottom: 0px;
+        text-align: center;
+    }
+
+    .new-order-button {
+        margin-top: 24px;
+        width: 160px;
+        height: 40px
+    }
+
+
+    // CARD 
+
     .card {
         @extend %card;
 
@@ -57,7 +113,7 @@ body {
     }
 
     svg {
-        margin-right: 10px;
+        margin-right: 8px;
     }
 
 }
