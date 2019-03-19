@@ -125,6 +125,10 @@ body {
   -ms-backface-visibility: hidden;
   /* padding-top: 30px; */ }
 
+.btn:focus, .btn:active, .navbar-toggler:active, .navbar-toggler:focus {
+  outline: none;
+  box-shadow: none; }
+
 textarea:focus,
 input[type="text"]:focus,
 input[type="password"]:focus,
@@ -285,11 +289,17 @@ body .card {
   font-size: 14px;
   color: #ffffff; }
 
-.store-table tbody {
+.col table {
+  border-collapse: collapse !important; }
+
+.table tbody {
   border-radius: 3px !important;
   box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.04);
   border: solid 1px #e5e5e9;
   background-color: #ffffff; }
+
+.table thead > tr > th {
+  border: none; }
 
 .col th {
   padding-top: 8px;
@@ -387,15 +397,15 @@ body {
   background-color: #fbfcfc; }
   body .container-store {
     padding-top: 48px; }
-    body .container-store .col {
+    body .container-store .col-title {
       padding: 0px;
       padding-bottom: 16px;
       margin-bottom: 32px;
       border-bottom: solid 1px #e5e5e9; }
-      body .container-store .col h2 {
-        margin: 0px; }
-      body .container-store .col .btn {
-        width: 160px; }
+    body .container-store .col h2 {
+      margin: 0px; }
+    body .container-store .col .btn {
+      width: 160px; }
   body .placeholder {
     padding-top: 160px;
     padding-bottom: 16px; }

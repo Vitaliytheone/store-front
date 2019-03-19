@@ -10,6 +10,13 @@ body {
 	/* padding-top: 30px; */
 }
 
+// BUTTON'S DEFAULT STYLES
+
+.btn:focus,.btn:active, .navbar-toggler:active, .navbar-toggler:focus {
+   outline: none;
+   box-shadow: none;
+}
+
 // INPUT'S DEFAULT STYLES
 
 textarea:focus,
@@ -232,11 +239,19 @@ Input:hover {
 
 // TABLE SETTINGS 
 
- .store-table tbody {
-	   border-radius: 3px !important;
+.col table {
+	border-collapse: collapse !important;
+	
+}
+ .table tbody {
+	  border-radius: 3px !important;
 		box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.04);
 		border: solid 1px #e5e5e9;
 		background-color: #ffffff;
+ }
+
+ .table thead>tr>th {
+	 border: none;
  }
 
 .col th {
@@ -262,7 +277,6 @@ td, tbody th {
 .col tbody a:hover svg use {
 	fill: #7765d6;
 }
-
 
 // ARROW BUTTON SETTINGS 
 

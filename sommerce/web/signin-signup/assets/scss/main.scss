@@ -9,11 +9,13 @@ body {
         padding-top: 48px;
 
         // STORES 
-        .col {
+        .col-title {
             padding: 0px;
             padding-bottom: 16px;
             margin-bottom: 32px;
             border-bottom: solid 1px #e5e5e9;
+        }
+        .col {
 
             h2 {
                 @extend %h2;
