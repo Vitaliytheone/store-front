@@ -6,7 +6,7 @@ body {
 
     
     .container-store {
-        padding-top: 48px;
+        padding-top: 47px;
 
         // STORES 
         .col-title {
@@ -16,6 +16,8 @@ body {
             border-bottom: solid 1px #e5e5e9;
         }
         .col {
+            padding-right: 0px;
+            padding-left: 0px;
 
             h2 {
                 @extend %h2;
@@ -34,9 +36,22 @@ body {
                 @extend %nav-link;
             }
 
-            tr td {
+            tr td, .form-check-label {
                 @extend %text-under;
             }
+
+            .form-check-label {
+                line-height: 16px;
+            }
+
+            .table-stores td:last-child {
+                width: 100px;
+            }
+
+            .table-staff td:last-child {
+                width: 160px;
+            }
+
         }
 
     }

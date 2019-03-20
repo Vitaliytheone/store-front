@@ -203,6 +203,10 @@ $opacitgrey: #e5e5e9;
   color: #6e6c88;
 }
 
+%disable-text {
+	color: #bdbcc8 !important;
+}
+
 // MIXINS OF STATUS BUTTONS 
 
 @mixin status-button {
@@ -223,3 +227,6 @@ $opacitgrey: #e5e5e9;
 	isplay: inline-block;
 	text-align: center;
 }
+
+// CHECKBOX AND RADIO 
+

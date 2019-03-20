@@ -58,7 +58,9 @@ Input::placeholder {
     @extend %placeholder-input-normal;
 }
 
-Input:hover {
+input[type="text"]:hover,
+input[type="password"]:hover,
+input[type="email"]:hover {
 	@extend %focus-input;
 }
 
@@ -79,6 +81,7 @@ Input:hover {
 	box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.04);
 	padding-top: 16px;
 	padding-bottom: 17px;
+	border: 1px solid #e5e5e9;
 }
 
 .nav-link {
@@ -91,13 +94,13 @@ Input:hover {
 }
 
 .oval {
-		width: 16px;
-		height: 16px;
+	width: 16px;
+	height: 16px;
     border-radius: 20px;
     padding-top: 2px;
     position: absolute;
-		top: 0px;
-		right: 15px;
+	top: 0px;
+	right: 15px;
     background-color: #ff5c86;
     font-family: Montserrat;
     font-size: 8px;
@@ -112,6 +115,10 @@ Input:hover {
 
 .nav-link:hover,
 .nav-link:active  {
+	color: #312e55 !important;
+}
+
+.nav-link-active {
 	color: #312e55 !important;
 }
 
@@ -239,15 +246,10 @@ Input:hover {
 
 // TABLE SETTINGS 
 
-.col table {
-	border-collapse: collapse !important;
-	
-}
  .table tbody {
-	  border-radius: 3px !important;
-		box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.04);
-		border: solid 1px #e5e5e9;
-		background-color: #ffffff;
+	box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.04);
+	border: solid 1px #e5e5e9;
+	background-color: #ffffff;
  }
 
  .table thead>tr>th {
@@ -277,6 +279,38 @@ td, tbody th {
 .col tbody a:hover svg use {
 	fill: #7765d6;
 }
+
+.container-store .col tbody.support-links > tr > th > a{
+	color: #7765d6;
+	font-weight: 400;
+}
+
+.container-store .col tbody.support-links > tr > th > a.new-response {
+	color: #312e55;
+	font-weight: bold;
+}
+
+/* DISABLE COLUMNS OF TABLE */
+
+.disable-text th, .disable-text td, .disable-text a {
+	@extend %disable-text;
+}
+
+.disable-text a svg use {
+	fill: #e5e5e9;
+}
+
+.disable-text a {
+	cursor: default;
+}
+
+.col tbody .disable-text a:hover svg use {
+	fill: #e5e5e9;
+}
+
+/*****************************/                  
+
+
 
 // ARROW BUTTON SETTINGS 
 
@@ -355,4 +389,101 @@ td, tbody th {
 	}
 }
 
+// CHECKBOX AND RADIO 
 
+input[type="checkbox"]:checked, 
+input[type="checkbox"]:not(:checked), 
+input[type="radio"]:checked, 
+input[type="radio"]:not(:checked) 
+{
+    position: absolute;
+    left: -9999px;
+}
+
+input[type="checkbox"]:checked + label, 
+input[type="checkbox"]:not(:checked) + label, 
+input[type="radio"]:checked + label, 
+input[type="radio"]:not(:checked) + label {
+    display: inline-block;
+    position: relative;
+	padding-left: 30px;
+    cursor: pointer;
+}
+
+input[type="checkbox"]:checked + label:before, 
+input[type="checkbox"]:not(:checked) + label:before,
+input[type="radio"]:checked + label:before, 
+input[type="radio"]:not(:checked) + label:before {
+    content: "";
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 16px;
+    height: 16px;
+    border: 1px solid #dddddd;
+    background-color: #ffffff;
+}
+
+input[type="checkbox"]:checked + label:before, 
+input[type="checkbox"]:not(:checked) + label:before {
+    border-radius: 2px;
+}
+
+input[type="radio"]:checked + label:before, 
+input[type="radio"]:not(:checked) + label:before {
+    border-radius: 100%;
+}
+
+
+input[type="checkbox"]:checked + label:after, 
+input[type="checkbox"]:not(:checked) + label:after, 
+input[type="radio"]:checked + label:after, 
+input[type="radio"]:not(:checked) + label:after {
+    content: "";
+    position: absolute;
+    -webkit-transition: all 0.2s ease;
+    -moz-transition: all 0.2s ease;
+    -o-transition: all 0.2s ease;
+    transition: all 0.2s ease;
+}
+
+input[type="checkbox"]:checked + label:before {
+    background-color: #7765d6;
+    border: 1px solid #7765d6
+}
+
+input[type="checkbox"]:checked + label:after, 
+input[type="checkbox"]:not(:checked) + label:after {
+    left: 3px;
+    top: 4px;
+    width: 10px;
+    height: 5px;
+    border-radius: 1px;
+    border-left: 2px solid white;
+	border-bottom: 2px solid white;
+    -webkit-transform: rotate(-45deg);
+    -moz-transform: rotate(-45deg);
+    -o-transform: rotate(-45deg);
+    -ms-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+}
+
+input[type="radio"]:checked + label:after, 
+input[type="radio"]:not(:checked) + label:after {
+    left: 5px;
+    top: 5px;
+    width: 10px;
+    height: 10px;
+    border-radius: 100%;
+    background-color: #e145a3;
+}
+
+input[type="checkbox"]:not(:checked) + label:after, 
+input[type="radio"]:not(:checked) + label:after {
+    opacity: 0;
+}
+
+input[type="checkbox"]:checked + label:after, 
+input[type="radio"]:checked + label:after {
+    opacity: 1;
+}
