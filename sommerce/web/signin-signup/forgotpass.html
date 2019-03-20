@@ -1,88 +1,125 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-
-<head>
+  <head>
     <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link
-        href="https://fonts.googleapis.com/css?family=Montserrat:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i"
-        rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
-    <link rel="stylesheet" href="assets/css/main.css">
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Montserrat:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="assets/css/main.css" />
     <title>Sommerce</title>
-</head>
+  </head>
 
-<body>
+  <body>
     <div class="container mt-5">
-        <div class="row justify-content-center">
-            <div class="col-md-6 col-lg-5 col-xl-4">
-                <div class="text-center pb-4">
-                    <img src="assets/img/Full.svg" alt="">
-                </div>
-                <div class="card mb-3">
-                    <div class="card-body">
-                        <div class="card-title">
-                            <h3>Reset password</h3>
-                            <p>Enter your email and we will sent you a link to reset your password.</p>
-                        </div>
+      <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5 col-xl-4">
+          <div class="text-center pb-4">
+            <img src="assets/img/Full.svg" alt="" />
+          </div>
+          <div class="card mb-3">
+            <div class="card-body">
+              <div class="card-title">
+                <h3>Reset password</h3>
+                <p>
+                  Enter your email and we will sent you a link to reset your
+                  password.
+                </p>
+              </div>
 
-                        <form id="login-form" action="/signin" method="post">
-                            <!-- <input type="hidden" name="_csrf"
+              <form id="login-form" action="/signin" method="post">
+                <!-- <input type="hidden" name="_csrf"
                                         value="C5UyfN9UyenUnyoay5guCQN3IjhERKshtaxnWdy0uMJOoX07jBjxp-LIEn2Ezn5GWzVSXjwxw0zf_D875OXhmg=="> -->
-                            <fieldset>
-                                <div class="alert alert-danger hidden error-text" style="display: none">Incorrect email
-                                    or
-                                    password</div>
-                                <div class="form-group">
-                                    <div class="form-group required">
-                                        <label for="forgot-email">Email</label>
-                                        <input class="input" type="text" id="forgot-email" class="form-control"
-                                            name="ForgotPasswordForm[email]" placeholder="Email" autofocus=""
-                                            aria-required="true">
-                                    </div>
-                                </div>
-                                <button type="submit" class="btn purple-button btn-block">Send</button>
-                            </fieldset>
-                        </form>
+                <fieldset>
+                  <div
+                    class="alert alert-danger hidden error-text"
+                    style="display: none"
+                  >
+                    Incorrect email or password
+                  </div>
+                  <div class="form-group">
+                    <div class="form-group required">
+                      <label for="forgot-email">Email</label>
+                      <input
+                        class="input"
+                        type="text"
+                        id="forgot-email"
+                        class="form-control"
+                        name="ForgotPasswordForm[email]"
+                        placeholder="Email"
+                        autofocus=""
+                        aria-required="true"
+                      />
                     </div>
-                </div>
-                <div class="text-center">
-                    <a href="signin.html" class="arrow-left-button svg-button">
-                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24"
-                            height="24" viewBox="0 0 24 24">
-                            <defs>
-                                <path id="a"
-                                    d="M8.934 4.17l7.885 7.418a.559.559 0 0 1 0 .824L8.934 19.83a.647.647 0 0 1-.876 0l-.877-.824a.559.559 0 0 1 0-.824L13.752 12l-6.57-6.181a.559.559 0 0 1 0-.824l.876-.824a.647.647 0 0 1 .876 0z" />
-                            </defs>
-                            <g fill="none" fill-rule="evenodd">
-                                <mask id="b" fill="#fff">
-                                    <use xlink:href="#a" />
-                                </mask>
-                                <use fill="#7765D6" transform="matrix(-1 0 0 1 24 0)" xlink:href="#a" />
-                            </g>
-                        </svg>
-                        Back to Sign in
-                    </a>
-                </div>
+                  </div>
+                  <button type="submit" class="btn purple-button btn-block">
+                    Send
+                  </button>
+                </fieldset>
+              </form>
             </div>
+          </div>
+          <div class="text-center">
+            <a href="signin.html" class="arrow-left-button svg-button">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+              >
+                <defs>
+                  <path
+                    id="a"
+                    d="M8.934 4.17l7.885 7.418a.559.559 0 0 1 0 .824L8.934 19.83a.647.647 0 0 1-.876 0l-.877-.824a.559.559 0 0 1 0-.824L13.752 12l-6.57-6.181a.559.559 0 0 1 0-.824l.876-.824a.647.647 0 0 1 .876 0z"
+                  />
+                </defs>
+                <g fill="none" fill-rule="evenodd">
+                  <mask id="b" fill="#fff">
+                    <use xlink:href="#a" />
+                  </mask>
+                  <use
+                    fill="#7765D6"
+                    transform="matrix(-1 0 0 1 24 0)"
+                    xlink:href="#a"
+                  />
+                </g>
+              </svg>
+              Back to Sign in
+            </a>
+          </div>
         </div>
+      </div>
     </div>
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.3.1.js"
-        integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-        crossorigin="anonymous"></script>
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.js"
+      integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+      integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+      crossorigin="anonymous"
+    ></script>
     <!-- <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script> -->
     <script src="assets/js/main.js"></script>
     <script src="assets/js/bootstrap.min.js"></script>
-</body>
-
+  </body>
 </html>

@@ -10,148 +10,147 @@ $opacitgrey: #e5e5e9;
 //  BUTTONS
 
 %normal-purple-button {
-	border-radius: 2px;
-	box-shadow: 0 2px 4px 0 rgba(119, 101, 214, 0.21);
-	background-color: #7765d6;
+  border-radius: 2px;
+  box-shadow: 0 2px 4px 0 rgba(119, 101, 214, 0.21);
+  background-color: #7765d6;
 }
 
 %focused-purple-button {
-	border-radius: 2px;
-	box-shadow: 0 2px 4px 0 rgba(119, 101, 214, 0.21);
-	background-color: #7765d6;
+  border-radius: 2px;
+  box-shadow: 0 2px 4px 0 rgba(119, 101, 214, 0.21);
+  background-color: #7765d6;
 }
 
 %pressed-purple-button {
-	border-radius: 2px;
-	box-shadow: 0 2px 4px 0 rgba(119, 101, 214, 0.21);
-	background-color: #7765d6;
+  border-radius: 2px;
+  box-shadow: 0 2px 4px 0 rgba(119, 101, 214, 0.21);
+  background-color: #7765d6;
 }
 
 %normal-red-button {
-	border-radius: 2px;
-	box-shadow: 0 2px 4px 0 rgba(255, 92, 134, 0.2);
-	background-color: #ff5c86;
+  border-radius: 2px;
+  box-shadow: 0 2px 4px 0 rgba(255, 92, 134, 0.2);
+  background-color: #ff5c86;
 }
 
 %focused-red-button {
-	border-radius: 2px;
-	box-shadow: 0 2px 4px 0 rgba(255, 92, 134, 0.2);
-	background-color: #ff7498;
+  border-radius: 2px;
+  box-shadow: 0 2px 4px 0 rgba(255, 92, 134, 0.2);
+  background-color: #ff7498;
 }
 
 %pressed-red-button {
-	border-radius: 2px;
-	box-shadow: 0 2px 4px 0 rgba(255, 92, 134, 0.2);
-	background-color: #f64774;
+  border-radius: 2px;
+  box-shadow: 0 2px 4px 0 rgba(255, 92, 134, 0.2);
+  background-color: #f64774;
 }
 
 %disable-button {
-	border-radius: 2px;
-	background-color: #e5e5e9;
+  border-radius: 2px;
+  background-color: #e5e5e9;
 }
 
 // INPUTS
 
 %normal-input {
-	width: 100%;
-	border-radius: 2px;
-	border: solid 1px #bdbcc8;
-	height: 40px;
+  width: 100%;
+  border-radius: 2px;
+  border: solid 1px #bdbcc8;
+  height: 40px;
 }
 
 %focus-input {
-	border-radius: 2px;
-	border: solid 1px #6e6c88;
-	background-color: #ffffff;
-	height: 40px;
+  border-radius: 2px;
+  border: solid 1px #6e6c88;
+  background-color: #ffffff;
+  height: 40px;
 }
 
 %active-input {
-	box-shadow: 0 2px 4px 0 rgba(123, 98, 221, 0.1) !important;
-	border: solid 1px #7765d6 !important;
-	background-color: #ffffff;
-	height: 40px;
+  box-shadow: 0 2px 4px 0 rgba(123, 98, 221, 0.1) !important;
+  border: solid 1px #7765d6 !important;
+  background-color: #ffffff;
+  height: 40px;
 }
 
 %disable-input {
-	border-radius: 2px;
-	border: solid 1px #bdbcc8;
-	background-color: #e5e5e9;
-	height: 40px;
+  border-radius: 2px;
+  border: solid 1px #bdbcc8;
+  background-color: #e5e5e9;
+  height: 40px;
 }
 
 %large-input {
-	border-radius: 2px;
-	border: solid 1px #bdbcc8;
-	background-color: #ffffff;
+  border-radius: 2px;
+  border: solid 1px #bdbcc8;
+  background-color: #ffffff;
 }
 
 // PLACEHOLDERS
 
 %placeholder-input-normal {
-	font-family: Montserrat;
-	font-size: 14px;
-	font-weight: 400;
-	line-height: 24px;
-	color: #bdbcc8;
+  font-family: Montserrat;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 24px;
+  color: #bdbcc8;
 }
 
 %placeholder-input-focus {
-	font-family: Montserrat;
-	font-size: 14px;
-	font-weight: 500;
-	line-height: 24px;
-	color: #bdbcc8;
+  font-family: Montserrat;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 24px;
+  color: #bdbcc8;
 }
 
 %placeholder-input-active {
-	font-family: Montserrat;
-	font-size: 14px;
-	font-weight: 500;
-	line-height: 24px;
-	color: #312e55;
+  font-family: Montserrat;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 24px;
+  color: #312e55;
 }
 
 %placeholder-input-filled {
-	font-family: Montserrat;
-	font-size: 14px;
-	font-weight: 500;
-	line-height: 24px;
-	color: #312e55;
+  font-family: Montserrat;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 24px;
+  color: #312e55;
 }
 
 %placeholder-input-disable {
-	font-family: Montserrat;
-	font-size: 14px;
-	font-weight: 500;
-	line-height: 24px;
-	color: #6e6c88;
+  font-family: Montserrat;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 24px;
+  color: #6e6c88;
 }
 
 %placeholder-input-large {
-	font-family: Montserrat;
-	font-size: 14px;
-	font-weight: 500;
-	line-height: 24px;
-	color: #bdbcc8;
+  font-family: Montserrat;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 24px;
+  color: #bdbcc8;
 }
-
 
 // TEXT
 
 %error-text {
-	font-size: 12px;
-	font-weight: 500;
-	line-height: 20px;
-	text-align: center;
-	color: #721c24;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 20px;
+  text-align: center;
+  color: #721c24;
 }
 
 %h3 {
-	font-size: 16px;
-	font-weight: bold;
-	line-height: 24px;
-	color: #312e55;
+  font-size: 16px;
+  font-weight: bold;
+  line-height: 24px;
+  color: #312e55;
 }
 
 %h2 {
@@ -169,7 +168,7 @@ $opacitgrey: #e5e5e9;
 }
 
 %text-under {
-	font-size: 14px;
+  font-size: 14px;
   font-weight: 400;
   line-height: 24px;
   color: #6e6c88;
@@ -183,17 +182,17 @@ $opacitgrey: #e5e5e9;
 }
 
 %forgot {
-    font-size: 12px;
-    font-weight: 400;
-    line-height: 20px;
-    color: #7765d6;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 20px;
+  color: #7765d6;
 }
 
 %nav-link {
-	font-size: 14px;
-	font-weight: 500;
-	line-height: 24px;
-	color: #6e6c88;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 24px;
+  color: #6e6c88;
 }
 
 %status-text {
@@ -204,29 +203,28 @@ $opacitgrey: #e5e5e9;
 }
 
 %disable-text {
-	color: #bdbcc8 !important;
+  color: #bdbcc8 !important;
 }
 
-// MIXINS OF STATUS BUTTONS 
+// MIXINS OF STATUS BUTTONS
 
 @mixin status-button {
-	padding: 2px 8px 3px 8px;
-	border-radius: 6px;
+  padding: 2px 8px 3px 8px;
+  border-radius: 6px;
 }
 
 @mixin status-oval {
-	display: inline-block;
-	width: 8px;
-	height: 8px;
-	border-radius: 20px;
-	margin-right: 6px;
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 20px;
+  margin-right: 6px;
 }
 
 @mixin status-text {
-	@extend %status-text;
-	isplay: inline-block;
-	text-align: center;
+  @extend %status-text;
+  isplay: inline-block;
+  text-align: center;
 }
 
-// CHECKBOX AND RADIO 
-
+// CHECKBOX AND RADIO

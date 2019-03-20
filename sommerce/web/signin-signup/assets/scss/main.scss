@@ -1,138 +1,131 @@
 @import "settings";
 
-
 body {
-    background-color: #fbfcfc;
+  background-color: #fbfcfc;
 
-    
-    .container-store {
-        padding-top: 47px;
+  .container-store {
+    padding-top: 47px;
 
-        // STORES 
-        .col-title {
-            padding: 0px;
-            padding-bottom: 16px;
-            margin-bottom: 32px;
-            border-bottom: solid 1px #e5e5e9;
-        }
-        .col {
-            padding-right: 0px;
-            padding-left: 0px;
-
-            h2 {
-                @extend %h2;
-                margin: 0px;
-            }
-
-            .btn {
-                width: 160px;
-            }
-
-            th {
-                @extend %th;
-            }
-
-            tbody tr th {
-                @extend %nav-link;
-            }
-
-            tr td, .form-check-label {
-                @extend %text-under;
-            }
-
-            .form-check-label {
-                line-height: 16px;
-            }
-
-            .table-stores td:last-child {
-                width: 100px;
-            }
-
-            .table-staff td:last-child {
-                width: 160px;
-            }
-
-        }
-
+    // STORES
+    .col-title {
+      padding: 0px;
+      padding-bottom: 16px;
+      margin-bottom: 32px;
+      border-bottom: solid 1px #e5e5e9;
     }
+    .col {
+      padding-right: 0px;
+      padding-left: 0px;
 
-    // STORES EMPTY
-    .placeholder {
-        padding-top: 160px;
-        padding-bottom: 16px;
-    }
+      h2 {
+        @extend %h2;
+        margin: 0px;
+      }
 
-    .placeholder-text {
-        @extend %placeholder-input-normal;
-        margin-bottom: 0px;
-        text-align: center;
-    }
-
-    .new-order-button {
-        margin-top: 24px;
+      .btn {
         width: 160px;
-        height: 40px
-    }
+      }
 
+      th {
+        @extend %th;
+      }
 
-    // CARD 
+      tbody tr th {
+        @extend %nav-link;
+      }
 
-    .card {
-        @extend %card;
-
-        .card-body {
-            border: 0px;
-            padding: 24px;
-
-            h3 {
-                @extend %h3;
-            }
-
-            p {
-                @extend %text-under;
-                margin-bottom: 0px;
-            }
-
-            .card-title {
-                padding-bottom: 12px;
-            }
-
-            .alert {
-                padding: 7px 8px;
-            }
-
-            .error-text {
-                @extend %error-text;
-            }
-
-            .forgot {
-                @extend %forgot;
-            }
-
-            .btn {
-                height: 40px;
-            }
-
-            .terms {
-                @extend %forgot;
-                color: #6e6c88;
-            }
-
-        }
-    }
-
-    .text-under {
+      tr td,
+      .form-check-label {
         @extend %text-under;
-    }
+      }
 
-    .text-under a, .svg-button {
-        @extend %a-under;
-    }
+      .form-check-label {
+        line-height: 16px;
+      }
 
-    svg {
-        margin-right: 8px;
-    }
+      .table-stores td:last-child {
+        width: 100px;
+      }
 
+      .table-staff td:last-child {
+        width: 160px;
+      }
+    }
+  }
+
+  // STORES EMPTY
+  .placeholder {
+    padding-top: 160px;
+    padding-bottom: 16px;
+  }
+
+  .placeholder-text {
+    @extend %placeholder-input-normal;
+    margin-bottom: 0px;
+    text-align: center;
+  }
+
+  .new-order-button {
+    margin-top: 24px;
+    width: 160px;
+    height: 40px;
+  }
+
+  // CARD
+
+  .card {
+    @extend %card;
+
+    .card-body {
+      border: 0px;
+      padding: 24px;
+
+      h3 {
+        @extend %h3;
+      }
+
+      p {
+        @extend %text-under;
+        margin-bottom: 0px;
+      }
+
+      .card-title {
+        padding-bottom: 12px;
+      }
+
+      .alert {
+        padding: 7px 8px;
+      }
+
+      .error-text {
+        @extend %error-text;
+      }
+
+      .forgot {
+        @extend %forgot;
+      }
+
+      .btn {
+        height: 40px;
+      }
+
+      .terms {
+        @extend %forgot;
+        color: #6e6c88;
+      }
+    }
+  }
+
+  .text-under {
+    @extend %text-under;
+  }
+
+  .text-under a,
+  .svg-button {
+    @extend %a-under;
+  }
+
+  svg {
+    margin-right: 8px;
+  }
 }
-
-
