@@ -117,185 +117,30 @@
     </div>
   </nav>
 
-  <div class="container container-store">
-    <div class="row">
-      <div class="col col-title d-flex justify-content-between align-items-center">
-        <h2>Invoices</h2>
-        <button class="btn purple-button">Pay selected</button>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col">
-        <table class="table">
-          <thead>
-            <tr class="table-borderless">
-              <th scope="col" class="d-flex align-items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
-                  <g fill="none" fill-rule="evenodd">
-                    <rect width="16" height="16" fill="#7765D6" rx="2" />
-                    <rect width="10" height="2" x="3" y="7" fill="#FFF" rx="1" />
-                  </g>
-                </svg>
-                id
-              </th>
-              <th scope="col">Domain</th>
-              <th scope="col">Created</th>
-              <th scope="col">Amount</th>
-              <th scope="col">Status</th>
-              <th scope="col" style="width: 160px;">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>
-                <input id="inlineCheckbox1" type="checkbox" class="invoice-checkbox" />
-                <label class="form-check-label" for="inlineCheckbox1">13</label>
-              </td>
-              <th>albastore.net</th>
-              <td>2019-01-30</td>
-              <td>$35.00</td>
-              <td>
-                <span class="button-status-active">
-                  <span class="button-status-oval"></span>
-                  <span class="button-status-text">Paid</span>
-                </span>
-              </td>
-              <td>
-                <a href="#">
-                  <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24" height="24"
-                    viewBox="0 0 24 24">
-                    <defs>
-                      <path id="c" d="M6.25 0v4A2.75 2.75 0 0 0 9 6.75h3V15a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1V1a1 1 0 0 1 1-1h5.25zm1.5.185a1 1 0 0 1 .174.158l3.83 4.395a1 1 0 0 1 .235.512H9c-.69 0-1.25-.56-1.25-1.25V.185z" />
-                    </defs>
-                    <g fill="none" fill-rule="evenodd" transform="translate(6 4)">
-                      <use fill="#BDBCC8" xlink:href="#c" />
-                    </g>
-                  </svg>
-                  View details
-                </a>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <input id="inlineCheckbox2" type="checkbox" class="invoice-checkbox" checked />
-                <label class="form-check-label" for="inlineCheckbox2">89</label>
-              </td>
-              <th>instaboost.com</th>
-              <td>2019-01-30</td>
-              <td>$35.00</td>
-              <td>
-                <span class="button-status-pending">
-                  <span class="button-status-oval"></span>
-                  <span class="button-status-text">Unpaid</span>
-                </span>
-              </td>
-              <td>
-                <a href="#">
-                  <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24" height="24"
-                    viewBox="0 0 24 24">
-                    <defs>
-                      <path id="c" d="M6.25 0v4A2.75 2.75 0 0 0 9 6.75h3V15a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1V1a1 1 0 0 1 1-1h5.25zm1.5.185a1 1 0 0 1 .174.158l3.83 4.395a1 1 0 0 1 .235.512H9c-.69 0-1.25-.56-1.25-1.25V.185z" />
-                    </defs>
-                    <g fill="none" fill-rule="evenodd" transform="translate(6 4)">
-                      <use fill="#BDBCC8" xlink:href="#c" />
-                    </g>
-                  </svg>
-                  View details
-                </a>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <input id="inlineCheckbox3" type="checkbox" class="invoice-checkbox" checked />
-                <label class="form-check-label" for="inlineCheckbox3">71</label>
-              </td>
-              <th>centromarketing.com</th>
-              <td>2019-01-30</td>
-              <td>$35.00</td>
-              <td>
-                <span class="button-status-cancel">
-                  <span class="button-status-oval"></span>
-                  <span class="button-status-text">Canceled</span>
-                </span>
-              </td>
-              <td>
-                <a href="#">
-                  <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24" height="24"
-                    viewBox="0 0 24 24">
-                    <defs>
-                      <path id="c" d="M6.25 0v4A2.75 2.75 0 0 0 9 6.75h3V15a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1V1a1 1 0 0 1 1-1h5.25zm1.5.185a1 1 0 0 1 .174.158l3.83 4.395a1 1 0 0 1 .235.512H9c-.69 0-1.25-.56-1.25-1.25V.185z" />
-                    </defs>
-                    <g fill="none" fill-rule="evenodd" transform="translate(6 4)">
-                      <use fill="#BDBCC8" xlink:href="#c" />
-                    </g>
-                  </svg>
-                  View details
-                </a>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <input id="inlineCheckbox4" type="checkbox" class="invoice-checkbox" />
-                <label class="form-check-label" for="inlineCheckbox4">21</label>
-              </td>
-              <th>moreviews.com</th>
-              <td>2019-01-30</td>
-              <td>$35.00</td>
-              <td>
-                <span class="button-status-pending">
-                  <span class="button-status-oval"></span>
-                  <span class="button-status-text">Unpaid</span>
-                </span>
-              </td>
-              <td>
-                <a href="#">
-                  <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24" height="24"
-                    viewBox="0 0 24 24">
-                    <defs>
-                      <path id="c" d="M6.25 0v4A2.75 2.75 0 0 0 9 6.75h3V15a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1V1a1 1 0 0 1 1-1h5.25zm1.5.185a1 1 0 0 1 .174.158l3.83 4.395a1 1 0 0 1 .235.512H9c-.69 0-1.25-.56-1.25-1.25V.185z" />
-                    </defs>
-                    <g fill="none" fill-rule="evenodd" transform="translate(6 4)">
-                      <use fill="#BDBCC8" xlink:href="#c" />
-                    </g>
-                  </svg>
-                  View details
-                </a>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <input id="inlineCheckbox5" type="checkbox" class="invoice-checkbox" checked />
-                <label class="form-check-label" for="inlineCheckbox5">116</label>
-              </td>
-              <th>instaimpressions.com</th>
-              <td>2019-01-30</td>
-              <td>$35.00</td>
-              <td>
-                <span class="button-status-active">
-                  <span class="button-status-oval"></span>
-                  <span class="button-status-text">Paid</span>
-                </span>
-              </td>
-              <td>
-                <a href="#">
-                  <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24" height="24"
-                    viewBox="0 0 24 24">
-                    <defs>
-                      <path id="c" d="M6.25 0v4A2.75 2.75 0 0 0 9 6.75h3V15a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1V1a1 1 0 0 1 1-1h5.25zm1.5.185a1 1 0 0 1 .174.158l3.83 4.395a1 1 0 0 1 .235.512H9c-.69 0-1.25-.56-1.25-1.25V.185z" />
-                    </defs>
-                    <g fill="none" fill-rule="evenodd" transform="translate(6 4)">
-                      <use fill="#BDBCC8" xlink:href="#c" />
-                    </g>
-                  </svg>
-                  View details
-                </a>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+
+  <div class="row justify-content-center">
+    <div class="col col-xl-10">
+      <div class="container container-store q">
+        <div class="row justify-content-center">
+          <div class="col-8 col-title d-flex justify-content-between align-items-center">
+            <h2>Account settings</h2>
+          </div>
+        </div>
       </div>
     </div>
   </div>
+
+  <style>
+    .q {
+      /* height: 100vh; */
+      box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.04);
+      border: solid 1px #e5e5e9;
+      background-color: #ffffff;
+      border-top: 0px;
+    }
+  </style>
+
+
 
   <!-- Optional JavaScript -->
   <!-- jQuery first, then Popper.js, then Bootstrap JS -->

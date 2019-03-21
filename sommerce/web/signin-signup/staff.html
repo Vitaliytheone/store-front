@@ -65,7 +65,7 @@
                                     <path id="x" d="M9.032 13.485h9.826a.5.5 0 0 1 .5.5v1.005a.5.5 0 0 1-.5.5H8.152a1 1 0 0 1-.993-.875l-.447-3.563a1.013 1.013 0 0 1-.007-.046l-.14-1.126-.303-2.41h.002l-.117-.94H4.605a.5.5 0 0 1-.497-.449l-.105-1.03A.5.5 0 0 1 4.5 4.5l5.529.013.066.003H19a1 1 0 0 1 1 1v5.045a1 1 0 0 1-.972 1l-10.201.288.205 1.635zM8.781 19.5a1.507 1.507 0 0 1-1.512-1.504c0-.83.677-1.503 1.512-1.503.834 0 1.51.673 1.51 1.503 0 .83-.676 1.504-1.51 1.504zm7.051 0a1.507 1.507 0 0 1-1.51-1.504c0-.83.676-1.503 1.51-1.503.835 0 1.512.673 1.512 1.503 0 .83-.677 1.504-1.512 1.504z" />
                                 </defs>
                                 <g fill="none" fill-rule="evenodd">
-                                    <use fill="#BDBCC8"" xlink:href="#x" />
+                                    <use fill="#BDBCC8"" xlink:href=" #x" />
                                 </g>
                             </svg>
                             Stores
@@ -145,29 +145,31 @@
                             <td>Active</td>
                             <td>2019-01-30, 11:58:34</td>
                             <td>
-                                <a href="#">
-                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24" height="24" viewBox="0 0 24 24">
-                                <defs>
-                                    <path id="edit" d="M16.41 4.158l3.056 3.135a.5.5 0 0 1 0 .698L8.05 19.698a1 1 0 0 1-.727.301l-2.8-.029a.5.5 0 0 1-.494-.495L4 16.565a1 1 0 0 1 .284-.707l11.41-11.7a.5.5 0 0 1 .715 0zm-2.105 13.84H19.5a.5.5 0 0 1 .5.5V19.5a.5.5 0 0 1-.5.5h-5.195a.5.5 0 0 1-.5-.5v-1.003a.5.5 0 0 1 .5-.5z" />
-                                </defs>
-                                <g fill="none" fill-rule="evenodd">
-                                    <use fill="#BDBCC8" xlink:href="#edit" />
-                                </g>
-                            </svg>
+                                <a href="#" data-toggle="modal" data-target="#modal-edit">
+                                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                                        width="24" height="24" viewBox="0 0 24 24">
+                                        <defs>
+                                            <path id="edit" d="M16.41 4.158l3.056 3.135a.5.5 0 0 1 0 .698L8.05 19.698a1 1 0 0 1-.727.301l-2.8-.029a.5.5 0 0 1-.494-.495L4 16.565a1 1 0 0 1 .284-.707l11.41-11.7a.5.5 0 0 1 .715 0zm-2.105 13.84H19.5a.5.5 0 0 1 .5.5V19.5a.5.5 0 0 1-.5.5h-5.195a.5.5 0 0 1-.5-.5v-1.003a.5.5 0 0 1 .5-.5z" />
+                                        </defs>
+                                        <g fill="none" fill-rule="evenodd">
+                                            <use fill="#BDBCC8" xlink:href="#edit" />
+                                        </g>
+                                    </svg>
 
-                                   Edit
+                                    Edit
                                 </a>
                             </td>
                             <td>
-                                <a href="#">
-                                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24" height="24" viewBox="0 0 24 24">
-                                            <defs>
-                                                <path id="password" d="M10.101 11.049a5.19 5.19 0 0 1 1.148-5.537 5.1 5.1 0 0 1 7.25 0 5.188 5.188 0 0 1 0 7.3A5.101 5.101 0 0 1 13 13.97l-1.978 1.992a.978.978 0 0 1-.973.25.543.543 0 0 0-.685.408l-.154.71a.574.574 0 0 1-.704.435.55.55 0 0 0-.678.441l-.084.482a1.03 1.03 0 0 1-.809.835l-2.323.468A.513.513 0 0 1 4 19.484V17.62c0-.274.108-.537.3-.73l5.801-5.842zm4.993-2.173a1.5 1.5 0 1 0 2.121-2.122 1.5 1.5 0 0 0-2.12 2.122z" />
-                                            </defs>
-                                            <g fill="none" fill-rule="evenodd">
-                                                <use fill="#BDBCC8" xlink:href="#password" />
-                                            </g>
-                                        </svg>
+                                <a href="#" data-toggle="modal" data-target="#modal-set-password">
+                                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                                        width="24" height="24" viewBox="0 0 24 24">
+                                        <defs>
+                                            <path id="password" d="M10.101 11.049a5.19 5.19 0 0 1 1.148-5.537 5.1 5.1 0 0 1 7.25 0 5.188 5.188 0 0 1 0 7.3A5.101 5.101 0 0 1 13 13.97l-1.978 1.992a.978.978 0 0 1-.973.25.543.543 0 0 0-.685.408l-.154.71a.574.574 0 0 1-.704.435.55.55 0 0 0-.678.441l-.084.482a1.03 1.03 0 0 1-.809.835l-2.323.468A.513.513 0 0 1 4 19.484V17.62c0-.274.108-.537.3-.73l5.801-5.842zm4.993-2.173a1.5 1.5 0 1 0 2.121-2.122 1.5 1.5 0 0 0-2.12 2.122z" />
+                                        </defs>
+                                        <g fill="none" fill-rule="evenodd">
+                                            <use fill="#BDBCC8" xlink:href="#password" />
+                                        </g>
+                                    </svg>
                                     Set password
                                 </a>
                             </td>
@@ -178,22 +180,24 @@
                             <td>Active</td>
                             <td>2019-01-30, 11:58:34</td>
                             <td>
-                                <a href="#">
-                                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24" height="24" viewBox="0 0 24 24">
-                                    <defs>
-                                        <path id="edit" d="M16.41 4.158l3.056 3.135a.5.5 0 0 1 0 .698L8.05 19.698a1 1 0 0 1-.727.301l-2.8-.029a.5.5 0 0 1-.494-.495L4 16.565a1 1 0 0 1 .284-.707l11.41-11.7a.5.5 0 0 1 .715 0zm-2.105 13.84H19.5a.5.5 0 0 1 .5.5V19.5a.5.5 0 0 1-.5.5h-5.195a.5.5 0 0 1-.5-.5v-1.003a.5.5 0 0 1 .5-.5z" />
-                                    </defs>
-                                    <g fill="none" fill-rule="evenodd">
-                                        <use fill="#BDBCC8" xlink:href="#edit" />
-                                    </g>
-                                </svg>
+                                <a href="" data-toggle="modal" data-target="#modal-edit">
+                                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                                        width="24" height="24" viewBox="0 0 24 24">
+                                        <defs>
+                                            <path id="edit" d="M16.41 4.158l3.056 3.135a.5.5 0 0 1 0 .698L8.05 19.698a1 1 0 0 1-.727.301l-2.8-.029a.5.5 0 0 1-.494-.495L4 16.565a1 1 0 0 1 .284-.707l11.41-11.7a.5.5 0 0 1 .715 0zm-2.105 13.84H19.5a.5.5 0 0 1 .5.5V19.5a.5.5 0 0 1-.5.5h-5.195a.5.5 0 0 1-.5-.5v-1.003a.5.5 0 0 1 .5-.5z" />
+                                        </defs>
+                                        <g fill="none" fill-rule="evenodd">
+                                            <use fill="#BDBCC8" xlink:href="#edit" />
+                                        </g>
+                                    </svg>
 
-                                   Edit
+                                    Edit
                                 </a>
                             </td>
                             <td>
-                                <a href="#">
-                                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24" height="24" viewBox="0 0 24 24">
+                                <a href="" data-toggle="modal" data-target="#modal-set-password">
+                                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                                        width="24" height="24" viewBox="0 0 24 24">
                                         <defs>
                                             <path id="password" d="M10.101 11.049a5.19 5.19 0 0 1 1.148-5.537 5.1 5.1 0 0 1 7.25 0 5.188 5.188 0 0 1 0 7.3A5.101 5.101 0 0 1 13 13.97l-1.978 1.992a.978.978 0 0 1-.973.25.543.543 0 0 0-.685.408l-.154.71a.574.574 0 0 1-.704.435.55.55 0 0 0-.678.441l-.084.482a1.03 1.03 0 0 1-.809.835l-2.323.468A.513.513 0 0 1 4 19.484V17.62c0-.274.108-.537.3-.73l5.801-5.842zm4.993-2.173a1.5 1.5 0 1 0 2.121-2.122 1.5 1.5 0 0 0-2.12 2.122z" />
                                         </defs>
@@ -211,30 +215,32 @@
                             <td>Inactive</td>
                             <td>2019-01-30, 11:58:34</td>
                             <td>
-                                <a href="#">
-                                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24" height="24" viewBox="0 0 24 24">
-                                    <defs>
-                                        <path id="edit" d="M16.41 4.158l3.056 3.135a.5.5 0 0 1 0 .698L8.05 19.698a1 1 0 0 1-.727.301l-2.8-.029a.5.5 0 0 1-.494-.495L4 16.565a1 1 0 0 1 .284-.707l11.41-11.7a.5.5 0 0 1 .715 0zm-2.105 13.84H19.5a.5.5 0 0 1 .5.5V19.5a.5.5 0 0 1-.5.5h-5.195a.5.5 0 0 1-.5-.5v-1.003a.5.5 0 0 1 .5-.5z" />
-                                    </defs>
-                                    <g fill="none" fill-rule="evenodd">
-                                        <use fill="#BDBCC8" xlink:href="#edit" />
-                                    </g>
-                                </svg>
+                                <a href="" data-toggle="modal" data-target="#modal-edit">
+                                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                                        width="24" height="24" viewBox="0 0 24 24">
+                                        <defs>
+                                            <path id="edit" d="M16.41 4.158l3.056 3.135a.5.5 0 0 1 0 .698L8.05 19.698a1 1 0 0 1-.727.301l-2.8-.029a.5.5 0 0 1-.494-.495L4 16.565a1 1 0 0 1 .284-.707l11.41-11.7a.5.5 0 0 1 .715 0zm-2.105 13.84H19.5a.5.5 0 0 1 .5.5V19.5a.5.5 0 0 1-.5.5h-5.195a.5.5 0 0 1-.5-.5v-1.003a.5.5 0 0 1 .5-.5z" />
+                                        </defs>
+                                        <g fill="none" fill-rule="evenodd">
+                                            <use fill="#BDBCC8" xlink:href="#edit" />
+                                        </g>
+                                    </svg>
 
-                                   Edit
+                                    Edit
                                 </a>
                             </td>
                             <td>
-                                <a href="#">
-                                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24" height="24" viewBox="0 0 24 24">
-                                            <defs>
-                                                <path id="password" d="M10.101 11.049a5.19 5.19 0 0 1 1.148-5.537 5.1 5.1 0 0 1 7.25 0 5.188 5.188 0 0 1 0 7.3A5.101 5.101 0 0 1 13 13.97l-1.978 1.992a.978.978 0 0 1-.973.25.543.543 0 0 0-.685.408l-.154.71a.574.574 0 0 1-.704.435.55.55 0 0 0-.678.441l-.084.482a1.03 1.03 0 0 1-.809.835l-2.323.468A.513.513 0 0 1 4 19.484V17.62c0-.274.108-.537.3-.73l5.801-5.842zm4.993-2.173a1.5 1.5 0 1 0 2.121-2.122 1.5 1.5 0 0 0-2.12 2.122z" />
-                                            </defs>
-                                            <g fill="none" fill-rule="evenodd">
-                                                <use fill="#BDBCC8" xlink:href="#password" />
-                                            </g>
-                                        </svg>
-                                    Set password 
+                                <a href="" data-toggle="modal" data-target="#modal-set-password">
+                                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                                        width="24" height="24" viewBox="0 0 24 24">
+                                        <defs>
+                                            <path id="password" d="M10.101 11.049a5.19 5.19 0 0 1 1.148-5.537 5.1 5.1 0 0 1 7.25 0 5.188 5.188 0 0 1 0 7.3A5.101 5.101 0 0 1 13 13.97l-1.978 1.992a.978.978 0 0 1-.973.25.543.543 0 0 0-.685.408l-.154.71a.574.574 0 0 1-.704.435.55.55 0 0 0-.678.441l-.084.482a1.03 1.03 0 0 1-.809.835l-2.323.468A.513.513 0 0 1 4 19.484V17.62c0-.274.108-.537.3-.73l5.801-5.842zm4.993-2.173a1.5 1.5 0 1 0 2.121-2.122 1.5 1.5 0 0 0-2.12 2.122z" />
+                                        </defs>
+                                        <g fill="none" fill-rule="evenodd">
+                                            <use fill="#BDBCC8" xlink:href="#password" />
+                                        </g>
+                                    </svg>
+                                    Set password
                                 </a>
                             </td>
                         </tr>
@@ -244,8 +250,9 @@
                             <td>Inactive</td>
                             <td>2019-01-30, 11:58:34</td>
                             <td>
-                                <a href="#">
-                                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24" height="24" viewBox="0 0 24 24">
+                                <a href="" data-toggle="modal" data-target="#modal-edit">
+                                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                                        width="24" height="24" viewBox="0 0 24 24">
                                         <defs>
                                             <path id="edit" d="M16.41 4.158l3.056 3.135a.5.5 0 0 1 0 .698L8.05 19.698a1 1 0 0 1-.727.301l-2.8-.029a.5.5 0 0 1-.494-.495L4 16.565a1 1 0 0 1 .284-.707l11.41-11.7a.5.5 0 0 1 .715 0zm-2.105 13.84H19.5a.5.5 0 0 1 .5.5V19.5a.5.5 0 0 1-.5.5h-5.195a.5.5 0 0 1-.5-.5v-1.003a.5.5 0 0 1 .5-.5z" />
                                         </defs>
@@ -254,19 +261,20 @@
                                         </g>
                                     </svg>
 
-                                   Edit
+                                    Edit
                                 </a>
                             </td>
                             <td>
-                                <a href="#">
-                                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24" height="24" viewBox="0 0 24 24">
-                                            <defs>
-                                                <path id="password" d="M10.101 11.049a5.19 5.19 0 0 1 1.148-5.537 5.1 5.1 0 0 1 7.25 0 5.188 5.188 0 0 1 0 7.3A5.101 5.101 0 0 1 13 13.97l-1.978 1.992a.978.978 0 0 1-.973.25.543.543 0 0 0-.685.408l-.154.71a.574.574 0 0 1-.704.435.55.55 0 0 0-.678.441l-.084.482a1.03 1.03 0 0 1-.809.835l-2.323.468A.513.513 0 0 1 4 19.484V17.62c0-.274.108-.537.3-.73l5.801-5.842zm4.993-2.173a1.5 1.5 0 1 0 2.121-2.122 1.5 1.5 0 0 0-2.12 2.122z" />
-                                            </defs>
-                                            <g fill="none" fill-rule="evenodd">
-                                                <use fill="#BDBCC8" xlink:href="#password" />
-                                            </g>
-                                        </svg>
+                                <a href="" data-toggle="modal" data-target="#modal-set-password">
+                                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                                        width="24" height="24" viewBox="0 0 24 24">
+                                        <defs>
+                                            <path id="password" d="M10.101 11.049a5.19 5.19 0 0 1 1.148-5.537 5.1 5.1 0 0 1 7.25 0 5.188 5.188 0 0 1 0 7.3A5.101 5.101 0 0 1 13 13.97l-1.978 1.992a.978.978 0 0 1-.973.25.543.543 0 0 0-.685.408l-.154.71a.574.574 0 0 1-.704.435.55.55 0 0 0-.678.441l-.084.482a1.03 1.03 0 0 1-.809.835l-2.323.468A.513.513 0 0 1 4 19.484V17.62c0-.274.108-.537.3-.73l5.801-5.842zm4.993-2.173a1.5 1.5 0 1 0 2.121-2.122 1.5 1.5 0 0 0-2.12 2.122z" />
+                                        </defs>
+                                        <g fill="none" fill-rule="evenodd">
+                                            <use fill="#BDBCC8" xlink:href="#password" />
+                                        </g>
+                                    </svg>
                                     Set password
                                 </a>
                             </td>
@@ -277,8 +285,9 @@
                             <td>Active</td>
                             <td>2019-01-30, 11:58:34</td>
                             <td>
-                                <a href="#">
-                                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24" height="24" viewBox="0 0 24 24">
+                                <a href="" data-toggle="modal" data-target="#modal-edit">
+                                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                                        width="24" height="24" viewBox="0 0 24 24">
                                         <defs>
                                             <path id="edit" d="M16.41 4.158l3.056 3.135a.5.5 0 0 1 0 .698L8.05 19.698a1 1 0 0 1-.727.301l-2.8-.029a.5.5 0 0 1-.494-.495L4 16.565a1 1 0 0 1 .284-.707l11.41-11.7a.5.5 0 0 1 .715 0zm-2.105 13.84H19.5a.5.5 0 0 1 .5.5V19.5a.5.5 0 0 1-.5.5h-5.195a.5.5 0 0 1-.5-.5v-1.003a.5.5 0 0 1 .5-.5z" />
                                         </defs>
@@ -287,19 +296,20 @@
                                         </g>
                                     </svg>
 
-                                   Edit
+                                    Edit
                                 </a>
                             </td>
                             <td>
-                                <a href="#">
-                                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24" height="24" viewBox="0 0 24 24">
-                                    <defs>
-                                        <path id="password" d="M10.101 11.049a5.19 5.19 0 0 1 1.148-5.537 5.1 5.1 0 0 1 7.25 0 5.188 5.188 0 0 1 0 7.3A5.101 5.101 0 0 1 13 13.97l-1.978 1.992a.978.978 0 0 1-.973.25.543.543 0 0 0-.685.408l-.154.71a.574.574 0 0 1-.704.435.55.55 0 0 0-.678.441l-.084.482a1.03 1.03 0 0 1-.809.835l-2.323.468A.513.513 0 0 1 4 19.484V17.62c0-.274.108-.537.3-.73l5.801-5.842zm4.993-2.173a1.5 1.5 0 1 0 2.121-2.122 1.5 1.5 0 0 0-2.12 2.122z" />
-                                    </defs>
-                                    <g fill="none" fill-rule="evenodd">
-                                        <use fill="#BDBCC8" xlink:href="#password" />
-                                    </g>
-                                </svg>
+                                <a href="" data-toggle="modal" data-target="#modal-set-password">
+                                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                                        width="24" height="24" viewBox="0 0 24 24">
+                                        <defs>
+                                            <path id="password" d="M10.101 11.049a5.19 5.19 0 0 1 1.148-5.537 5.1 5.1 0 0 1 7.25 0 5.188 5.188 0 0 1 0 7.3A5.101 5.101 0 0 1 13 13.97l-1.978 1.992a.978.978 0 0 1-.973.25.543.543 0 0 0-.685.408l-.154.71a.574.574 0 0 1-.704.435.55.55 0 0 0-.678.441l-.084.482a1.03 1.03 0 0 1-.809.835l-2.323.468A.513.513 0 0 1 4 19.484V17.62c0-.274.108-.537.3-.73l5.801-5.842zm4.993-2.173a1.5 1.5 0 1 0 2.121-2.122 1.5 1.5 0 0 0-2.12 2.122z" />
+                                        </defs>
+                                        <g fill="none" fill-rule="evenodd">
+                                            <use fill="#BDBCC8" xlink:href="#password" />
+                                        </g>
+                                    </svg>
                                     Set password
                                 </a>
                             </td>
@@ -309,6 +319,138 @@
             </div>
         </div>
     </div>
+
+    <!-- ModalS -->
+    <div class="modal fade" id="modal-edit" tabindex="-1" role="dialog" aria-labelledby="modal-edit" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <div class="d-flex align-items-center">
+                            <img src="assets/img/ic-popups/edit-staff.svg" alt="edit-staff">
+                            <span>Edit staff account</span>
+                        </div>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <img src="assets/img/ic-popups/close.svg" alt="close">
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="login-form" action="/signin" method="post">
+                            <fieldset>
+                                <div class="form-group">
+                                    <div class="form-group field-loginform-username required">
+                                        <label for="loginform-username">Username</label>
+                                        <input class="input" type="text" id="loginform-username" class="form-control" name="LoginForm[username]"
+                                            placeholder="Email" autofocus="" aria-required="true" value="Nina Gregory" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div>
+                                        <div class="d-flex justify-content-between">
+                                            <label for="select-status">Status</label>
+                                        </div>
+                                        <div class="select-wrapper">
+                                            <select class="form-control no-radius" id="select-status">
+                                                <option>Active</option>
+                                                <option>Inactive</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div>
+                                        <div class="">
+                                            <label>Access rights</label>
+                                            <div>
+                                                <div class="modal-access-one">
+                                                    <span>
+                                                        <input id="staff-orders" type="checkbox" class="invoice-checkbox" />
+                                                        <label class="form-check-label" for="staff-orders">Orders</label>
+                                                    </span>
+                                                    <span>
+                                                        <input id="staff-products" type="checkbox" class="invoice-checkbox" />
+                                                        <label class="form-check-label" for="staff-products">Products</label>
+                                                    </span>
+                                                    <span>
+                                                        <input id="staff-payments" type="checkbox" class="invoice-checkbox" />
+                                                        <label class="form-check-label" for="staff-payments">Payments</label>
+                                                    </span>
+                                                </div>
+                                                <div class="modal-access-two">
+                                                    <span>
+                                                        <input id="staff-pages" type="checkbox" class="invoice-checkbox" />
+                                                        <label class="form-check-label" for="staff-pages">Pages</label>
+                                                    </span>
+                                                    <span>
+                                                        <input id="staff-settings" type="checkbox" class="invoice-checkbox" />
+                                                        <label class="form-check-label" for="staff-settings">Settings</label>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn save-changes-button purple-button">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    <div class="modal fade" id="modal-set-password" tabindex="-1" role="dialog" aria-labelledby="modal-set-password"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="d-flex align-items-center">
+                        <img src="assets/img/ic-popups/set-password.svg" alt="set-new-password">
+                        <span>Set new password</span>
+                    </div>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <img src="assets/img/ic-popups/close.svg" alt="close">
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="login-form" action="/signin" method="post">
+                        <fieldset>
+                            <div class="form-group disable-input">
+                                <div class="form-group field-loginform-username required">
+                                    <label for="loginform-username">Username</label>
+                                    <input class="input" type="text" id="loginform-username" class="form-control" name="LoginForm[username]"
+                                        placeholder="Email" autofocus="" aria-required="true" value="Nina Gregory" />
+                                </div>
+                            </div>
+                            <div class="form-group generate-password">
+                                <div class="form-group field-loginform-username required">
+                                    <label for="loginform-username">Password</label>
+                                    <input class="input" type="text" id="loginform-username" class="form-control" name="LoginForm[username]"
+                                        placeholder="Email" autofocus="" aria-required="true" value="Sxn9t0zZ" />
+                                    <a class="generate-password-button" href="#">
+                                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                                            width="24" height="24" viewBox="0 0 24 24">
+                                            <defs>
+                                                <path id="generate-password" d="M10.325 9.445a7.247 7.247 0 0 0-2.359 1.726c-.375.41-.706.844-.986 1.29a6.5 6.5 0 0 0-.55 1.043.223.223 0 0 1-.25.138.224.224 0 0 1-.18-.224c.009-.44.086-.874.161-1.24a9.697 9.697 0 0 1 2.035-4.27c.41-.49.81-.891 1.226-1.228.257-.208.472-.372.674-.515a3.9 3.9 0 0 1 .16-.105l-.277-1.802a.225.225 0 0 1 .081-.209.222.222 0 0 1 .22-.034l6.261 2.448a.224.224 0 0 1 .059.384l-5.237 4.231a.222.222 0 0 1-.36-.14l-.255-1.666c-.14.052-.279.11-.423.173zm7.496.913a.224.224 0 0 1 .179.224c-.009.44-.086.874-.161 1.24a9.699 9.699 0 0 1-2.035 4.27c-.41.49-.81.891-1.226 1.228-.258.209-.472.372-.674.515a3.926 3.926 0 0 1-.16.105l.276 1.802a.225.225 0 0 1-.08.209.221.221 0 0 1-.22.034l-6.261-2.448a.224.224 0 0 1-.059-.384l5.237-4.231a.221.221 0 0 1 .36.14l.255 1.666c.14-.052.279-.11.423-.173a7.247 7.247 0 0 0 2.359-1.726c.375-.41.706-.844.986-1.29.177-.283.399-.657.55-1.043a.223.223 0 0 1 .25-.138z" />
+                                            </defs>
+                                            <g fill="none" fill-rule="evenodd">
+                                                <use fill="#7765d6" fill-rule="nonzero" xlink:href="#generate-password" />
+                                            </g>
+                                        </svg>
+                                    </a>
+                                    <span class="text-under-password">Type or generate new password for staff account</span>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn save-changes-button purple-button">Set password</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
 
     <!-- Optional JavaScript -->

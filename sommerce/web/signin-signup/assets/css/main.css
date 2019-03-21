@@ -13,21 +13,23 @@
   box-shadow: 0 2px 4px 0 rgba(119, 101, 214, 0.21);
   background-color: #7765d6; }
 
+.modal select,
 input {
   width: 100%;
   border-radius: 2px;
   border: solid 1px #bdbcc8;
   height: 40px; }
 
+select:hover,
 input[type="text"]:hover,
 input[type="password"]:hover,
 input[type="email"]:hover {
   border-radius: 2px;
   border: solid 1px #6e6c88;
-  background-color: #ffffff;
-  height: 40px; }
+  background-color: #ffffff; }
 
 textarea:focus,
+select:focus,
 input[type="text"]:focus,
 input[type="password"]:focus,
 input[type="datetime"]:focus,
@@ -45,15 +47,41 @@ input[type="color"]:focus,
 .uneditable-input:focus {
   box-shadow: 0 2px 4px 0 rgba(123, 98, 221, 0.1) !important;
   border: solid 1px #7765d6 !important;
-  background-color: #ffffff;
-  height: 40px; }
+  background-color: #ffffff; }
 
-input::placeholder, body .placeholder-text {
+.modal .modal-body .disable-input input {
+  border-radius: 2px;
+  border: solid 1px #bdbcc8;
+  background-color: #e5e5e9;
+  height: 40px;
+  pointer-events: none; }
+
+.modal .modal-body .form-group textarea {
+  border-radius: 2px;
+  border: solid 1px #bdbcc8;
+  background-color: #ffffff; }
+
+textarea.form-control::placeholder,
+input::placeholder, .modal .modal-body .generate-password input, body .placeholder-text {
   font-family: Montserrat;
   font-size: 14px;
   font-weight: 400;
   line-height: 24px;
   color: #bdbcc8; }
+
+.modal .modal-body .form-group span label {
+  font-family: Montserrat;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 24px;
+  color: #312e55; }
+
+.modal .modal-header span {
+  font-family: Montserrat;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 24px;
+  color: #312e55; }
 
 .navbar .container .dropdown-menu a,
 .navbar .container .dropdown-menu a:hover, .navbar .container .dropdown-menu a:last-child {
@@ -76,26 +104,33 @@ body .card .card-body h3 {
   line-height: 24px;
   color: #312e55; }
 
-body .container-store .col h2 {
+body .container-store .col h2, body .container-store .col-8 h2 {
   font-size: 24px;
   font-weight: 500;
   line-height: 32px;
   color: #312e55; }
 
-body .container-store .col th {
+body .container-store .col th, body .container-store .col-8 th {
   font-size: 12px;
   font-weight: 500;
   line-height: 20px;
   color: #312e55; }
 
 body .container-store .col tr td,
-body .container-store .col .form-check-label, body .card .card-body p, body .text-under {
+body .container-store .col .form-check-label, body .container-store .col-8 tr td,
+body .container-store .col-8 .form-check-label, body .card .card-body p, body .text-under {
   font-size: 14px;
   font-weight: 400;
   line-height: 24px;
   color: #6e6c88; }
 
-body .text-under a,
+.modal .modal-body .text-under-password {
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 20px;
+  color: #bdbcc8; }
+
+.modal .modal-footer span, body .text-under a,
 body .svg-button {
   font-size: 14px;
   font-weight: 500;
@@ -108,7 +143,7 @@ body .card .card-body .forgot, body .card .card-body .terms {
   line-height: 20px;
   color: #7765d6; }
 
-.navbar .container .nav-link, body .container-store .col tbody tr th {
+.navbar .container .nav-link, body .container-store .col tbody tr th, body .container-store .col-8 tbody tr th {
   font-size: 14px;
   font-weight: 500;
   line-height: 24px;
@@ -134,6 +169,26 @@ body {
   -ms-backface-visibility: hidden;
   /* padding-top: 30px; */ }
 
+textarea.form-control {
+  resize: none;
+  border-radius: 0px;
+  font-size: 14px;
+  font-weight: 500; }
+
+.form-group textarea.form-control:hover {
+  border: solid 1px #6e6c88; }
+
+select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -webkit-border-radius: 0px;
+  background-image: url("../img/ic-popups/select-arrows.svg");
+  background-position: 99% 50%;
+  background-repeat: no-repeat;
+  background-size: 24px; }
+
+button[type="button"],
+button[type="button"]:focus,
 .btn:focus,
 .btn:active,
 .navbar-toggler:active,
@@ -142,6 +197,7 @@ body {
   box-shadow: none; }
 
 textarea:focus,
+select:focus,
 input[type="text"]:focus,
 input[type="password"]:focus,
 input[type="datetime"]:focus,
@@ -159,12 +215,17 @@ input[type="color"]:focus,
 .uneditable-input:focus {
   outline: none; }
 
+input[type="password"] {
+  font: larger "Lucida Sans Unicode",sans-serif;
+  color: #312e55; }
+
 label {
   font-size: 12px;
   font-weight: 500;
   line-height: 20px;
   color: #6e6c88; }
 
+.modal select,
 input {
   padding: 8px 12px 8px 12px;
   font-size: 14px;
@@ -279,6 +340,7 @@ body .card {
         left: 95px; } }
 
 .purple-button {
+  height: 40px;
   font-size: 14px;
   font-weight: 500;
   line-height: 24px;
@@ -336,6 +398,35 @@ tbody th {
   fill: #e5e5e9; }
 
 /*****************************/
+.modal .modal-header {
+  border-bottom: 0px; }
+  .modal .modal-header .d-flex img {
+    padding-right: 16px; }
+  .modal .modal-header .close {
+    opacity: 1; }
+.modal .modal-body .form-group span {
+  margin-right: 35px; }
+.modal .modal-body .modal-access-one span:nth-child(1) {
+  margin-right: 31px; }
+.modal .modal-body .form-group span label {
+  line-height: 16px;
+  padding-left: 25px; }
+.modal .modal-body .disable-input input {
+  font-weight: 400;
+  color: #6e6c88; }
+.modal .modal-body .generate-password input {
+  pointer-events: none; }
+.modal .modal-body .generate-password-button {
+  position: absolute;
+  right: 15px;
+  bottom: 65px; }
+.modal .modal-footer {
+  background-color: #fbfcfc; }
+  .modal .modal-footer .save-changes-button {
+    width: 132px; }
+  .modal .modal-footer .send-button {
+    width: 132px; }
+
 .arrow-left-button:hover {
   color: #8672ed;
   text-decoration: none; }
@@ -502,18 +593,18 @@ body {
       padding-bottom: 16px;
       margin-bottom: 32px;
       border-bottom: solid 1px #e5e5e9; }
-    body .container-store .col {
+    body .container-store .col, body .container-store .col-8 {
       padding-right: 0px;
       padding-left: 0px; }
-      body .container-store .col h2 {
+      body .container-store .col h2, body .container-store .col-8 h2 {
         margin: 0px; }
-      body .container-store .col .btn {
+      body .container-store .col .btn, body .container-store .col-8 .btn {
         width: 160px; }
-      body .container-store .col .form-check-label {
+      body .container-store .col .form-check-label, body .container-store .col-8 .form-check-label {
         line-height: 16px; }
-      body .container-store .col .table-stores td:last-child {
+      body .container-store .col .table-stores td:last-child, body .container-store .col-8 .table-stores td:last-child {
         width: 100px; }
-      body .container-store .col .table-staff td:last-child {
+      body .container-store .col .table-staff td:last-child, body .container-store .col-8 .table-staff td:last-child {
         width: 160px; }
   body .placeholder {
     padding-top: 160px;

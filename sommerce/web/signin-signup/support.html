@@ -123,7 +123,7 @@
         <div class="row">
             <div class="col col-title d-flex justify-content-between align-items-center">
                 <h2>Support tickets</h2>
-                <button class="btn purple-button">Create a ticket</button>
+                <button class="btn purple-button" data-toggle="modal" data-target="#modal-support">Create a ticket</button>
             </div>
         </div>
         <div class="row">
@@ -140,56 +140,56 @@
                     <tbody class="support-links">
                         <tr>
                             <th><a class="new-response" href="#">I need help with my store</a></th>
-                                <td>
-                                    <span class="button-status-pending">
-                                        <span class="button-status-oval"></span>
-                                        <span class="button-status-text">Pending</span>
-                                    </span>
-                                </td>
+                            <td>
+                                <span class="button-status-pending">
+                                    <span class="button-status-oval"></span>
+                                    <span class="button-status-text">Pending</span>
+                                </span>
+                            </td>
                             <td>2018-01-30, 12:58:34</td>
                             <td>2019-01-30, 11:58:34</td>
                         </tr>
                         <tr>
                             <th><a href="#">My domain is not available</a></th>
-                                <td>
-                                    <span class="button-status-pending">
-                                        <span class="button-status-oval"></span>
-                                        <span class="button-status-text">Pending</span>
-                                    </span>
-                                </td>
+                            <td>
+                                <span class="button-status-pending">
+                                    <span class="button-status-oval"></span>
+                                    <span class="button-status-text">Pending</span>
+                                </span>
+                            </td>
                             <td>2018-01-30, 12:58:34</td>
                             <td>2019-01-30, 11:58:34</td>
                         </tr>
                         <tr>
                             <th><a href="#">Do you have referral program?</a></th>
-                                <td>
-                                    <span class="button-status-active">
-                                        <span class="button-status-oval"></span>
-                                        <span class="button-status-text">Responded</span>
-                                    </span>
-                                </td>
+                            <td>
+                                <span class="button-status-active">
+                                    <span class="button-status-oval"></span>
+                                    <span class="button-status-text">Responded</span>
+                                </span>
+                            </td>
                             <td>2018-01-30, 12:58:34</td>
                             <td>2019-01-30, 11:58:34</td>
                         </tr>
                         <tr>
                             <th><a href="#">I even not able to add...</a></th>
-                                <td>
-                                    <span class="button-status-pending">
-                                        <span class="button-status-oval"></span>
-                                        <span class="button-status-text">Pending</span>
-                                    </span>
-                                </td>
+                            <td>
+                                <span class="button-status-pending">
+                                    <span class="button-status-oval"></span>
+                                    <span class="button-status-text">Pending</span>
+                                </span>
+                            </td>
                             <td>2018-01-30, 12:58:34</td>
                             <td>2019-01-30, 11:58:34</td>
                         </tr>
                         <tr>
                             <th><a href="#">I can not pay the invoice</a></th>
-                                <td>
-                                    <span class="button-status-active">
-                                        <span class="button-status-oval"></span>
-                                        <span class="button-status-text">Responded</span>
-                                    </span>
-                                </td>
+                            <td>
+                                <span class="button-status-active">
+                                    <span class="button-status-oval"></span>
+                                    <span class="button-status-text">Responded</span>
+                                </span>
+                            </td>
                             <td>2018-01-30, 12:58:34</td>
                             <td>2019-01-30, 11:58:34</td>
                         </tr>
@@ -199,6 +199,54 @@
         </div>
     </div>
 
+
+    <div class="modal fade" id="modal-support" tabindex="-1" role="dialog" aria-labelledby="modal-support" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="d-flex align-items-center">
+                        <img src="assets/img/ic-popups/ticket.svg" alt="set-new-password">
+                        <span>Create a new ticket</span>
+                    </div>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <img src="assets/img/ic-popups/close.svg" alt="close">
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="login-form" action="/signin" method="post">
+                        <fieldset>
+                            <div class="form-group">
+                                <div class="form-group field-loginform-username required">
+                                    <label for="subject-modal-form">Subject</label>
+                                    <input class="input" type="text" id="subject-modal-form" class="form-control" name="LoginForm[username]"
+                                        placeholder="Type your ticket subject" autofocus="" aria-required="true" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <textarea class="form-control"  placeholder="Please type your problem here..." rows="5"></textarea>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+                <div class="modal-footer d-flex justify-content-between">
+                    <div class="d-flex align-items-center">
+                        <a href="">
+                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24" height="24" viewBox="0 0 24 24">
+                                <defs>
+                                    <path id="attach-files" d="M4.768 15.495l.893-1.544a.5.5 0 0 1 .684-.183l.866.5a.5.5 0 0 1 .184.682l-.893 1.544L10.852 19l6.646-11.495L13.148 5l-4.092 7.078 1.308.754 1.284-2.222L12.9 8.445a.5.5 0 0 1 .684-.182l.866.5a.5.5 0 0 1 .184.682l-.63 1.089-1.906 3.296a2.003 2.003 0 0 1-2.734.732l-1.308-.754a1.997 1.997 0 0 1-.733-2.73L11.415 4a2.003 2.003 0 0 1 2.734-.732l4.35 2.508a1.997 1.997 0 0 1 .733 2.73L12.585 20a2.003 2.003 0 0 1-2.734.732L5.5 18.224a1.997 1.997 0 0 1-.733-2.73z" />
+                                </defs>
+                                <g fill="none" fill-rule="evenodd">
+                                    <use fill="#7765d6" fill-rule="nonzero" xlink:href="#attach-files" />
+                                </g>
+                            </svg>
+                        </a>
+                        <span>Attach files</span>
+                    </div>
+                    <button type="button" class="btn send-button purple-button">Send</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
