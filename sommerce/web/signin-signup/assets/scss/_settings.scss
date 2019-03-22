@@ -77,13 +77,17 @@ label {
   color: #6e6c88;
 }
 
-.modal select,
+.form-group select,
 input {
   padding: 8px 12px 8px 12px;
   @extend %normal-input;
   font-size: 14px;
   font-weight: 500;
   line-height: 14px;
+}
+
+.input[type="password"] {
+  padding: 4px 12px 8px 12px;
 }
 
 textarea.form-control::placeholder,
@@ -97,6 +101,12 @@ input[type="password"]:hover,
 input[type="email"]:hover {
   @extend %focus-input;
 }
+
+ .disable-input input {
+    @extend %disable-input;
+    font-weight: 400;
+    color: #6e6c88;
+  }
 
 // CARD
 

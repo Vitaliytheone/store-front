@@ -70,14 +70,14 @@
             </a>
           </div>
           <div class="menu-link-container">
-            <a class="nav-item nav-link  nav-link-active" href="#">
+            <a class="nav-item nav-link" href="#">
               <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24" height="24"
                 viewBox="0 0 24 24">
                 <defs>
                   <path id="c" d="M6.25 0v4A2.75 2.75 0 0 0 9 6.75h3V15a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1V1a1 1 0 0 1 1-1h5.25zm1.5.185a1 1 0 0 1 .174.158l3.83 4.395a1 1 0 0 1 .235.512H9c-.69 0-1.25-.56-1.25-1.25V.185z" />
                 </defs>
                 <g fill="none" fill-rule="evenodd" transform="translate(6 4)">
-                  <use fill="#7765d6" xlink:href="#c" />
+                  <use fill="#BDBCC8" xlink:href="#c" />
                 </g>
               </svg>
               Invoices
@@ -119,26 +119,172 @@
 
 
   <div class="row justify-content-center">
-    <div class="col col-xl-10">
-      <div class="container container-store q">
+    <div class="col-10">
+      <div class="container container-store container-form">
         <div class="row justify-content-center">
           <div class="col-8 col-title d-flex justify-content-between align-items-center">
             <h2>Account settings</h2>
+          </div>
+          <div class="col-8">
+            <form id="login-form" action="/signin" method="post">
+              <!-- <input type="hidden" name="_csrf"
+                                                        value="C5UyfN9UyenUnyoay5guCQN3IjhERKshtaxnWdy0uMJOoX07jBjxp-LIEn2Ezn5GWzVSXjwxw0zf_D875OXhmg=="> -->
+              <fieldset>
+                <div class="alert alert-danger hidden error-text" style="display: none;">
+                  Incorrect email or password
+                </div>
+                <div class="form-group">
+                  <div class="field-signupform-first_name required">
+                    <label for="signupform-first_name">First name</label>
+                    <input class="input" type="text" id="signupform-first_name" class="form-control" name="SignupForm[first_name]"
+                      placeholder="First name" aria-required="true" value="Denchik">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <div class="field-signupform-last_name required">
+                    <label for="signupform-last_name">Last name</label>
+                    <input class="input" type="text" id="signupform-last_name" class="form-control" name="SignupForm[last_name]"
+                      placeholder="Last name" aria-required="true" value="Bezborodko">
+                  </div>
+                </div>
+                <div class="form-group disable-input">
+                  <div class="field-signupform-email required">
+                    <label for="signupform-email">Email</label>
+                    <input class="input" type="text" id="signupform-email" class="form-control" name="SignupForm[email]"
+                      placeholder="Email" aria-required="true" value="johnlennon@gmail.com">
+                    <a href="#" data-toggle="modal" data-target="#modal-settings-email">Change email</a>
+                  </div>
+                </div>
+                <div class="form-group disable-input">
+                  <div class="field-signupform-password required">
+                    <label for="signupform-password">Password</label>
+                    <input class="input" type="password" id="signupform-password" class="form-control" name="SignupForm[password]"
+                      placeholder="Password" aria-required="true" value="13213123123">
+                    <a href="#" data-toggle="modal" data-target="#modal-settings-password">Change password</a>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <div>
+                    <div class="d-flex justify-content-between">
+                      <label for="select-status">Timezone</label>
+                    </div>
+                    <div class="select-wrapper">
+                      <select class="form-control no-radius" id="select-status">
+                        <option>(UTC) Greenwich Mean Time, Western European Time</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div class="d-flex justify-content-end">
+                  <button type="submit" class="btn purple-button save-changes btn-block">
+                    Save changes
+                  </button>
+                </div>
+              </fieldset>
+            </form>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <style>
-    .q {
-      /* height: 100vh; */
-      box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.04);
-      border: solid 1px #e5e5e9;
-      background-color: #ffffff;
-      border-top: 0px;
-    }
-  </style>
+
+  <!-- Modals -->
+  <div class="modal fade" id="modal-settings-email" tabindex="-1" role="dialog" aria-labelledby="modal-settings-email" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <div class="d-flex align-items-center">
+            <img src="assets/img/ic-popups/change-email.svg" alt="edit-staff">
+            <span>Change email</span>
+          </div>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <img src="assets/img/ic-popups/close.svg" alt="close">
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="login-form" action="/signin" method="post">
+            <fieldset>
+                <div class="form-group disable-input">
+                  <div class="field-signupform-email required">
+                    <label for="signupform-email">Current email</label>
+                    <input class="input" type="text" id="signupform-email" class="form-control" name="SignupForm[email]" placeholder="Email"
+                      aria-required="true" value="johnlennon@gmail.com">
+                  </div>
+                </div>
+                  <div class="form-group">
+                    <div class="field-signupform-email required">
+                      <label for="signupform-email">New email</label>
+                      <input class="input" type="text" id="signupform-email" class="form-control" name="SignupForm[email]" placeholder="Email"
+                        aria-required="true">
+                    </div>
+                  </div>
+                    <div class="form-group">
+                      <div class="field-signupform-password required">
+                        <label for="signupform-password">Current password</label>
+                        <input class="input" type="password" id="signupform-password" class="form-control" name="SignupForm[password]"
+                          placeholder="Password" aria-required="true">
+                      </div>
+                    </div>
+            </fieldset>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn save-changes-button purple-button">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+    <div class="modal fade" id="modal-settings-password" tabindex="-1" role="dialog" aria-labelledby="modal-settings-password"
+      aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <div class="d-flex align-items-center">
+              <img src="assets/img/ic-popups/change-email.svg" alt="edit-staff">
+              <span>Change password</span>
+            </div>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <img src="assets/img/ic-popups/close.svg" alt="close">
+            </button>
+          </div>
+          <div class="modal-body">
+            <form id="login-form" action="/signin" method="post">
+              <fieldset>
+                <div class="form-group">
+                  <div class="field-signupform-password required">
+                    <label for="signupform-password">Current password</label>
+                    <input class="input" type="password" id="signupform-password" class="form-control" name="SignupForm[password]"
+                      placeholder="Password" aria-required="true" value="13123123123">
+                  </div>
+                </div>
+                  <div class="form-group">
+                    <div class="field-signupform-password required">
+                      <label for="signupform-password">New password</label>
+                      <input class="input" type="password" id="signupform-password" class="form-control" name="SignupForm[password]"
+                        placeholder="Password" aria-required="true">
+                    </div>
+                  </div>
+                <div class="form-group">
+                  <div class="field-signupform-password required">
+                    <label for="signupform-password">Confirm  password</label>
+                    <input class="input" type="password" id="signupform-password" class="form-control" name="SignupForm[password]"
+                      placeholder="Password" aria-required="true">
+                  </div>
+                </div>
+              </fieldset>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn save-changes-button purple-button">Save changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
 
 
 

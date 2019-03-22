@@ -13,7 +13,7 @@
   box-shadow: 0 2px 4px 0 rgba(119, 101, 214, 0.21);
   background-color: #7765d6; }
 
-.modal select,
+.form-group select,
 input {
   width: 100%;
   border-radius: 2px;
@@ -49,7 +49,7 @@ input[type="color"]:focus,
   border: solid 1px #7765d6 !important;
   background-color: #ffffff; }
 
-.modal .modal-body .disable-input input {
+.disable-input input, .modal .modal-body .disable-input input {
   border-radius: 2px;
   border: solid 1px #bdbcc8;
   background-color: #e5e5e9;
@@ -130,7 +130,7 @@ body .container-store .col-8 .form-check-label, body .card .card-body p, body .t
   line-height: 20px;
   color: #bdbcc8; }
 
-.modal .modal-footer span, body .text-under a,
+.modal .modal-footer span, body .container-form .form-group.disable-input a, body .text-under a,
 body .svg-button {
   font-size: 14px;
   font-weight: 500;
@@ -225,12 +225,19 @@ label {
   line-height: 20px;
   color: #6e6c88; }
 
-.modal select,
+.form-group select,
 input {
   padding: 8px 12px 8px 12px;
   font-size: 14px;
   font-weight: 500;
   line-height: 14px; }
+
+.input[type="password"] {
+  padding: 4px 12px 8px 12px; }
+
+.disable-input input {
+  font-weight: 400;
+  color: #6e6c88; }
 
 body .card {
   border-radius: 3px;
@@ -586,6 +593,19 @@ input[type="radio"]:checked + label:after {
 
 body {
   background-color: #fbfcfc; }
+  body .container-form {
+    height: 100vh;
+    box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.04);
+    border: solid 1px #e5e5e9;
+    background-color: #ffffff;
+    border-top: 0px; }
+    body .container-form .form-group.disable-input {
+      position: relative; }
+      body .container-form .form-group.disable-input a {
+        font-weight: 400;
+        position: absolute;
+        top: 40px;
+        right: 15px; }
   body .container-store {
     padding-top: 47px; }
     body .container-store .col-title {
