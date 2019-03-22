@@ -230,23 +230,37 @@
                 </div>
                 <div class="modal-footer d-flex justify-content-between">
                     <div class="d-flex align-items-center">
-                        <a href="">
-                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24" height="24" viewBox="0 0 24 24">
-                                <defs>
-                                    <path id="attach-files" d="M4.768 15.495l.893-1.544a.5.5 0 0 1 .684-.183l.866.5a.5.5 0 0 1 .184.682l-.893 1.544L10.852 19l6.646-11.495L13.148 5l-4.092 7.078 1.308.754 1.284-2.222L12.9 8.445a.5.5 0 0 1 .684-.182l.866.5a.5.5 0 0 1 .184.682l-.63 1.089-1.906 3.296a2.003 2.003 0 0 1-2.734.732l-1.308-.754a1.997 1.997 0 0 1-.733-2.73L11.415 4a2.003 2.003 0 0 1 2.734-.732l4.35 2.508a1.997 1.997 0 0 1 .733 2.73L12.585 20a2.003 2.003 0 0 1-2.734.732L5.5 18.224a1.997 1.997 0 0 1-.733-2.73z" />
-                                </defs>
-                                <g fill="none" fill-rule="evenodd">
-                                    <use fill="#7765d6" fill-rule="nonzero" xlink:href="#attach-files" />
-                                </g>
-                            </svg>
-                        </a>
+                        <Input type="file" id="attach-file" class="hide" data-multiple-caption="{count} files attached" multiple></Input>
+                        <label for="attach-file" class="attach"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24" height="24" viewBox="0 0 24 24">
+                            <defs>
+                                <path id="attach-files" d="M4.768 15.495l.893-1.544a.5.5 0 0 1 .684-.183l.866.5a.5.5 0 0 1 .184.682l-.893 1.544L10.852 19l6.646-11.495L13.148 5l-4.092 7.078 1.308.754 1.284-2.222L12.9 8.445a.5.5 0 0 1 .684-.182l.866.5a.5.5 0 0 1 .184.682l-.63 1.089-1.906 3.296a2.003 2.003 0 0 1-2.734.732l-1.308-.754a1.997 1.997 0 0 1-.733-2.73L11.415 4a2.003 2.003 0 0 1 2.734-.732l4.35 2.508a1.997 1.997 0 0 1 .733 2.73L12.585 20a2.003 2.003 0 0 1-2.734.732L5.5 18.224a1.997 1.997 0 0 1-.733-2.73z" />
+                            </defs>
+                            <g fill="none" fill-rule="evenodd">
+                                <use fill="#7765d6" fill-rule="nonzero" xlink:href="#attach-files" />
+                            </g>
+                        </svg>
                         <span>Attach files</span>
+                    </label>
                     </div>
                     <button type="button" class="btn send-button purple-button">Send</button>
                 </div>
             </div>
         </div>
-    </div>
+        
+        <style>
+            .hide {
+                position: absolute;
+                overflow: hidden;
+                z-index: -1;
+                widows: 0.1px;
+                height: 0.1px;
+                opacity: 0;
+            }
+
+            label {
+                cursor: pointer;
+            }
+        </style>
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
