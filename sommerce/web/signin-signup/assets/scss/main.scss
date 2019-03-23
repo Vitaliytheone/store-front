@@ -15,7 +15,6 @@ body {
 
         a {
           @extend %a-under;
-          font-weight: 400;
           position: absolute;
           top: 40px;
           right: 15px;
@@ -133,6 +132,49 @@ body {
       .terms {
         @extend %forgot;
         color: #6e6c88;
+      }
+
+      // Invoices 
+
+      h2 {
+        @extend %h2;
+      }
+
+      h2 + span {
+        width: 93px;
+      }
+
+      .invoice-time {
+        @extend %placeholder-input-normal;
+      }
+
+      .warning-text {
+        @extend %warning-text;
+      }
+      
+      form {
+        margin-top: 24px;
+      }
+      
+      form .select-wrapper {
+        width: 516px;
+      }
+
+      form button {
+        width: 150px; 
+      }
+
+        th {
+        @extend %th;
+      }
+
+      tbody tr {
+        @extend  %text-under
+      }
+
+      .total-cost {
+        @extend %placeholder-input-active;
+        font-weight: bold;
       }
     }
   }

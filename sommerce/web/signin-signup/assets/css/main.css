@@ -62,14 +62,14 @@ input[type="color"]:focus,
   background-color: #ffffff; }
 
 textarea.form-control::placeholder,
-input::placeholder, .modal .modal-body .generate-password input, body .placeholder-text {
+input::placeholder, .modal .modal-body .generate-password input, body .placeholder-text, body .card .card-body .invoice-time {
   font-family: Montserrat;
   font-size: 14px;
   font-weight: 400;
   line-height: 24px;
   color: #bdbcc8; }
 
-.modal .modal-body .form-group span label {
+.modal .modal-body .form-group span label, body .card .card-body .total-cost {
   font-family: Montserrat;
   font-size: 14px;
   font-weight: 500;
@@ -93,10 +93,17 @@ input::placeholder, .modal .modal-body .generate-password input, body .placehold
 
 body .card .card-body .error-text {
   font-size: 12px;
-  font-weight: 500;
+  font-weight: 400;
   line-height: 20px;
   text-align: center;
   color: #721c24; }
+
+body .card .card-body .warning-text {
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 20px;
+  text-align: center;
+  color: #856404; }
 
 body .card .card-body h3 {
   font-size: 16px;
@@ -104,13 +111,13 @@ body .card .card-body h3 {
   line-height: 24px;
   color: #312e55; }
 
-body .container-store .col h2, body .container-store .col-8 h2 {
+body .container-store .col h2, body .container-store .col-8 h2, body .card .card-body h2 {
   font-size: 24px;
   font-weight: 500;
   line-height: 32px;
   color: #312e55; }
 
-body .container-store .col th, body .container-store .col-8 th {
+body .container-store .col th, body .container-store .col-8 th, body .card .card-body th {
   font-size: 12px;
   font-weight: 500;
   line-height: 20px;
@@ -118,7 +125,7 @@ body .container-store .col th, body .container-store .col-8 th {
 
 body .container-store .col tr td,
 body .container-store .col .form-check-label, body .container-store .col-8 tr td,
-body .container-store .col-8 .form-check-label, body .card .card-body p, body .text-under {
+body .container-store .col-8 .form-check-label, body .card .card-body p, body .card .card-body tbody tr, body .text-under {
   font-size: 14px;
   font-weight: 400;
   line-height: 24px;
@@ -133,7 +140,7 @@ body .container-store .col-8 .form-check-label, body .card .card-body p, body .t
 .modal .modal-footer span, body .container-form .form-group.disable-input a, body .text-under a,
 body .svg-button {
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 400;
   line-height: 24px;
   color: #7765d6; }
 
@@ -602,7 +609,6 @@ body {
     body .container-form .form-group.disable-input {
       position: relative; }
       body .container-form .form-group.disable-input a {
-        font-weight: 400;
         position: absolute;
         top: 40px;
         right: 15px; }
@@ -649,6 +655,16 @@ body {
       height: 40px; }
     body .card .card-body .terms {
       color: #6e6c88; }
+    body .card .card-body h2 + span {
+      width: 93px; }
+    body .card .card-body form {
+      margin-top: 24px; }
+    body .card .card-body form .select-wrapper {
+      width: 516px; }
+    body .card .card-body form button {
+      width: 150px; }
+    body .card .card-body .total-cost {
+      font-weight: bold; }
   body svg {
     margin-right: 8px; }
 

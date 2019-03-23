@@ -139,10 +139,19 @@ $opacitgrey: #e5e5e9;
 
 %error-text {
   font-size: 12px;
-  font-weight: 500;
+  font-weight: 400;
   line-height: 20px;
   text-align: center;
   color: #721c24;
+}
+
+%warning-text {
+
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 20px;
+  text-align: center;
+  color: #856404;
 }
 
 %h3 {
@@ -182,7 +191,7 @@ $opacitgrey: #e5e5e9;
 
 %a-under {
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 400;
   line-height: 24px;
   color: #7765d6;
 }
