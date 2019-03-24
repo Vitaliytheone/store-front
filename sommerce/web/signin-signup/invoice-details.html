@@ -61,62 +61,46 @@
           <div class="card">
             <div class="card-body">
               <div class="d-flex justify-content-between invoice-solo">
-                <h2>Multiple Invoice</h2>
+                <h2>Invoice #324</h2>
                 <span
-                  class="button-status-pending d-flex align-items-center justify-content-center"
+                  class="button-status-active d-flex align-items-center justify-content-center"
                 >
                   <span class="button-status-oval"></span>
-                  <span class="button-status-text">Unpaid</span>
+                  <span class="button-status-text">Paid</span>
                 </span>
               </div>
 
-              <form id="login-form" action="/signin" method="post">
-                <fieldset>
-                  <div class="form-group">
-                    <label for="select-status">Payment method</label>
-                    <div class="d-flex justify-content-between">
-                      <div class="select-wrapper">
-                        <select
-                          class="form-control no-radius"
-                          id="select-status"
-                        >
-                          <option>Bitcoin</option>
-                        </select>
-                      </div>
-                      <button type="submit" class="btn purple-button btn-block">
-                        Pay now
-                      </button>
-                    </div>
-                  </div>
-                  <div class="alert alert-warning hidden warning-text">
-                    Bitcoin payment will be processed after 2 confirmations from
-                    Bitcoin network.
-                  </div>
-                </fieldset>
-              </form>
               <table class="table table-stores">
                 <thead>
-                  <tr class="table-borderless">
-                    <th scope="col">ID</th>
+                  <tr>
                     <th scope="col">Details</th>
                     <th scope="col">Amount</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr class="table-borderless">
-                    <td>104</td>
                     <td>One month maintenance for bulkfollows.com</td>
                     <td>$35.00</td>
                   </tr>
-                  <tr>
-                    <td>11</td>
-                    <td>One month maintenance for bulkfollows.com</td>
-                    <td>$55.00</td>
-                  </tr>
                   <tr class="total-cost">
-                    <td></td>
                     <td class="d-flex justify-content-end">Total:</td>
-                    <td>$90.00</td>
+                    <td>$35.00</td>
+                  </tr>
+                </tbody>
+              </table>
+              <table class="table table-transaction">
+                <thead>
+                  <tr>
+                    <th scope="col">Payment data</th>
+                    <th scope="col">Method</th>
+                    <th scope="col">Transaction ID</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="table-borderless transaction-table">
+                    <td>2019-03-23 16:22:32</td>
+                    <td>2Checkout</td>
+                    <td>4A899278AS651170N</td>
                   </tr>
                 </tbody>
               </table>

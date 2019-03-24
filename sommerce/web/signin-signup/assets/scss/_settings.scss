@@ -11,24 +11,24 @@ body {
 }
 
 textarea.form-control {
-    resize: none;
-    border-radius: 0px;
-    font-size: 14px;
-    font-weight: 500;
+  resize: none;
+  border-radius: 0px;
+  font-size: 14px;
+  font-weight: 500;
 }
 
 .form-group textarea.form-control:hover {
-   border: solid 1px #6e6c88;
+  border: solid 1px #6e6c88;
 }
 
 select {
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    -webkit-border-radius: 0px;
-    background-image: url("../img/ic-popups/select-arrows.svg");
-    background-position: 99% 50%;
-    background-repeat: no-repeat;
-    background-size: 24px;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -webkit-border-radius: 0px;
+  background-image: url("../img/ic-popups/select-arrows.svg");
+  background-position: 99% 50%;
+  background-repeat: no-repeat;
+  background-size: 24px;
 }
 // BUTTON'S DEFAULT STYLES
 
@@ -66,7 +66,7 @@ input[type="color"]:focus,
 }
 
 input[type="password"] {
-  font: larger "Lucida Sans Unicode",sans-serif;
+  font: larger "Lucida Sans Unicode", sans-serif;
   color: $dark;
 }
 
@@ -102,11 +102,11 @@ input[type="email"]:hover {
   @extend %focus-input;
 }
 
- .disable-input input {
-    @extend %disable-input;
-    font-weight: 400;
-    color: #6e6c88;
-  }
+.disable-input input {
+  @extend %disable-input;
+  font-weight: 400;
+  color: #6e6c88;
+}
 
 // CARD
 
@@ -292,7 +292,7 @@ input[type="email"]:hover {
 
 // TABLE SETTINGS
 
-.table tbody {
+.col .table tbody {
   box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.04);
   border: solid 1px #e5e5e9;
   background-color: #ffffff;
@@ -359,89 +359,81 @@ tbody th {
 
 /*****************************/
 
-// MODALS SETTINGS 
-
+// MODALS SETTINGS
 
 .modal {
-
-  
   .modal-header {
     border-bottom: 0px;
 
-  span {
-    @extend %placeholder-input-filled;
+    span {
+      @extend %placeholder-input-filled;
+    }
+
+    .d-flex img {
+      padding-right: 16px;
+    }
+
+    .close {
+      opacity: 1;
+    }
   }
 
-  .d-flex img {
-    padding-right: 16px;
-  }
+  .modal-body {
+    .form-group span {
+      margin-right: 35px;
+    }
 
-  .close {
-    opacity: 1;
-  }
+    .modal-access-one span:nth-child(1) {
+      margin-right: 31px;
+    }
 
-}
+    .form-group span label {
+      @extend %placeholder-input-active;
+      line-height: 16px;
+      padding-left: 25px;
+    }
 
-.modal-body {
+    .text-under-password {
+      @extend %text-under-password;
+    }
 
-  .form-group span {
-    margin-right: 35px;
-  }
+    .disable-input input {
+      @extend %disable-input;
+      font-weight: 400;
+      color: #6e6c88;
+    }
 
-  .modal-access-one span:nth-child(1) {
-    margin-right: 31px;
-  }
+    .generate-password input {
+      @extend %placeholder-input-normal;
+      pointer-events: none;
+    }
 
-  .form-group span label {
-    @extend %placeholder-input-active;
-    line-height: 16px;
-    padding-left: 25px;
-  }
+    .generate-password-button {
+      position: absolute;
+      right: 15px;
+      bottom: 65px;
+    }
 
-  .text-under-password {
-    @extend %text-under-password;
-  }
-
-  .disable-input input {
-    @extend %disable-input;
-    font-weight: 400;
-    color: #6e6c88;
-  }
-
-  .generate-password input {
-    @extend %placeholder-input-normal;
-    pointer-events: none;
-  }
-
- .generate-password-button {
-    position: absolute;
-    right: 15px;
-    bottom: 65px;
-  }
-
-  .form-group textarea {
+    .form-group textarea {
       @extend %large-input;
+    }
   }
-
-  
-}
 
   .modal-footer {
     background-color: #fbfcfc;
 
-  .save-changes-button {
-    width: 132px;
-  }
+    .save-changes-button {
+      width: 132px;
+    }
 
-  span {
-    @extend %a-under;
-  }
+    span {
+      @extend %a-under;
+    }
 
-  .send-button {
-    width: 132px;
+    .send-button {
+      width: 132px;
+    }
   }
-
-}
 }
 // ARROW BUTTON SETTINGS
 

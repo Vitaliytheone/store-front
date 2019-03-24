@@ -2,29 +2,28 @@
 
 body {
   background-color: #fbfcfc;
-  
+
   .container-form {
-      height: 100vh;
-      box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.04);
-      border: solid 1px #e5e5e9;
-      background-color: #ffffff;
-      border-top: 0px;
+    height: 100vh;
+    box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.04);
+    border: solid 1px #e5e5e9;
+    background-color: #ffffff;
+    border-top: 0px;
 
-      .form-group.disable-input {
-        position: relative;
+    .form-group.disable-input {
+      position: relative;
 
-        a {
-          @extend %a-under;
-          position: absolute;
-          top: 40px;
-          right: 15px;
-        }
+      a {
+        @extend %a-under;
+        position: absolute;
+        top: 40px;
+        right: 15px;
       }
+    }
   }
 
   .container-store {
     padding-top: 47px;
-    
 
     // STORES
     .col-title {
@@ -33,7 +32,8 @@ body {
       margin-bottom: 32px;
       border-bottom: solid 1px #e5e5e9;
     }
-    .col, .col-8 {
+    .col,
+    .col-8 {
       padding-right: 0px;
       padding-left: 0px;
 
@@ -134,7 +134,7 @@ body {
         color: #6e6c88;
       }
 
-      // Invoices 
+      // Invoices
 
       h2 {
         @extend %h2;
@@ -144,37 +144,57 @@ body {
         width: 93px;
       }
 
+      h2 + span.button-status-active {
+        width: 73px;
+      }
+
       .invoice-time {
         @extend %placeholder-input-normal;
+      }
+
+      .invoice-solo {
+        margin-bottom: 44px;
+      }
+
+      .table-transaction {
+        margin-top: 48px;
       }
 
       .warning-text {
         @extend %warning-text;
       }
-      
+
       form {
         margin-top: 24px;
       }
-      
+
       form .select-wrapper {
         width: 516px;
       }
 
       form button {
-        width: 150px; 
+        width: 150px;
       }
 
-        th {
+      th {
         @extend %th;
       }
 
       tbody tr {
-        @extend  %text-under
+        @extend %text-under;
       }
 
       .total-cost {
         @extend %placeholder-input-active;
         font-weight: bold;
+        border-bottom: 1px solid #dee2e6;
+      }
+
+      .transaction-table {
+        border-radius: 3px;
+        box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.04);
+        border-bottom: 1px solid #e5e5e9;
+        background-color: #fbfcfc;
       }
     }
   }

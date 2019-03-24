@@ -111,20 +111,23 @@ body .card .card-body h3 {
   line-height: 24px;
   color: #312e55; }
 
-body .container-store .col h2, body .container-store .col-8 h2, body .card .card-body h2 {
+body .container-store .col h2,
+body .container-store .col-8 h2, body .card .card-body h2 {
   font-size: 24px;
   font-weight: 500;
   line-height: 32px;
   color: #312e55; }
 
-body .container-store .col th, body .container-store .col-8 th, body .card .card-body th {
+body .container-store .col th,
+body .container-store .col-8 th, body .card .card-body th {
   font-size: 12px;
   font-weight: 500;
   line-height: 20px;
   color: #312e55; }
 
 body .container-store .col tr td,
-body .container-store .col .form-check-label, body .container-store .col-8 tr td,
+body .container-store .col .form-check-label,
+body .container-store .col-8 tr td,
 body .container-store .col-8 .form-check-label, body .card .card-body p, body .card .card-body tbody tr, body .text-under {
   font-size: 14px;
   font-weight: 400;
@@ -150,7 +153,8 @@ body .card .card-body .forgot, body .card .card-body .terms {
   line-height: 20px;
   color: #7765d6; }
 
-.navbar .container .nav-link, body .container-store .col tbody tr th, body .container-store .col-8 tbody tr th {
+.navbar .container .nav-link, body .container-store .col tbody tr th,
+body .container-store .col-8 tbody tr th {
   font-size: 14px;
   font-weight: 500;
   line-height: 24px;
@@ -223,7 +227,7 @@ input[type="color"]:focus,
   outline: none; }
 
 input[type="password"] {
-  font: larger "Lucida Sans Unicode",sans-serif;
+  font: larger "Lucida Sans Unicode", sans-serif;
   color: #312e55; }
 
 label {
@@ -365,7 +369,7 @@ body .card {
   font-size: 14px;
   color: #ffffff; }
 
-.table tbody {
+.col .table tbody {
   box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.04);
   border: solid 1px #e5e5e9;
   background-color: #ffffff; }
@@ -619,18 +623,24 @@ body {
       padding-bottom: 16px;
       margin-bottom: 32px;
       border-bottom: solid 1px #e5e5e9; }
-    body .container-store .col, body .container-store .col-8 {
+    body .container-store .col,
+    body .container-store .col-8 {
       padding-right: 0px;
       padding-left: 0px; }
-      body .container-store .col h2, body .container-store .col-8 h2 {
+      body .container-store .col h2,
+      body .container-store .col-8 h2 {
         margin: 0px; }
-      body .container-store .col .btn, body .container-store .col-8 .btn {
+      body .container-store .col .btn,
+      body .container-store .col-8 .btn {
         width: 160px; }
-      body .container-store .col .form-check-label, body .container-store .col-8 .form-check-label {
+      body .container-store .col .form-check-label,
+      body .container-store .col-8 .form-check-label {
         line-height: 16px; }
-      body .container-store .col .table-stores td:last-child, body .container-store .col-8 .table-stores td:last-child {
+      body .container-store .col .table-stores td:last-child,
+      body .container-store .col-8 .table-stores td:last-child {
         width: 100px; }
-      body .container-store .col .table-staff td:last-child, body .container-store .col-8 .table-staff td:last-child {
+      body .container-store .col .table-staff td:last-child,
+      body .container-store .col-8 .table-staff td:last-child {
         width: 160px; }
   body .placeholder {
     padding-top: 160px;
@@ -657,6 +667,12 @@ body {
       color: #6e6c88; }
     body .card .card-body h2 + span {
       width: 93px; }
+    body .card .card-body h2 + span.button-status-active {
+      width: 73px; }
+    body .card .card-body .invoice-solo {
+      margin-bottom: 44px; }
+    body .card .card-body .table-transaction {
+      margin-top: 48px; }
     body .card .card-body form {
       margin-top: 24px; }
     body .card .card-body form .select-wrapper {
@@ -664,7 +680,13 @@ body {
     body .card .card-body form button {
       width: 150px; }
     body .card .card-body .total-cost {
-      font-weight: bold; }
+      font-weight: bold;
+      border-bottom: 1px solid #dee2e6; }
+    body .card .card-body .transaction-table {
+      border-radius: 3px;
+      box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.04);
+      border-bottom: 1px solid #e5e5e9;
+      background-color: #fbfcfc; }
   body svg {
     margin-right: 8px; }
 

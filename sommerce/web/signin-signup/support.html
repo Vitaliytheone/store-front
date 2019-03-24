@@ -242,9 +242,9 @@
                 </div>
                 <div class="modal-footer d-flex justify-content-between">
                     <div class="d-flex align-items-center">
-                        <Input type="file" id="attach-file" class="hide" data-multiple-caption="{count} files attached"
-                            multiple></Input>
-                        <label for="attach-file" class="attach">
+                        <Input type="file" id="attach-file" class="hide-input" data-multiple-caption="{count} files attached"
+                            multiple />
+                        <label for="attach-file" class="attach d-flex align-items-center">
                             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
                                 width="24" height="24" viewBox="0 0 24 24">
                                 <defs>
@@ -255,8 +255,20 @@
                                     <use fill="#7765d6" fill-rule="nonzero" xlink:href="#attach-files" />
                                 </g>
                             </svg>
-                            <span>Attach files</span>
-                            <button class="privet">privet</button>
+                            <span class="">Attach files</span>
+                            <button type="button" class="close button-hidden" style="opacity: 1">
+                                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                                    width="24" height="24" viewBox="0 0 24 24">
+                                    <defs>
+                                        <path id="close"
+                                            d="M13.816 12l3.933 3.934a.856.856 0 0 1 0 1.21l-.605.605a.856.856 0 0 1-1.21 0L12 13.816l-3.934 3.933a.856.856 0 0 1-1.21 0l-.605-.605a.856.856 0 0 1 0-1.21L10.184 12 6.251 8.066a.856.856 0 0 1 0-1.21l.605-.605a.856.856 0 0 1 1.21 0L12 10.184l3.934-3.933a.856.856 0 0 1 1.21 0l.605.605a.856.856 0 0 1 0 1.21L13.816 12z" />
+                                    </defs>
+                                    <g fill="none" fill-rule="evenodd">
+                                        <use fill="#7765d6" xlink:href="#close" />
+                                    </g>
+                                </svg>
+
+                            </button>
                         </label>
                     </div>
                     <button type="button" class="btn send-button purple-button">Send</button>
@@ -265,13 +277,18 @@
         </div>
 
         <style>
+            .underline-text {
+                text-decoration: underline;
+            }
             .new-privet {
                 display: block !important;
             }
-            .privet {
+
+            .button-hidden {
                 display: none;
             }
-            .hide {
+
+            .hide-input {
                 position: absolute;
                 overflow: hidden;
                 z-index: -1;

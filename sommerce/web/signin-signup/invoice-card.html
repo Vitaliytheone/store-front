@@ -1,107 +1,138 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
+  <head>
     <!-- Required meta tags -->
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
-        crossorigin="anonymous" />
-    <link href="https://fonts.googleapis.com/css?family=Montserrat:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i"
-        rel="stylesheet" />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Montserrat:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
     <link rel="stylesheet" href="assets/css/main.css" />
     <title>Sommerce</title>
-</head>
+  </head>
 
-<body>
-
+  <body>
     <div class="container mt-5">
-        <div class="row align-items-center flex-column">
-            <div class="col-8">
-                <a href="signin.html" class="mb-3 arrow-left-button svg-button d-flex">
-                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24"
-                        height="24" viewBox="0 0 24 24">
-                        <defs>
-                            <path id="a" d="M8.934 4.17l7.885 7.418a.559.559 0 0 1 0 .824L8.934 19.83a.647.647 0 0 1-.876 0l-.877-.824a.559.559 0 0 1 0-.824L13.752 12l-6.57-6.181a.559.559 0 0 1 0-.824l.876-.824a.647.647 0 0 1 .876 0z" />
-                        </defs>
-                        <g fill="none" fill-rule="evenodd">
-                            <mask id="b" fill="#fff">
-                                <use xlink:href="#a" />
-                            </mask>
-                            <use fill="#7765D6" transform="matrix(-1 0 0 1 24 0)" xlink:href="#a" />
-                        </g>
-                    </svg>
-                    Back to Invoices
-                </a>
-                <div class="card">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between">
-                            <h2>Invoice #324</h2>
-                            <span class="button-status-pending d-flex align-items-center justify-content-center">
-                                <span class="button-status-oval"></span>
-                                <span class="button-status-text">Unpaid</span>
-                            </span>
-                        </div>
-                        <span class="invoice-time">2019-03-23 16:22:32</span>
+      <div class="row align-items-center flex-column">
+        <div class="col-8">
+          <a
+            href="signin.html"
+            class="mb-3 arrow-left-button svg-button d-flex"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              xmlns:xlink="http://www.w3.org/1999/xlink"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+            >
+              <defs>
+                <path
+                  id="a"
+                  d="M8.934 4.17l7.885 7.418a.559.559 0 0 1 0 .824L8.934 19.83a.647.647 0 0 1-.876 0l-.877-.824a.559.559 0 0 1 0-.824L13.752 12l-6.57-6.181a.559.559 0 0 1 0-.824l.876-.824a.647.647 0 0 1 .876 0z"
+                />
+              </defs>
+              <g fill="none" fill-rule="evenodd">
+                <mask id="b" fill="#fff">
+                  <use xlink:href="#a" />
+                </mask>
+                <use
+                  fill="#7765D6"
+                  transform="matrix(-1 0 0 1 24 0)"
+                  xlink:href="#a"
+                />
+              </g>
+            </svg>
+            Back to Invoices
+          </a>
+          <div class="card">
+            <div class="card-body">
+              <div class="d-flex justify-content-between">
+                <h2>Invoice #324</h2>
+                <span
+                  class="button-status-pending d-flex align-items-center justify-content-center"
+                >
+                  <span class="button-status-oval"></span>
+                  <span class="button-status-text">Unpaid</span>
+                </span>
+              </div>
+              <span class="invoice-time">2019-03-23 16:22:32</span>
 
-                        <form id="login-form" action="/signin" method="post">
-                            <fieldset>
-                                <div class="form-group">
-                                    <label for="select-status">Payment method</label>
-                                    <div class="d-flex justify-content-between">
-                                    <div class="select-wrapper">
-                                        <select class="form-control no-radius" id="select-status">
-                                            <option>Bitcoin</option>
-                                        </select>
-                                    </div>
-                                    <button type="submit" class="btn purple-button btn-block">
-                                        Pay now
-                                    </button>
-                                    </div>
-                                </div>
-                                <div class="alert alert-warning hidden warning-text">
-                                   Bitcoin payment will be processed after 2 confirmations from Bitcoin network.
-                                </div>
-                            </fieldset>
-                        </form>
-                        <table class="table table-stores">
-                            <thead>
-                                <tr class="table-borderless">
-                                    <th scope="col">Details</th>
-                                    <th scope="col">Amount</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr class="table-borderless">
-                                    <td>One month maintenance for bulkfollows.com</td>
-                                    <td>$35.00</td>
-                                </tr>
-                                <tr class="total-cost">
-                                    <td class="d-flex justify-content-end">Total:</td>
-                                    <td>$35.00</td>
-                                </tr>
-                               
-                            </tbody>
-                        </table>
+              <form id="login-form" action="/signin" method="post">
+                <fieldset>
+                  <div class="form-group">
+                    <label for="select-status">Payment method</label>
+                    <div class="d-flex justify-content-between">
+                      <div class="select-wrapper">
+                        <select
+                          class="form-control no-radius"
+                          id="select-status"
+                        >
+                          <option>Bitcoin</option>
+                        </select>
+                      </div>
+                      <button type="submit" class="btn purple-button btn-block">
+                        Pay now
+                      </button>
                     </div>
-                </div>
+                  </div>
+                  <div class="alert alert-warning hidden warning-text">
+                    Bitcoin payment will be processed after 2 confirmations from
+                    Bitcoin network.
+                  </div>
+                </fieldset>
+              </form>
+              <table class="table table-stores">
+                <thead>
+                  <tr>
+                    <th scope="col">Details</th>
+                    <th scope="col">Amount</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="table-borderless">
+                    <td>One month maintenance for bulkfollows.com</td>
+                    <td>$35.00</td>
+                  </tr>
+                  <tr class="total-cost">
+                    <td class="d-flex justify-content-end">Total:</td>
+                    <td>$35.00</td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
+          </div>
         </div>
+      </div>
     </div>
-
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
-        crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-        crossorigin="anonymous"></script>
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.js"
+      integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+      integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+      crossorigin="anonymous"
+    ></script>
     <!-- <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script> -->
     <script src="assets/js/main.js"></script>
     <script src="assets/js/bootstrap.min.js"></script>
-</body>
-
+  </body>
 </html>

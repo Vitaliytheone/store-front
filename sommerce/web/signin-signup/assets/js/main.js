@@ -1,6 +1,6 @@
 // Input type file;
 
-var inputs = document.querySelectorAll(".hide");
+var inputs = document.querySelectorAll(".hide-input");
 Array.prototype.forEach.call(inputs, function(input) {
   var label = input.nextElementSibling,
     labelVal = label.innerHTML;
@@ -28,13 +28,13 @@ Array.prototype.forEach.call(inputs, function(input) {
     }
 
     if (fileName) {
-      console.log(fileName);
       label.querySelector("span").innerHTML = fileName;
+      label.querySelector("span").classList.add("underline-text");
       label.querySelector("button").classList.add("new-privet");
+
       var button = label.querySelector("button");
       button.addEventListener("click", function(event) {
         document.getElementById("attach-file").value = null;
-        console.log(fileName);
         label.innerHTML = labelVal;
         event.preventDefault();
       });
