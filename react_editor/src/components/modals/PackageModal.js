@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { ModalBody, Label, FormGroup } from 'reactstrap';
 import { Field } from 'formik';
 import { PackageInput } from '../Inputs';
@@ -140,7 +140,7 @@ class PackageModal extends React.PureComponent {
 				{values.provider_id == 'none' || values.mode == 0 ? services.errorService ? (
 					<span className="m--font-danger">{services.messageService}</span>
 				) : (
-					null
+						null
 					) : <FormGroup>
 						<Field
 							entities={services.providerServices}
